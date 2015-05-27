@@ -40,10 +40,44 @@ use Data::Dumper;
 use pairing;
 use toolbox;
 
-my $initialDir = $ARGV[0];                                                                                  # recovery of the name of the directory to analyse
-my $fileConf = $ARGV[1];                                                                                    # recovery of the name of the software.configuration.txt file
-my $refFastaFile = $ARGV[2];                                                                                # recovery of the reference file
+##########################################
+# recovery of parameters/arguments given when the program is executed
+##########################################
 my $cmd_line=$0." @ARGV";
+my ($nomprog)=$0=~/([^\/]+)$/;
+unless ($#ARGV>=0)                                                                                          # if no argument given
+{
+
+  print <<"Mesg";
+
+  perldoc $nomprog display the help
+
+Mesg
+
+  exit;
+}
+
+my %param = @ARGV;                                                                                          # get the parameters 
+if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}))
+{
+  print <<"Mesg";
+
+  ERROR: Parameters -d or -c or -r are required.
+  perldoc $nomprog display the help
+
+Mesg
+  exit;
+}
+
+
+##########################################
+# recovery of initial informations/files
+##########################################
+my $initialDir = $param{'-d'};                                                # recovery of the name of the directory to analyse
+my $fileConf = $param{'-c'};                                                                                # recovery of the name of the software.configuration.txt file
+my $refFastaFile = $param{'-r'};                                                                            # recovery of the reference file
+
+my $fileAdaptator = defined($param{'-a'})? $param{'-a'} : "$toggle/adaptator.txt";                          # recovery of the adaptator file
 
 my $optionref = toolbox::readFileConf($fileConf);
 my $softParameters = toolbox::extractHashSoft($optionref, "SGE");   
@@ -140,7 +174,7 @@ for (my $i=0; $i<=$#listOfFiles; $i++)                                          
         if ($#listOfFastq == 0)                                                                             # if 1 file --> single analysis to do
         {
             toolbox::exportLog("INFOS: $0 : Run singleAnalysis.pl on $firstDir\n",1);
-            my $singleCom = 'qsub -N singleAnalysis '.$options.' "singleAnalysis.pl '.$firstDir.' '.$fileConf.' '.$refFastaFile.'"';
+            my $singleCom = 'qsub -N singleAnalysis '.$options.' "singleAnalysis.pl -d '.$firstDir.' -c '.$fileConf.' -r '.$refFastaFile.'"';
             ##DEBUG
             toolbox::exportLog("DEBUG: $0 : qsub singleAnalysis command : $singleCom\n",1);
             my $job_id = `$singleCom`;
@@ -158,7 +192,7 @@ for (my $i=0; $i<=$#listOfFiles; $i++)                                          
         elsif ($#listOfFastq == 1)                                                                          # if 2 files --> pair analysis to do
         {
             toolbox::exportLog("INFOS: $0 : Run pairAnalysis.pl on $firstDir\n",1);
-            my $pairCom = 'qsub -N pairAnalysis '.$options.' "pairAnalysis.pl '.$firstDir.' '.$fileConf.' '.$refFastaFile.'"';
+            my $pairCom = 'qsub -N pairAnalysis '.$options.' "pairAnalysis.pl -d '.$firstDir.' -c '.$fileConf.' -r '.$refFastaFile.'"';
             ##DEBUG
             toolbox::exportLog("DEBUG: $0 : qsub pairAnalysis command : $pairCom\n",1);
             my $job_id = `$pairCom`;
@@ -280,3 +314,25 @@ toolbox::exportLog("#########################################\nCONGRATS: SNP cal
 
 close F1;
 exit;
+
+=head1 Name
+
+globalAnalysisSGE.pl
+
+=head1 Usage
+
+globalAnalysisSGE.pl -d DIR-c FILE -r FILE [-a FILE]
+
+=head1 Required arguments
+
+      -d DIR    The directory containing fastq file
+      -c FILE   The configuration file
+      -r FILE   The reference sequence (fasta)
+
+=head1 Optional argument
+      -a FILE   The file containig the adaptator sequences
+
+=head1  Author
+Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+
+=cut
