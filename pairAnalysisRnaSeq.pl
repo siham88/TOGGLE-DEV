@@ -226,7 +226,7 @@ print F1 "cutadapt\n";
 my $newDir = toolbox::changeDirectoryArbo($initialDir,2);                                                   # change for the cutadapt directory
 my $cutadaptDir = $newDir;                                                                                  # to keep the information of cutadapt folder for the following analysis
 ##DEBUG print LOG "CHANGE DIRECTORY TO $newDir\n";
-my $fileAdaptator = "$toggle/adaptator.txt";     # /!\ ARGV[3] et si non reseignÃ© ce fichier lÃ , mais on le place oÃ¹ ?
+$fileAdaptator = "$toggle/adaptator.txt";     # /!\ ARGV[3] et si non reseignÃ© ce fichier lÃ , mais on le place oÃ¹ ?
 toolbox::checkFile($fileAdaptator);
 my $cutadaptSpecificFileConf = "$newDir"."/cutadapt.conf";                                                  # name for the cutadapt specific configuration file
 

@@ -69,7 +69,7 @@ Mesg
 }
 
 my %param = @ARGV;                                                                                          # get the parameters 
-if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}))
+if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}) or not defined($param{'-g'}))
 {
   print <<"Mesg";
 
@@ -81,13 +81,10 @@ Mesg
 }
 
 
-
-##########################################
-# recovery of initial informations/files
-##########################################
-my $initialDir = $param{'-d'};                                                # recovery of the name of the directory to analyse
-my $fileConf = $param{'-c'};                                                                                # recovery of the name of the software.configuration.txt file
-my $refFastaFile = $param{'-r'};                                                                            # recovery of the reference file
+my $initialDir = $param{'-d'};                                                                                  # recovery of the name of the directory to analyse
+my $fileConf = $param{'-c'};                                                                                    # recovery of the name of the software.configuration.txt file
+my $refFastaFile = $param{'-r'};                                                                                # recovery of the reference file
+my $gffFile = $param{'-g'};
 
 my $fileAdaptator = defined($param{'-a'})? $param{'-a'} : "$toggle/adaptator.txt";                          # recovery of the adaptator file
 
