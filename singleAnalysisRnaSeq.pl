@@ -52,12 +52,44 @@ use HTSeq;
 
 
 ##########################################
+# recovery of parameters/arguments given when the program is executed
+##########################################
+my $cmd_line=$0." @ARGV";
+my ($nomprog)=$0=~/([^\/]+)$/;
+unless ($#ARGV>=0)                                                                                          # if no argument given
+{
+
+  print <<"Mesg";
+
+  perldoc $nomprog display the help
+
+Mesg
+
+  exit;
+}
+
+my %param = @ARGV;                                                                                          # get the parameters 
+if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}))
+{
+  print <<"Mesg";
+
+  ERROR: Parameters -d or -c or -r are required.
+  perldoc $nomprog display the help
+
+Mesg
+  exit;
+}
+
+
+
+##########################################
 # recovery of initial informations/files
 ##########################################
-my $initialDir = $ARGV[0];                                                                                  # recovery of the name of the directory to analyse
-my $fileConf = $ARGV[1];                                                                                    # recovery of the name of the software.configuration.txt file
-my $refFastaFile = $ARGV[2];                                                                                # recovery of the reference file
-my $gffFile = $ARGV[3];
+my $initialDir = $param{'-d'};                                                # recovery of the name of the directory to analyse
+my $fileConf = $param{'-c'};                                                                                # recovery of the name of the software.configuration.txt file
+my $refFastaFile = $param{'-r'};                                                                            # recovery of the reference file
+
+my $fileAdaptator = defined($param{'-a'})? $param{'-a'} : "$toggle/adaptator.txt";                          # recovery of the adaptator file
 
 toolbox::existsDir($initialDir);                                                                            # check if this directory exists
 
@@ -268,3 +300,27 @@ print LOG "#########################################\nINFOS: Single sequence ana
 close F1;
 close LOG;
 exit;
+
+
+=head1 Name
+
+singleAnalysisRnaSeq.pl
+
+=head1 Usage
+
+singleAnalysisRnaSeq.pl -d DIR-c FILE -r FILE -g FILE [-a FILE]
+
+=head1 Required arguments
+
+      -d DIR    The directory containing fastq file
+      -c FILE   The configuration file
+      -r FILE   The reference sequence (fasta)
+      -g FILE   The annotation file for the reference (gff)
+      
+=head1 Optional argument
+      -a FILE   The file containig the adaptator sequences
+
+=head1  Author
+Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+
+=cut
