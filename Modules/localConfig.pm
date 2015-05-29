@@ -46,14 +46,14 @@ our $toggle="/path/to/toggle";
 our $java = "/path/to/java -Xmx12g -jar";
 
 our $bwa = "/path/to/bwa";
-our $picard = "$java /path/to/picard-tools";
+our $picard = "$java /path/to/picard-tools-1.130";
 
-our $samtools = "/path/to/samtools_O.1.17";
+our $samtools = "/path/to/samtools_1.2";
 our $GATK = "/path/to/java -Xmx12g -jar /path/to/GenomeAnalysisTK-3.3/GenomeAnalysisTK.jar";
 our $fastqc = "/path/to/FastQC/fastqc";
 
 #Path for CutAdapt
-our $cutadapt = "/path/to/cutadapt-1.2.1/bin/cutadapt";
+our $cutadapt = "/path/to/cutadapt-1.8/bin/cutadapt";
 
 ##### FOR RNASEQ analysis
 #Path for fastq_trimmer
