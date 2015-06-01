@@ -1174,7 +1174,7 @@ sub transferDirectoryFromMasterToNode
 {
     my ($localDir,$master) = @_;
 								    ###########################################################################
-    $master = 'nas' if (not defined $master or $master eq '');     #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
+    $master = 'nas2' if (not defined $master or $master eq '');     #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
 								    ###########################################################################
     # get the SGE user name
     my $SGE_User = `echo \$USER` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE USER isn't defined\n",0);
@@ -1229,7 +1229,7 @@ sub transferDirectoryFromNodeToMaster
     
     my ($localDir,$distantDir,$erase,$master) = @_;
 								###########################################################################
-    $master = 'nas'; # if (not defined $master or $master eq ''); #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
+    $master = 'nas2'; # if (not defined $master or $master eq ''); #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
 								###########################################################################
     
     $erase=1 ; # if (not defined $erase);					
