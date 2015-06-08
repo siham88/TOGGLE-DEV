@@ -75,6 +75,7 @@ VALIDATION_STRINGENCY=SILENT
 
 $picardTools markDuplicates
 VALIDATION_STRINGENCY=SILENT
+REMOVE_DUPLICATES=TRUE
 
 $SGE
 -q -q bioinfo.q@node13.alineos.net
