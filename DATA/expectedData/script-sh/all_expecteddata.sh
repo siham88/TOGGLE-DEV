@@ -21,6 +21,7 @@ rm RC3.SAMTOOLSFLAGSTAT.txt
 rm RC3_1.FASTXTRIMMER.fastq RC3_2.FASTXTRIMMER.fastq
 rm -rf tophat
 rm referenceRNASeq*bt2 referenceRNASeq*ebwt
+rm -rf radseq/outputRadseq
 
 cd script-sh
 
@@ -118,5 +119,10 @@ sh bowtie-build.sh;
 sh bowtie2-build.sh;
 sh tophat.sh;
 sh htseqcount.sh;
+
+echo "
+################ radseq_processRadtags
+";
+sh radseq_processRadtags.sh;
 
 exit;

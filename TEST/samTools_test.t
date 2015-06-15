@@ -91,7 +91,7 @@ is($observedMD5sum,$expectedMD5sum,'Ok for the content of the samtools faidx out
 is(samTools::samToolsIndex($bamFile),1,'Ok for samToolsIndex running');
 
 ###Checking the correct structure for the output file using md5sum
-$expectedMD5sum = "8e1c53324486a6455790a26dfdc5a464";
+$expectedMD5sum = "29bed7c8c70c24cd84a439d3fc473474";
 $observedMD5sum=`md5sum $bamFile.bai`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -109,7 +109,7 @@ is(samTools::samToolsView($bamFile, $bamFileOut, $optionRef),1,'Ok for samToolsV
 
 
 ###Checking the correct structure for the output file using md5sum
-$expectedMD5sum = "af10b544a1fa63c5544115f56445a59c";
+$expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
 $observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -204,7 +204,7 @@ is(samTools::samToolsFlagstat($bamFile,"$testingDir/RC3.SAMTOOLSFLAGSTAT.txt"),1
 my $expectedOutputFlag="$testingDir/RC3.SAMTOOLSFLAGSTAT.txt";
 
 ####Checking the correct structure for the output file using md5sum
-$expectedMD5sum = "de3b20969a5e852c9b3627890e3f86f8";
+$expectedMD5sum = "c08ff58a41733e3e1ab782ca22653397";
 $observedMD5sum=`md5sum ../DATA-TEST/samtoolsTestDir/RC3.SAMTOOLSFLAGSTAT.txt`;	# structure of the test file
 @withoutName = split (" ", $observedMD5sum);    				# to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];     						# just to have the md5sum result

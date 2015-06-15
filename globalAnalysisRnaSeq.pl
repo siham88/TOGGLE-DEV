@@ -165,13 +165,13 @@ for (my $i=0; $i<=$#listOfFiles; $i++)                                          
         if ($#listOfFastq == 0)                                                                             # if 1 file --> single analysis to do
         {
             toolbox::exportLog("INFOS: $0 : Run singleAnalysisRnaSeq.pl on $firstDir\n",1);
-            my $singleCom = "singleAnalysisRnaSeq.pl $firstDir $fileConf $refFastaFile $gffFile";
+            my $singleCom = "singleAnalysisRnaSeq.pl -d $firstDir -c $fileConf -r $refFastaFile -g $gffFile";
             toolbox::run($singleCom);
         }
         elsif ($#listOfFastq == 1)                                                                          # if 2 files --> pair analysis to do
         {
             toolbox::exportLog("INFOS: $0 : Run pairAnalysisRnaSeq.pl on $firstDir\n",1);
-            my $pairCom = "pairAnalysisRnaSeq.pl $firstDir $fileConf $refFastaFile $gffFile";
+            my $pairCom = "pairAnalysisRnaSeq.pl -d $firstDir -c $fileConf -r $refFastaFile -g $gffFile";
             toolbox::run($pairCom);
         }
         else                                                                                                # if more than 2 files, there is a problem
@@ -266,7 +266,7 @@ globalAnalysisRnaSeq.pl
 
 =head1 Usage
 
-globalAnalysis.pl -d DIR-c FILE -r FILE [-a FILE]
+globalAnalysis.pl -d DIR-c FILE -r FILE -g FILE [-a FILE]
 
 =head1 Required arguments
 

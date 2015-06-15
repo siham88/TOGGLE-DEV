@@ -113,7 +113,7 @@ my $bamRealigned="$testingDir/RC3.GATKINDELREALIGNER.bam";
 is(gatk::gatkIndelRealigner($fastaRef, $bamToRealigne, $intervalsFile, $bamRealigned, $optionHachees),1, 'Test for gatk::gatkIndelRealigner');
 
 #####Checking the correct structure for the output file using md5sum
-$expectedMD5sum="56ae82eb60876eaa14b4d737c7d88653";     # structure of the ref file
+$expectedMD5sum="3296b45af3890583e257447cb8d94f2d";     # structure of the ref file
 $observedMD5sum=`md5sum ../DATA-TEST/gatkTestDir/RC3.GATKINDELREALIGNER.bam`;     # structure of the test file
 @withoutName =split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];      #just to have the md5sum result
