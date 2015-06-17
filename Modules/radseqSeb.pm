@@ -80,8 +80,8 @@ sub splitKeyFile
 			@head = split("\t",$line,5);
 			if ($head[0] ne "Flowcell" or $head[1] ne "Lane" or $head[2] ne "Barcode" or $head[3] ne "DNASample")
 			{
-				#toolbox::exportLog("ERROR: radseq::splitKeyFile : The Keyfile header of file $filein is not like 'Flowcell\tLane\tBarcode\tDNASample' '$! \n",0);
-				print "The Keyfile header of file $keyFileFile is not like 'Flowcell\tLane\tBarcode\tDNASample' \n";
+				#toolbox::exportLog("ERROR: radseq::splitKeyFile : The Keyfile header of file $keyFileFile is not like 'Flowcell\tLane\tBarcode\tDNASample' '$! \n",0);
+				print "ERROR: radseq::splitKeyFile : The Keyfile header of file $keyFileFile is not like 'Flowcell\tLane\tBarcode\tDNASample' \n";
 				exit;
 			}
 			$comp+=1;
@@ -95,6 +95,12 @@ sub splitKeyFile
 			if ($DNASample =~ m/.*\..*/ )	# change "." to "_" for runnig radseq::process_radtags
 			{
 				$DNASample =~ s/\./_/;
+			}
+			if ($lane !~ m/^\d+$/ )	# Test if lane is not numeric
+			{
+				#toolbox::exportLog("ERROR: radseq::splitKeyFile : The Keyfile lane "$lane" on line $comp is not numeric for file $keyFileFile '$! \n",0);
+				print "ERROR: radseq::splitKeyFile : The Keyfile lane '$lane' on line $comp is not numeric for file $keyFileFile \n";
+				exit;
 			}
 
 			my $outputFileName =$dirOut."/"."barcode_run01_lane$lane.txt";
