@@ -81,7 +81,7 @@ sub splitKeyFile
 			if ($head[0] ne "Flowcell" or $head[1] ne "Lane" or $head[2] ne "Barcode" or $head[3] ne "DNASample")
 			{
 				#toolbox::exportLog("ERROR: radseq::splitKeyFile : The Keyfile header of file $filein is not like 'Flowcell\tLane\tBarcode\tDNASample' '$! \n",0);
-				print "The Keyfile header of file $filein is not like 'Flowcell\tLane\tBarcode\tDNASample' \n";
+				print "The Keyfile header of file $keyFileFile is not like 'Flowcell\tLane\tBarcode\tDNASample' \n";
 				exit;
 			}
 			$comp+=1;
@@ -91,16 +91,22 @@ sub splitKeyFile
 			$comp+=1;
 			##DEBUG print $line."\n";
 			my ($flowcell, $lane, $barcode, $DNASample, $other) = split("\t",$line,5) ;
-			##DEBUG print $lane."\n";
+			##DEBUG print $DNASample."\n";
+			if ($DNASample =~ m/.*\..*/ )	# change "." to "_" for runnig radseq::process_radtags
+			{
+				$DNASample =~ s/\./_/;
+			}
+
 			my $outputFileName =$dirOut."/"."barcode_run01_lane$lane.txt";
-			print $outputFileName."\n";
+			##DEBUG print $outputFileName."\n";
 			open(LANEFILE, ">>",$outputFileName) or die $!; #toolbox::exportLog("ERROR: radseq::splitKeyFile : Can't open the file $outputFileName $!\n",0);
 			print LANEFILE $barcode."\t".$DNASample."\n";
 		}
 	}
 }
 
-##DEBUG splitKeyFile("../DATA-TEST/radseq/KeyfileTest.txt", "../DATA-TEST/radseq/barecode")
+##DEBUG
+splitKeyFile("../DATA-TEST/radseq/keyFileTest.txt", "../DATA-TEST/radseq/barecode")
 
 
 #################################################################################################
@@ -130,7 +136,8 @@ sub splitKeyFile
 
 #=head3 splitKeyFile()
 
-#This function split the Keyfile file on the different lane and take them in a directory (that contains the files to run radseq::process_radtags) created.
+#This function split the Keyfile file on the different lane and take them in a directory (that contains the files to run radseq::process_radtags) created
+#and check if "DNASample" don't contain "."'.
 #2 arguments are required : the Keyfile filename and the output directory name created.
 
 #Return 1 if radseq::splitKeyFile has ran correctly else 0.
