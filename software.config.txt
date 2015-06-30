@@ -3,6 +3,11 @@
 #Program name code by $NAME
 #under the program name (empty lines do not count), the option are symbolized by key=value (ex -n=5) or key alone (ex m)
 
+#radseq from stacks to demultiplex
+$radseq
+-e=apeKI
+
+
 #first program config
 $cutadapt
 -e=0.1
