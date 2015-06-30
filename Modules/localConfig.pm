@@ -37,7 +37,7 @@ use warnings;
 use Exporter;
 
 our @ISA=qw(Exporter);
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount);
+our @EXPORT=qw($radseq $bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount);
 
 #toggle path
 our $toggle="/path/to/toggle";
@@ -51,6 +51,7 @@ our $picard = "$java /path/to/picard-tools-1.130";
 our $samtools = "/path/to/samtools_1.2";
 our $GATK = "/path/to/java -Xmx12g -jar /path/to/GenomeAnalysisTK-3.3/GenomeAnalysisTK.jar";
 our $fastqc = "/path/to/FastQC/fastqc";
+our $radseq = "/path/to/stacks/radseq/";
 
 #Path for CutAdapt
 our $cutadapt = "/path/to/cutadapt-1.8/bin/cutadapt";
