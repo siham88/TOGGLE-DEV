@@ -93,23 +93,18 @@ sub splitKeyFile
 				toolbox::exportLog("ERROR: radseq::splitKeyFile : The Keyfile lane $lane on line $comp is not numeric for file $keyFile ! \n",0);
 				exit;
 			}
-			
-			my $newline="$flowcell\t$lane\t$barcode\t$DNASample\n";
-
-			
+						
 			$outputFileName ="$dirOut/barcode_run01_lane$lane.txt";
 			##DEBUG print "$outputFileName\n";
-			#open (LANEFILE, ">>",$outputFileName) or toolbox::exportLog("ERROR: radseq::splitKeyFile : Can't open the file $outputFileName!\n",0);
-			open LANEFILE, ">>$outputFileName" or toolbox::exportLog("ERROR: radseq::splitKeyFile : Can't open the file $outputFileName!\n",0);
-			#print LANEFILE $newline;
-			 
+			open(LANEFILE, ">>",$outputFileName) or toolbox::exportLog("ERROR: radseq::splitKeyFile : Can't open the file $outputFileName $!\n",0);
+			print LANEFILE $barcode."\t".$DNASample."\n";
+						 
 			push (@barcodeList, $outputFileName) if !($outputFileName ~~ @barcodeList);  # push in a array the files created after split key file.  
 		}
 		
 	}
 	close LANEFILE;
 	close KEYFILE;
-	
 	return @barcodeList;
 }
 
@@ -198,66 +193,47 @@ sub processRadtags
 	my ($keyFile,$initialDir,$options, $outDir)=@_;
 	
 	toolbox::exportLog("INFOS: radseq::processRadtags : running\n", 1);
-	##toolbox::checkFormatFastq();
-    	##1. Vérifier si les fichiers fastq sont des fastq. => fait dans globalanalysis PAS NECESSAIRE.
-		##2. Vérifier si les fichiers fastq sont décompresses ou pas (bool $zp). => sub checkGz ( ) => voir si gautier l'a fait (pour l'instant tester avec donner décompressé)
-		
-		##3. ok Vérifier la conformité du fichier keyFile. => sub checkKeyFile ( $keyFile ) SEB
-		##4. ok Splitter le fichier keyFile (par lane) et ajouter le sous-fichier generé au barcodeDirectory. sub splitKeyFile ( $keyFile ) SEB
-	my @barcodeList = radseq::splitKeyFile($keyFile, $outDir);
+	my @barcodeList = radseq::splitKeyFile($keyFile, $outDir); # Verify the conformity of keyFile and split le file by lane
 	#print Dumper @barcodeList;
 		
-		##5. Créer un dossier par lane $LaneDirectory et repartir les fichiers fastq dans le dossier correspondant. => sub treatmentDirectoryGBS ($directory) JULIE
-	my @laneDirectories=radseq::parseDirectory($initialDir);
-	my @laneDirectoriesOK;
-	#print Dumper @laneDirectories;
-		
-		##6. Pour chaque laneDirectory, vérifier si les fichiers sont en PE ou en Single ($infoPE) => réutiliser la sub pairReconition () mais ajouter le traitement des fichiers compressés ou faire une nouvelle sub pairReconitionGz ( ). 	
-	for my $barcode (0 .. $#barcodeList)
+	my @laneDirectories=radseq::parseDirectory($initialDir);	#make a directory by lane and distribute fastq files in the laneDirectory. 
+			
+	for my $barcode (0 .. $#barcodeList) 						#Iteration of each barcode file name
 		{
 			my $bc = $barcodeList[$barcode];
-			#print "$bc\n";
-			if ($bc=~m/.+(lane[0-9]).txt$/)
+			if ($bc=~m/.+(lane[0-9]).txt$/)						#finding the lane number in barcode (keyFile splitted)
 			{
 				my $bc=$1;
-				for my $directory (0 .. $#laneDirectories)
+				for my $directory (0 .. $#laneDirectories)		#Iteration of each directory (with fastq files)
 				{
-					my $dr = $laneDirectories[$directory];
-					if ($dr=~m/.+(lane[0-9])$/)
+					my $dr = $laneDirectories[$directory];		
+					if ($dr=~m/.+(lane[0-9])$/)					#finding the lane number in laneDirectory name
 					{
 						$dr=$1;
 						if ($dr eq $bc)
 						{
-							##7. Faire tourner radseq. => sub processRadseq ($optionsRadseqSofwareConfig $keyFileLane, $laneDirectory, $infoPE, $zp) JULIE
-							my $cmd_line = "$radseq -p $laneDirectories[$directory] -o $outDir -b $barcodeList[$barcode] $options -i fastq";
-							print "COMMANDE : \n";
-							print "$cmd_line\n\n";
+							my $cmd_line = "$radseq -p $laneDirectories[$directory] -o $outDir -b $barcodeList[$barcode] $options -i fastq"; 		# running radseq
+							#DEBUG print "COMMANDE : \n$cmd_line\n";							
 							
-							push (@laneDirectoriesOK, ($laneDirectories[$directory]) );
-							##/usr/local/stacks-1.29/bin/process_radtags -p ../radseq/radseqInput/lane5/ -o ../radseq/outputRadseq/ -b ../radseq/radseqInput/barcode/barcode_run01_lane5.txt -e apeKI -i fastq
-							
-							#if(toolbox::run($cmd_line)==1)		## if the command has been excuted correctly, export the log
-							#{
-							#   toolbox::exportLog("INFOS: radseq::processRadtags : correctly done\n",1);
-							#   return 1;
-							#}
-							#else
-							#{
-							#   toolbox::exportLog("ERROR: radseq::processRadtags : ABORTED\n",0);
-							#}
+							if(toolbox::run($cmd_line)==1)		## if the command has been excuted correctly, export the log
+							{
+							   toolbox::exportLog("INFOS: radseq::processRadtags : correctly done\n",1);						   	
+							}
+							else								## else erreur
+							{
+							   toolbox::exportLog("ERROR: radseq::processRadtags : ABORTED\n",0);
+							}
 						}	
 					}	
 				}	
 			}
 		}
 		
-	return @laneDirectoriesOK;
+	return $outDir;
 }
 ################################################################################################
 # END sub radseq::processRadtags
 ################################################################################################
-
-
 
 1;
 
