@@ -119,12 +119,10 @@ toolbox::checkFile($keyFile);                                                   
 toolbox::checkFile($fileAdaptator);                                                         # check if adaptator file exists
 
 #radseq::splitKeyFile($keyFile, $outDir);
-my @laneDirectoriesOK=radseq::processRadtags($keyFile,$initialDir,$options, $outDir);       # run radseq::processRadtags
-print Dumper @laneDirectoriesOK;
+$outDir=radseq::processRadtags($keyFile,$initialDir,$options, $outDir);       # run radseq::processRadtags
+print "Directory $outDir contains demultiplexed fastq to run globalanalysisSGE\n";
 
-#for my $i (0 .. $#laneDirectoriesOK)                                                       # foreach directory run globalAnalysisSGE.pl 
-#{
-#  print "$laneDirectoriesOK[$i]\n";
-#}
+#lancer globalAnalysisSGE a partir du dossier $outDir
+
 
 
