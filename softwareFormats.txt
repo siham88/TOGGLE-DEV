@@ -1,0 +1,18 @@
+$bwaSampe
+IN=fastq
+OUT=sam
+FUNCTION=bwaSampeBlock.txt
+
+$samtools sort
+IN=bam
+OUT=bam
+
+$samtools view
+IN=sam,bam
+OUT=sam,bam
+
+$fastqc
+IN=fastq,bam
+OUT=NA
+
+

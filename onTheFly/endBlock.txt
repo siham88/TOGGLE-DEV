@@ -1,0 +1,3 @@
+print "\nLast block\n";
+
+exit;
