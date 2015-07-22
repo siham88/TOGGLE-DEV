@@ -1,4 +1,4 @@
-#!/opt/perl-5.16.2/bin/perl
+#!/usr/bin/env perl
 
 
 ###################################################################################################################################
@@ -47,6 +47,7 @@ use warnings;
 use lib qw(./Modules);
 use localConfig;
 use Data::Dumper;
+use Switch;
 
 
 use bwa;
@@ -94,6 +95,8 @@ my $initialDir = $param{'-d'};                                                # 
 my $fileConf = $param{'-c'};                                                                                # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};                                                                               # recovery of the reference file
 toolbox::existsDir($initialDir);                                                                            # check if this directory exists                                                                          # recovery of the reference file
+my $fileList = toolbox::readDir($initialDir);                                   #recovery of the list of files in the initial dir
+
 
 
 
@@ -116,7 +119,38 @@ chomp $indivName;
 
 my $logFile=$indivName."_Global"."_log";
 open (LOG, ">",$logFile) or die ("ERROR: $0 : Cannot open the file $logFile\n$!\n");
-print LOG "#########################################\nINFOS: Paired sequences analysis started\n#########################################\n\n";
+print LOG "#########################################\nINFOS: TOGGLE will start\n#########################################\n\n";
 
 toolbox::checkFile($fileConf);                                                                              # check if this file exists
 toolbox::checkFile($refFastaFile);                                                                          # check if the reference file exists
+
+my $hashConf=toolbox::readFileConf($fileConf);
+
+my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
+
+my @dirList; #List that will contain in order the different step directories
+foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
+{
+  my $directory = $initialDir."/".$position."_".$$hashOrder{$position};
+  $directory =~ s/ /_/g; #Removing the spaces
+  toolbox::makeDir($directory); # Create the folder associated with each steps
+  push (@dirList,$directory); # Adding the newly created folder to the list of folders
+}
+
+#Switch and populating variable
+
+my ($fastq1,$fastq2,$sam,$bam,$vcf);
+
+
+switch (1)
+{
+  case (scalar @$fileList == 2 && $$fileList[0] =~ m/[fastq|fq]$/ && $$fileList[1] =~ m/[fastq|fq]$/) {$fastq1=$$fileList[0];$fastq2=$$fileList[1]; print "\nPaired fastq files"} #Two paired fastq files
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/[fastq|fq]$/) {$fastq1=$$fileList[0]; print "\nSingle fastq file"} # Single fastq file
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/sam$/) {$sam=$$fileList[0]; print "\nSingle SAM file"} # single SAM file
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/bam$/) {$bam = $$fileList[0]; print "\nSingle BAM file"} # single BAM file
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf$/) {$vcf = $$fileList[0]; print "\nSingle VCF file"} #single VCF file
+  case (scalar @$fileList > 2 && $$fileList[0] =~ m/[sam|bam|vcf]$/) {print "Multiple files, steps higher than 1000"} #multiple file for the case of step higher than 1000
+  else { toolbox::exportLog("ERROR: The input files are not in a format usable by TOGGLE, or the directory $initialDir is empty",0); }
+  
+}
+
