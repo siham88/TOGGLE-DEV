@@ -36,6 +36,7 @@ package onTheFly;
 use strict;
 use warnings;
 use Data::Dumper;
+use List::Compare;
 
 use lib qw(.);
 use localConfig;
@@ -124,6 +125,7 @@ sub generateScript
     foreach my $step (sort {$a<=> $b} keys %{$hashOrder})
     {
         my $currentSoft=$$hashOrder{$step}; #Picking up the step name
+        $currentSoft =~ s/ /_/g; #Removing extraspace
         $catCommand .= " ".$toggle."/onTheFly/".$currentSoft."Block.txt"; #Adding the code block for the corresponding step in the cat command, as all txt files with these blocks are name as softBlock.txt
 	
     }

@@ -70,3 +70,10 @@ VALIDATION_STRINGENCY=SILENT
 
 $picardTools sortsam single
 SORT_ORDER=coordinate
+
+
+
+$order
+1=bwaSampe
+2=samtools view
+3=samtools sort
