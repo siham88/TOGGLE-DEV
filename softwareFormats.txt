@@ -1,7 +1,6 @@
 $bwaSampe
 IN=fastq
 OUT=sam
-FUNCTION=bwaSampeBlock.txt
 
 $samtools sort
 IN=bam

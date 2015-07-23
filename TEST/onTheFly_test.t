@@ -31,6 +31,7 @@ use onTheFly;
 #######################################
 #Creating the IndividuSoft.txt file
 #######################################
+#system("mkdir LOGS");
 my $creatingCommand="echo \"onTheFly\nTEST\" > individuSoft.txt";
 system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
 
