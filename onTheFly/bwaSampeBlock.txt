@@ -11,6 +11,11 @@ print LOG "INFOS: $0 : Start BWA index and aln\n";
 print F1 "BWA\n";
 $newDir = shift @dirList;                                                  # change for the bwa direcotry
 my $bwaDir = $newDir;                                                                                   # to keep the information of bwa folder for the following analysis
+
+exit;
+
+__END__
+
 ##DEBUG print LOG "CHANGE DIRECTORY TO $newDir\n";
 $softParameters = toolbox::extractHashSoft($optionref,"BWA index");                                  # recovery of specific parameters of bwa index
 bwa::bwaIndex($refFastaFile,$softParameters);                                                           # indexation of Reference sequences file

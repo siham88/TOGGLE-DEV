@@ -106,6 +106,7 @@ toolbox::existsDir($initialDir);                                                
 my @pathIndividu = toolbox::extractPath($initialDir);
 my $individu = $pathIndividu[0];
 chdir "$initialDir";
+#system("mkdir LOGS") and die "Cannot create the LOGS directory for $individu: \n$0\n";
 my $infosFile = "individuSoft.txt";
 #my $infosFile = "$pathIndividu[1]/individuSoft.txt";
 open (F1, ">",$infosFile) or die ("ERROR: $0 : Cannot open the file $infosFile\n$!\n");
@@ -124,18 +125,23 @@ toolbox::checkFile($fileConf);                                                  
 toolbox::checkFile($refFastaFile);                                                                          # check if the reference file exists
 
 
-my $previousDir = toolbox::makeDir($initialDir."/0_initialFiles");
-my $mvCommand = "mv * $previousDir/.";
+my $initialFileList = toolbox::readDir($initialDir);
 
-toolbox::run($mvCommand);
+my $previousDir = $initialDir."/0_initialFiles";
+toolbox::makeDir($previousDir);
 
-my $fileList = toolbox::readDir($previousDir);                                   #recovery of the list of files in the 0_directory dir
-
+foreach my $currentFile (@$initialFileList)
+{
+  my ($basicName) = toolbox::extractPath($currentFile);
+  next if ($basicName =~ m/individuSoft|log\.[e|o]|Global_log$/); # Passing the individuSoft file
+  my $lnCommand = "ln -s ".$currentFile." ".$previousDir."/".$basicName;
+  print $lnCommand,"\n";
+  toolbox::run($lnCommand);
+}
 
 my $hashConf=toolbox::readFileConf($fileConf);
 
 my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
-
 
 
 my @dirList; #List that will contain in order the different step directories
@@ -150,6 +156,7 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
 #Switch and populating variable
 
 my ($fastq1,$fastq2,$sam,$bam,$vcf);
+my $fileList=toolbox::readDir($previousDir);
 
 switch (1)
 {
@@ -162,5 +169,8 @@ switch (1)
   else { toolbox::exportLog("ERROR: The input files are not in a format usable by TOGGLE",0); } # Not the good formats
   
 }
+
+my $newDir;
+
 
 
