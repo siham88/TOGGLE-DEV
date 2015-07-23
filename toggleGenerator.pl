@@ -3,7 +3,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2015 IRD-CIRAD
+# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@ use Data::Dumper;
 
 use pairing;
 use toolbox;
+use onTheFly;
 
 
 
@@ -69,7 +70,7 @@ if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param
 {
   print <<"Mesg";
 
-  ERROR: Parameters -d or -c or -r are required.
+  ERROR: Parameters -d and -c and -r are required.
   perldoc $nomprog display the help
 
 Mesg
@@ -83,9 +84,6 @@ Mesg
 my $initialDir = $param{'-d'};                                                # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};                                                                                # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};                                                                            # recovery of the reference file
-
-my $fileAdaptator = defined($param{'-a'})? $param{'-a'} : "$toggle/adaptator.txt";                          # recovery of the adaptator file
-
 
 my $infosFile = "individuSoft.txt";
 
@@ -112,4 +110,15 @@ toolbox::checkFile($fileConf);                                                  
 toolbox::existsDir($initialDir);                                                                            # check if this directory exists
 toolbox::checkFile($refFastaFile);
 
+#Retriving the configuration
+
+my $configInfo=toolbox::readFileConf($fileConf);
+
+
+#Verifying the correct ordering for the experiment, based on input output files
+onTheFly::checkOrder($configInfo);
+
+#Generation of Index required for the analysis to work (on the reference only)
+
+onTheFly::indexCreator($configInfo,$refFastaFile);
 

@@ -11,7 +11,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2015 IRD-CIRAD
+# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ my %param = @ARGV;                                                              
 if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}))
 {
   print <<"Mesg";
-  ERROR: Parameters -d or -c or -r are required.
+  ERROR: Parameters -d and -c and -r are required.
   perldoc $nomprog display the help
 Mesg
   exit;

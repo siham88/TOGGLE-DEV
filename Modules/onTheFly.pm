@@ -41,6 +41,7 @@ use List::Compare;
 use lib qw(.);
 use localConfig;
 use toolbox;
+use bwa;
 
 ################################################################################################
 # sub checkOrder =>  Will verify the order of the softwares in the pipeline 
@@ -111,6 +112,7 @@ sub checkOrder
 ################################################################################################
 # arguments :
 # 	- hash of complete configuration
+#       - script name
 ################################################################################################
 sub generateScript
 {
@@ -146,6 +148,47 @@ sub generateScript
         return 0;
     }
 }
+
+################################################################################################
+# sub indexCreator =>  will create the different index on the reference needed for the analysis
+################################################################################################
+# arguments :
+# 	- hash of complete configuration
+#       - reference file
+################################################################################################
+
+sub indexCreator
+{
+    my ($hashConf,$reference)=@_;
+    my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
+    
+    my @listConfig = keys %{$hashConf}; #Picking up all softwares with any option declared
+    
+    foreach my $step (sort {$a <=> $b}  keys %{$hashOrder})
+    {
+        my $currentSoft = $$hashOrder{$step};
+        
+        if ($currentSoft =~ m/bwa/i) #Any step involving BWA
+        {
+            if ($currentSoft =~ m/(bwa\s?index)/i) # If the index is expressely asked
+            {
+                my $softParameters = toolbox::extractHashSoft($hashConf,$1);                                  # recovery of specific parameters of bwa index
+                bwa::bwaIndex($reference,$softParameters);
+            }
+            else
+            {
+                my $refIndexedFile = $reference.".ann";
+                next if (toolbox::existsFile($refIndexedFile)); # The index is already created
+                my $softParameters = toolbox::extractHashSoft($hashConf,$1);                                  # recovery of specific parameters of bwa index
+                bwa::bwaIndex($reference,$softParameters);
+            }
+        }
+    }
+    
+    
+    return 1;
+}
+
 
 1;
 
