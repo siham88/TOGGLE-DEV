@@ -66,11 +66,11 @@ Mesg
 }
 
 my %param = @ARGV;                                                                                          # get the parameters 
-if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}))
+if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}) or not defined ($param{'-o'}))
 {
   print <<"Mesg";
 
-  ERROR: Parameters -d and -c and -r are required.
+  ERROR: Parameters -d and -c and -r and -o are required.
   perldoc $nomprog display the help
 
 Mesg
@@ -81,9 +81,23 @@ Mesg
 ##########################################
 # recovery of initial informations/files
 ##########################################
-my $initialDir = $param{'-d'};                                                # recovery of the name of the directory to analyse
-my $fileConf = $param{'-c'};                                                                                # recovery of the name of the software.configuration.txt file
-my $refFastaFile = $param{'-r'};                                                                            # recovery of the reference file
+my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
+my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
+my $refFastaFile = $param{'-r'};      # recovery of the reference file
+my $outputDir = $param{'-o'};      # recovery of the output folder
+
+##########################################
+# Creation of the output folder
+##########################################
+
+if (not -d $outputDir) #The output folder is not existing yet
+{
+    #creating the folder
+    my $createOutputDirCommand = "mkdir -p $outputDir";
+    system ("$createOutputDirCommand") and die ("\n$0 cannot create the output folder $outputDir: $!\nExiting...\n");
+}
+
+chdir $outputDir;
 
 my $infosFile = "individuSoft.txt";
 
@@ -96,21 +110,20 @@ $min = $min < 10 ? $min = "0".$min : $min;
 $an+=1900;
 my $date="$mois_jour-$mois-$an-$h"."_"."$min";
 
+
 #my $infosFile = "$pathIndividu[1]/individuSoft.txt";
 open (F1, ">",$infosFile) or die ("$0 : open error of $infosFile .... $!\n");
 print F1 "GLOBAL\n";
 print F1 "ANALYSIS_$date\n";
 
-
 toolbox::exportLog("#########################################\nINFOS: Global analysis \n#########################################\n",1);
 toolbox::exportLog("----------------------------------------",1);
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
+toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
 toolbox::exportLog("----------------------------------------",1);
-toolbox::checkFile($fileConf);                                                                              # check if this file exists
-toolbox::existsDir($initialDir);                                                                            # check if this directory exists
-toolbox::checkFile($refFastaFile);
-
-#Retriving the configuration
+toolbox::checkFile($fileConf);                              # check if this file exists
+toolbox::existsDir($initialDir);                            # check if this directory exists
+toolbox::checkFile($refFastaFile);                          #Retriving the configuration
 
 my $configInfo=toolbox::readFileConf($fileConf);
 
@@ -119,6 +132,89 @@ my $configInfo=toolbox::readFileConf($fileConf);
 onTheFly::checkOrder($configInfo);
 
 #Generation of Index required for the analysis to work (on the reference only)
-
+toolbox::exportLog("#########################################\nINFOS: Generating reference index requested \n#########################################\n",1);
+toolbox::exportLog("----------------------------------------",1);
 onTheFly::indexCreator($configInfo,$refFastaFile);
 
+#Generate script
+
+my $script = "toggleBzz.pl";
+
+onTheFly::generateScript($configInfo,$script);
+
+
+##########################################
+# Transferring data in the output folder and organizing
+#########################################
+
+my $loop = 0;                       # for the second loop
+
+my $listOfFiles = toolbox::readDir($initialDir);           # read it to recover files in it
+##DEBUG toolbox::exportLog("INFOS toolbox ReadDir: @$listOfFiles\n",1);
+my @listOfFiles = @$listOfFiles;
+
+#########################################
+# check if initial directory contain folder or not
+#########################################
+
+#Linking the original data to the output dir
+my $initialDirContent=toolbox::readDir($initialDir);
+
+my $workingDir = $outputDir."/Results";
+toolbox::makeDir($workingDir);
+
+foreach my $file (@{$initialDirContent})
+{
+    my ($shortName)=toolbox::extractPath($file);
+    my $lnCommand = "ln -s $file $workingDir/$shortName";
+    ##DEBUG print $lnCommand,"\n";
+    
+    if(toolbox::run($lnCommand)==1)       #Execute command
+    {
+        toolbox::exportLog("INFOS: $0 : Transferring $file to $workingDir\n",1);
+    }
+}
+toolbox::exportLog("----------------------------------------",1);
+
+my $folder = toolbox::checkInitialDirContent($workingDir);
+
+
+if ($folder == 0)               # if folder = 0, it's mean that there is only files in initial directory
+{
+    #########################################
+    # recognition of pairs of files and create a folder for each pair
+    #########################################
+    my $pairsInfos = pairing::pairRecognition($workingDir);            # from files fasta recognition of paired files
+    pairing::createDirPerCouple($pairsInfos,$workingDir);              # from infos of pairs, construction of the pair folder
+    
+    $listOfFiles = toolbox::readDir($workingDir);                     # read it to recover files in it
+    toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
+    @listOfFiles = @$listOfFiles;
+    
+}
+else
+{
+    my @listOfFolder = @$folder;                                                                            # if contain folder, recovery if the list of them in this table
+}
+
+
+#exit;
+
+#########################################
+# Launching the generated script on all subfolders
+#########################################
+
+my $listSamples=toolbox::readDir($workingDir);
+
+foreach my $currentDir(@{$listSamples})
+{
+    next unless $currentDir =~ m/:$/; # Will work only on folders
+    $currentDir =~ s/:$//;
+    my $launcherCommand="$script -d $currentDir -c $fileConf -r $refFastaFile";
+
+    if(toolbox::run($launcherCommand)==1)       #Execute command
+    {
+        toolbox::exportLog("INFOS: $0 : Correctly launched $script\n",1);
+    }
+}
+exit;

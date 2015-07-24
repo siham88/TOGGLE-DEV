@@ -97,9 +97,6 @@ my $refFastaFile = $param{'-r'};                                                
 toolbox::existsDir($initialDir);                                                                            # check if this directory exists                                                                          # recovery of the reference file
 
 
-
-
-
 ##########################################
 # Creation of IndividuSoft.txt for creation of logs files later
 ##########################################
@@ -134,14 +131,13 @@ foreach my $currentFile (@$initialFileList)
 {
   my ($basicName) = toolbox::extractPath($currentFile);
   next if ($basicName =~ m/individuSoft|log\.[e|o]|Global_log$/); # Passing the individuSoft file
-  my $lnCommand = "ln -s ".$currentFile." ".$previousDir."/".$basicName;
-  print $lnCommand,"\n";
-  toolbox::run($lnCommand);
+  my $mvCommand = "mv ".$currentFile." ".$previousDir."/".$basicName;
+  print $mvCommand,"\n";
+  toolbox::run($mvCommand);
 }
+my $optionRef=toolbox::readFileConf($fileConf);
 
-my $hashConf=toolbox::readFileConf($fileConf);
-
-my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
+my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the options for the order of the pipeline
 
 
 my @dirList; #List that will contain in order the different step directories
@@ -153,8 +149,14 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
   push (@dirList,$directory); # Adding the newly created folder to the list of folders
 }
 
+
 #Switch and populating variable
 
+#Standard variables
+
+my ($softParameters, $newDir);
+
+#Variable variables
 my ($fastq1,$fastq2,$sam,$bam,$vcf);
 my $fileList=toolbox::readDir($previousDir);
 
@@ -170,7 +172,6 @@ switch (1)
   
 }
 
-my $newDir;
 
 
 

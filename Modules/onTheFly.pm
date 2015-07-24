@@ -95,7 +95,7 @@ sub checkOrder
 	unless (scalar (@intersection)) #No element are Ok...
 	{
 	    #Print Error
-	    toolbox::exportLog("ERROR: onTheFly::checkOrder : The $previousSoft outputs are not compatible with the $currentSoft inputs.\nPlease check your pipeline order.\n",0);
+	    toolbox::exportLog("ERROR: onTheFly::checkOrder : The $previousSoft outputs ($previousFormat) are not compatible with the $currentSoft inputs ($currentFormat).\nPlease check your pipeline order.\n",0);
 	}
 
 	#Preparing for the next round
@@ -103,7 +103,7 @@ sub checkOrder
 	next if ($$hashInOut{$currentSoft}{"OUT"} eq "NA"); #for a brick such as FastQC which is a 'dead-end'
 	
 	$previousSoft=$currentSoft;
-	$previousFormat=$currentFormat;
+	$previousFormat=$$hashInOut{$currentSoft}{"OUT"};
 
     }
     return 1;

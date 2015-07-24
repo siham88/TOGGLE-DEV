@@ -74,6 +74,7 @@ SORT_ORDER=coordinate
 
 
 $order
-1=bwaSampe
-2=samtools view
-3=samtools sort
+1=bwaAln
+2=bwaSampe
+3=samtoolsView
+4=samtoolsSort

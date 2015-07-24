@@ -1,0 +1,25 @@
+##############################################
+# Block for bwa::bwaAln
+##############################################
+
+# A FAIRE SUR TOUT LES FICHIERS
+$fileList = toolbox::readDir($previousDir);
+$newDir = shift @dirList; #Picking up the current working directory
+##DEBUG print LOG "INFOS toolbox ReadDir: @$repairingList\n";
+my @fileList = @$fileList;
+for (my $i=0; $i<=$#fileList; $i++)
+{
+    ##########################################
+    # bwa::bwaAln
+    ##########################################
+    $softParameters = toolbox::extractHashSoft($optionRef,"bwaAln");                                       # recovery of specific parameters of bwa aln
+    my $fileWithoutExtention = toolbox::extractName($fileList[$i]);                                         # extract name of file without the extention
+    my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                   # name for the output file of bwa aln
+    bwa::bwaAln($refFastaFile,$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
+}
+
+$previousDir = $newDir;
+
+exit;
+
+__END__
