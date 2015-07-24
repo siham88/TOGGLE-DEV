@@ -144,9 +144,9 @@ is (onTheFly::checkOrder($hashOrderMultiple),'1','Test for correct pipeline with
 #Adding a configHash
 my $hashConf =   {
                         "order"=>   {
-                                        "1" => "bwaSampe",
-                                        "2" => "samtools view",
-                                        "3" => "samtools sort"
+                                        "1" => "bwaAln",
+                                        "2" => "bwaSampe",
+                                        "3" => "samtools view"
                                     }
                     };
 is (onTheFly::generateScript($hashConf,"$testingDir/ToggleBzzz.pl"),'1','Test for correct pipeline onTheFly::generateScript');
