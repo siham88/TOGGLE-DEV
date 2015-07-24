@@ -42,6 +42,8 @@ use lib qw(.);
 use localConfig;
 use toolbox;
 use bwa;
+use samTools;
+use picardTools;
 
 ################################################################################################
 # sub checkOrder =>  Will verify the order of the softwares in the pipeline 
@@ -179,7 +181,11 @@ sub indexCreator
             else #We check if the index is present or not
             {
                 my $refIndexedFile = $reference.".ann";
-                next if (toolbox::existsFile($refIndexedFile)); # The index is already created
+                if (-e $refIndexedFile)
+                {# The index is already created
+                    toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for bwa index already exists, skipped...\n",1);
+                    next;
+                }
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bwaIndex");                                  # recovery of specific parameters of bwa index
                 bwa::bwaIndex($reference,$softParameters);
             }
@@ -198,9 +204,16 @@ sub indexCreator
             }
             else #We check if the dict is present or not
             {
-                next if (toolbox::existsFile($dictFileOut)); # The index is already created
-                my $softParameters = toolbox::extractHashSoft($hashConf,"picardToolsCreateSequenceDictionary");# recovery of specific parameters of picardToolsCreateSequenceDictionary
-                picardTools::picardToolsCreateSequenceDictionary($reference,$dictFileOut,$softParameters);
+                if (-e $dictFileOut)
+                {# The index is already created
+                    toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for picardTools CreateSequenceDictionary already exists, skipped...\n",1);
+            
+                }
+                else
+                {
+                    my $softParameters = toolbox::extractHashSoft($hashConf,"picardToolsCreateSequenceDictionary");# recovery of specific parameters of picardToolsCreateSequenceDictionary
+                    picardTools::picardToolsCreateSequenceDictionary($reference,$dictFileOut,$softParameters);
+                }
             }
         }
         
@@ -215,9 +228,18 @@ sub indexCreator
             else #We check if the dict is present or not
             {
                 my $indexFileOut=$reference.".fai";
-                next if (toolbox::existsFile($indexFileOut)); # The index is already created
-                my $softParameters = toolbox::extractHashSoft($hashConf,"samToolsFaidx");# recovery of specific parameters of samToolsFaidx
-                samTools::samToolsFaidx($reference);
+                ##DEBUG print $reference,"--",$indexFileOut,"\n";
+                if (-e $indexFileOut)
+                {# The index is already created
+                    toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for samtools faidx already exists, skipped...\n",1);
+                    ##DEBUG print "skipped faidx\n";
+                }
+                else
+                {                
+                    ##DEBUG print "samtools faidx\n";
+                    my $softParameters = toolbox::extractHashSoft($hashConf,"samToolsFaidx");# recovery of specific parameters of samToolsFaidx
+                    samTools::samToolsFaidx($reference);
+                }
             }
         }
     }

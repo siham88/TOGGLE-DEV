@@ -24,6 +24,7 @@ my $configFile='software.config.txt';
 use_ok('onTheFly');
 can_ok('onTheFly','checkOrder');
 can_ok('onTheFly','generateScript');
+can_ok('onTheFly','indexCreator');
 
 use onTheFly;
 
@@ -56,6 +57,15 @@ system ("rm -Rf $testingDir") and die ("ERROR: $0 : Cannot remove the previous t
 ########################################
 my $makeDirCom = "mkdir $testingDir";
 system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
+
+########################################
+#Creation of test files
+########################################
+my $originalFastaRef="../DATA/expectedData/Reference.fasta";
+my $fastaRef="$testingDir/Reference.fasta";
+my $refCopyCom="cp $originalFastaRef $fastaRef";
+system($refCopyCom) and die ("ERROR: $0 : Cannot copy the Reference for test with the command $refCopyCom \n$!\n");
+  #Now we have a ref to be tested
 
 ########################################
 #checkOrder test
@@ -141,3 +151,30 @@ my $hashConf =   {
                     };
 is (onTheFly::generateScript($hashConf,"$testingDir/ToggleBzzz.pl"),'1','Test for correct pipeline onTheFly::generateScript');
 
+########################################
+#indexCreator test
+#######################################
+
+#testing the correct rendering
+#Adding a configHash
+$hashConf =   {
+                        "order"=>   {
+                                        "1" => "bwaSampe",
+                                        "2" => "gatkHaplotypeCaller",
+                                        "3" => "samtools sort"
+                                    }
+                    };
+is (onTheFly::indexCreator($hashConf,$fastaRef),'1','Test for correct onTheFly::indexCreator running');
+
+#Testing if creating in case of existing refs.
+is (onTheFly::indexCreator($hashConf,$fastaRef),'1','Test for not recreating the ref index for onTheFly::indexCreator running');
+
+#Testing fro re-creating forced of index
+$hashConf =   {
+                        "order"=>   {
+                                        "1" => "bwaSampe",
+                                        "2" => "gatkHaplotypeCaller",
+                                        "3" => "bwaIndex"
+                                    }
+                    };
+is (onTheFly::indexCreator($hashConf,$fastaRef),'1','Test for forced recreating the ref index for onTheFly::indexCreator running');
