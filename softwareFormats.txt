@@ -1,12 +1,16 @@
-$bwaSampe
+$bwaAln
 IN=fastq
+OUT=sai
+
+$bwaSampe
+IN=fastq,sai
 OUT=sam
 
-$samtools sort
+$samtoolsSort
 IN=bam
 OUT=bam
 
-$samtools view
+$samtoolsView
 IN=sam,bam
 OUT=sam,bam
 
