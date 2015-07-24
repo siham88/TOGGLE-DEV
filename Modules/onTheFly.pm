@@ -168,19 +168,56 @@ sub indexCreator
     {
         my $currentSoft = $$hashOrder{$step};
         
+        #INDEXING for BWA
         if ($currentSoft =~ m/bwa/i) #Any step involving BWA
         {
-            if ($currentSoft =~ m/(bwa\s?index)/i) # If the index is expressely asked
+            if ($currentSoft eq "bwaIndex") # If the index is expressely asked
             {
-                my $softParameters = toolbox::extractHashSoft($hashConf,$1);                                  # recovery of specific parameters of bwa index
+                my $softParameters = toolbox::extractHashSoft($hashConf,"bwaIndex");                                  # recovery of specific parameters of bwa index
                 bwa::bwaIndex($reference,$softParameters);
             }
-            else
+            else #We check if the index is present or not
             {
                 my $refIndexedFile = $reference.".ann";
                 next if (toolbox::existsFile($refIndexedFile)); # The index is already created
-                my $softParameters = toolbox::extractHashSoft($hashConf,$1);                                  # recovery of specific parameters of bwa index
+                my $softParameters = toolbox::extractHashSoft($hashConf,"bwaIndex");                                  # recovery of specific parameters of bwa index
                 bwa::bwaIndex($reference,$softParameters);
+            }
+        }
+        #INDEXING for PICARDTOOLS
+        if ($currentSoft eq "picardToolsCreateSequenceDictionary" or $currentSoft =~ m/gatk/i) #Any step involving GATK
+        {
+            my $dictFileOut=$reference;   # name of dictionary file    
+            $dictFileOut =~ s/\.[^\.]*$/.dict/;
+            if ($currentSoft eq "picardToolsCreateSequenceDictionary")
+            {
+                my $softParameters = toolbox::extractHashSoft($hashConf,"picardToolsCreateSequenceDictionary"); # recovery of specific parameters of picardToolsCreateSequenceDictionary
+                my $rmCommand = "rm -f $dictFileOut";
+                toolbox::run($rmCommand); #Removing of any existing previous dictionary
+                picardTools::picardToolsCreateSequenceDictionary($reference,$dictFileOut,$softParameters);
+            }
+            else #We check if the dict is present or not
+            {
+                next if (toolbox::existsFile($dictFileOut)); # The index is already created
+                my $softParameters = toolbox::extractHashSoft($hashConf,"picardToolsCreateSequenceDictionary");# recovery of specific parameters of picardToolsCreateSequenceDictionary
+                picardTools::picardToolsCreateSequenceDictionary($reference,$dictFileOut,$softParameters);
+            }
+        }
+        
+        #INDEXING for SAMTOOLS
+        if ($currentSoft eq "samToolsFaidx" or $currentSoft =~ m/gatk/i) #Any step involving GATK
+        {
+            if ($currentSoft eq "samToolsFaidx")
+            {
+                my $softParameters = toolbox::extractHashSoft($hashConf,"samToolsFaidx"); # recovery of specific parameters of samToolsFaidx
+                samTools::samToolsFaidx($reference);
+            }
+            else #We check if the dict is present or not
+            {
+                my $indexFileOut=$reference.".fai";
+                next if (toolbox::existsFile($indexFileOut)); # The index is already created
+                my $softParameters = toolbox::extractHashSoft($hashConf,"samToolsFaidx");# recovery of specific parameters of samToolsFaidx
+                samTools::samToolsFaidx($reference);
             }
         }
     }
