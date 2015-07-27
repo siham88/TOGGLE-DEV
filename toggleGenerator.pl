@@ -128,8 +128,8 @@ toolbox::checkFile($refFastaFile);                          #Retriving the confi
 my $configInfo=toolbox::readFileConf($fileConf);
 
 
-#Verifying the correct ordering for the experiment, based on input output files
-onTheFly::checkOrder($configInfo);
+#Verifying the correct ordering for the experiment, based on input output files and recovering the last step value
+my $lastStep = onTheFly::checkOrder($configInfo);
 
 #Generation of Index required for the analysis to work (on the reference only)
 toolbox::exportLog("#########################################\nINFOS: Generating reference index requested \n#########################################\n",1);
@@ -200,7 +200,7 @@ foreach my $file (@{$initialDirContent})
 toolbox::exportLog("----------------------------------------",1);
 
 
-if ($previousExtension eq "fastq")               # if folder = 0, it's mean that there is only files in initial directory
+if ($previousExtension eq "fastq")               # the data are all in FASTQ format
 {
     #########################################
     # recognition of pairs of files and create a folder for each pair
@@ -212,6 +212,10 @@ if ($previousExtension eq "fastq")               # if folder = 0, it's mean that
     toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
     
 }
+
+#Other Data are not always treated singlely, but can work together => check if order hash steps higher than 1000 using the $lastStep value
+
+
 
 
 

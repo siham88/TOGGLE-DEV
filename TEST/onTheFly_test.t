@@ -76,13 +76,16 @@ system($refCopyCom) and die ("ERROR: $0 : Cannot copy the Reference for test wit
 my $hashOrderOk =   {
                         "order"=>   {
                                         "1" => "bwaSampe",
-                                        "2" => "samtools view",
-                                        "3" => "samtools sort"
+                                        "2" => "samtoolsView",
+                                        "3" => "samtoolsSort"
                                     }
                     };
-is (onTheFly::checkOrder($hashOrderOk),'1','Test for correct pipeline onTheFly::checkOrder');
 
-#testing the uncorrect rendering TEST Ok in dev, but die so cannot be tested...
+my @output = onTheFly::checkOrder($hashOrderOk);
+my @expected=('1','3');
+is_deeply(\@output,\@expected,'Test for correct pipeline onTheFly::checkOrder');
+
+#testi;ng the uncorrect rendering TEST Ok in dev, but die so cannot be tested...
 #Adding a configHash
 #my $hashOrderNotOk =   {
 #                        "order"=>   {
@@ -98,22 +101,27 @@ my $hashOrderNAOk =   {
                         "order"=>   {
                                         "1" => "fastqc",
                                         "2" => "bwaSampe",
-                                        "3" => "samtools view",
-                                        "4" => "samtools sort"
+                                        "3" => "samtoolsView",
+                                        "4" => "samtoolsSort"
                                     }
                     };
-is (onTheFly::checkOrder($hashOrderNAOk),'1','Test for correct pipeline with \'dead-end\' software beginning onTheFly::checkOrder');
+
+@output = onTheFly::checkOrder($hashOrderNAOk);
+@expected=('1','4');
+is_deeply(\@output,\@expected,'Test for correct pipeline with \'dead-end\' software beginning onTheFly::checkOrder');
 
 #Testing for dead-end program in the middle
 my $hashOrderNAOkBis =   {
                         "order"=>   {
                                         "3" => "fastqc",
                                         "1" => "bwaSampe",
-                                        "2" => "samtools view",
-                                        "4" => "samtools sort"
+                                        "2" => "samtoolsView",
+                                        "4" => "samtoolsSort"
                                     }
                     };
-is (onTheFly::checkOrder($hashOrderNAOkBis),'1','Test for correct pipeline with \'dead-end\' software in the middle onTheFly::checkOrder');
+@output = onTheFly::checkOrder($hashOrderNAOkBis);
+@expected=('1','4');
+is_deeply(\@output,\@expected,'Test for correct pipeline with \'dead-end\' software in the middle onTheFly::checkOrder');
 
 #testing the single program
 my $hashOrderSingle =   {
@@ -121,20 +129,23 @@ my $hashOrderSingle =   {
                                         "3" => "bwaSampe"
                                     }
                     };
-is (onTheFly::checkOrder($hashOrderSingle),'1','Test for correct pipeline with a single software onTheFly::checkOrder');
+@output = onTheFly::checkOrder($hashOrderSingle);
+@expected=('3','3');
+is_deeply(\@output,\@expected,'Test for correct pipeline with a single software onTheFly::checkOrder');
+
 
 #testing multiple call of the same program
 my $hashOrderMultiple =   {
                         "order"=>   {
                                         "1" => "bwaSampe",
-                                        "2" => "samtools view",
-                                        "3" => "samtools sort",
-                                        "4" => "samtools view"
+                                        "2" => "samtoolsView",
+                                        "3" => "samtoolsSort",
+                                        "4" => "samtoolsView"
                                     }
                     };
-is (onTheFly::checkOrder($hashOrderMultiple),'1','Test for correct pipeline with multiple call of the same software onTheFly::checkOrder');
-
-
+@output = onTheFly::checkOrder($hashOrderMultiple);
+@expected=('1','4');
+is_deeply(\@output,\@expected,'Test for correct pipeline with multiple call of the same software onTheFly::checkOrder');
 
 ########################################
 #generateScript test
@@ -146,7 +157,7 @@ my $hashConf =   {
                         "order"=>   {
                                         "1" => "bwaAln",
                                         "2" => "bwaSampe",
-                                        "3" => "samtools view"
+                                        "3" => "samtoolsView"
                                     }
                     };
 is (onTheFly::generateScript($hashConf,"$testingDir/ToggleBzzz.pl"),'1','Test for correct pipeline onTheFly::generateScript');
@@ -161,7 +172,7 @@ $hashConf =   {
                         "order"=>   {
                                         "1" => "bwaSampe",
                                         "2" => "gatkHaplotypeCaller",
-                                        "3" => "samtools sort"
+                                        "3" => "samtoolsSort"
                                     }
                     };
 is (onTheFly::indexCreator($hashConf,$fastaRef),'1','Test for correct onTheFly::indexCreator running');

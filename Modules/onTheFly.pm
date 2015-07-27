@@ -61,7 +61,7 @@ sub checkOrder
     my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt");
     
     #Verifying the coherence of input/output
-    my ($previousSoft,$previousFormat,$currentFormat);
+    my ($previousSoft,$previousFormat,$currentFormat,$initialStep,$lastStep);
     foreach my $step (sort {$a<=> $b} keys %{$hashOrder})
     {
 	my $currentSoft=$$hashOrder{$step};
@@ -71,11 +71,14 @@ sub checkOrder
 	{ 
 	    $previousFormat=$$hashInOut{$currentSoft}{"OUT"};
 	    $previousSoft=$currentSoft;
+            $initialStep=$step unless $initialStep;
+            $lastStep = $step;
 	    #print "prout\n";
 	    next;
 	}
 	elsif (!defined $previousFormat && $$hashInOut{$currentSoft}{"OUT"} eq "NA")
 	{
+            $initialStep = $step;
 	    ##DEBUG print "pas prout\n";
 	    next;
 	}
@@ -104,9 +107,12 @@ sub checkOrder
 	
 	$previousSoft=$currentSoft;
 	$previousFormat=$$hashInOut{$currentSoft}{"OUT"};
+        $lastStep = $step;
+        ##DEBUG print $lastStep,"\n";
 
     }
-    return 1;
+    ##DEBUG print $initialStep,"--",$lastStep,"\n";
+    return ($initialStep,$lastStep); #Will return the last step number
 }
 
 ################################################################################################
