@@ -129,18 +129,7 @@ my $configInfo=toolbox::readFileConf($fileConf);
 
 
 #Verifying the correct ordering for the experiment, based on input output files and recovering the last step value
-my $lastStep = onTheFly::checkOrder($configInfo);
-
-#Generation of Index required for the analysis to work (on the reference only)
-toolbox::exportLog("#########################################\nINFOS: Generating reference index requested \n#########################################\n",1);
-toolbox::exportLog("----------------------------------------",1);
-onTheFly::indexCreator($configInfo,$refFastaFile);
-
-#Generate script
-
-my $script = "toggleBzz.pl";
-
-onTheFly::generateScript($configInfo,$script);
+my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo);
 
 
 ##########################################
@@ -168,7 +157,7 @@ foreach my $file (@{$initialDirContent})
     {
         $extension = "fastq";
     }
-    if ($previousExtension == 0) #first round
+    if ($previousExtension eq "0") #first round
     {
         $previousExtension = $extension;
         next;
@@ -178,6 +167,13 @@ foreach my $file (@{$initialDirContent})
         toolbox::exportLog("ERROR : $0 : The file type in the initial directory are not homogeneous : $previousExtension and $extension are not compatible in the same analysis.\n",0);
     }
     next;
+}
+
+#Checking if the files are taken in charge by TOGGLE
+
+if ($previousExtension !~ m/fastq|vcf|sam|bam/)
+{
+    toolbox::exportLog("ERROR : $0 : The filetype $previousExtension is not taken in charge by TOGGLE\n",0);
 }
 
 
@@ -197,8 +193,8 @@ foreach my $file (@{$initialDirContent})
         toolbox::exportLog("INFOS: $0 : Transferring $file to $workingDir\n",1);
     }
 }
-toolbox::exportLog("----------------------------------------",1);
 
+my $listOfFiles = toolbox::readDir($workingDir);                     # read it to recover files in it
 
 if ($previousExtension eq "fastq")               # the data are all in FASTQ format
 {
@@ -208,18 +204,51 @@ if ($previousExtension eq "fastq")               # the data are all in FASTQ for
     my $pairsInfos = pairing::pairRecognition($workingDir);            # from files fasta recognition of paired files
     pairing::createDirPerCouple($pairsInfos,$workingDir);              # from infos of pairs, construction of the pair folder
     
-    my $listOfFiles = toolbox::readDir($workingDir);                     # read it to recover files in it
     toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
     
 }
 
 #Other Data are not always treated singlely, but can work together => check if order hash steps higher than 1000 using the $lastStep value
 
+elsif ($firstOrder<1000) #Other types of data requesting a single treatment
+{
+    #Create a directory per file
+    foreach my $file (@$listOfFiles)
+    {
+        my ($completeName)=toolbox::extractPath($file);
+        my $basicName=toolbox::extractName($completeName);
+        my $dirName=$workingDir."/".$basicName."Directory";
+        toolbox::makeDir($dirName);
+        my $mvCommand = "mv $file $dirName/$basicName";
+        if (toolbox::run($mvCommand) == 1)
+        {
+            toolbox::exportLog("INFOS : $0 : Transferring $file to $dirName\n",1);
+        }
+        
+    }
+}
 
 
+#Generation of Index required for the analysis to work (on the reference only)
+toolbox::exportLog("#########################################\nINFOS: Generating reference index requested \n#########################################\n",1);
+toolbox::exportLog("----------------------------------------",1);
+onTheFly::indexCreator($configInfo,$refFastaFile);
 
+#Generate script
 
-#exit;
+my $script = "toggleBzz.pl";
+my $hashOrder=toolbox::extractHashSoft($configInfo,"order"); #Picking up the options for the order of the pipeline
+
+my ($orderBefore1000,$orderAfter1000);
+
+foreach my $step (sort {$a <=> $b} %{$hashOrder}) #Will create two subhash for the order, to launch twice the generateScript
+{
+    
+}
+
+onTheFly::generateScript($hashOrder,$script);
+
+exit;
 
 #########################################
 # Launching the generated script on all subfolders
