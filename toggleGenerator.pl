@@ -236,35 +236,57 @@ onTheFly::indexCreator($configInfo,$refFastaFile);
 
 #Generate script
 
-my $script = "toggleBzz.pl";
+my $scriptSingle = "toggleBzz.pl";
+my $scriptMultiple = "toggleMultiple.pl";
 my $hashOrder=toolbox::extractHashSoft($configInfo,"order"); #Picking up the options for the order of the pipeline
 
 my ($orderBefore1000,$orderAfter1000);
 
-foreach my $step (sort {$a <=> $b} %{$hashOrder}) #Will create two subhash for the order, to launch twice the generateScript
+foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash for the order, to launch twice the generateScript
 {
-    
-}
-
-onTheFly::generateScript($hashOrder,$script);
-
-exit;
-
-#########################################
-# Launching the generated script on all subfolders
-#########################################
-
-my $listSamples=toolbox::readDir($workingDir);
-
-foreach my $currentDir(@{$listSamples})
-{
-    next unless $currentDir =~ m/:$/; # Will work only on folders
-    $currentDir =~ s/:$//;
-    my $launcherCommand="$script -d $currentDir -c $fileConf -r $refFastaFile";
-
-    if(toolbox::run($launcherCommand)==1)       #Execute command
+    if ($step < 1000)
     {
-        toolbox::exportLog("INFOS: $0 : Correctly launched $script\n",1);
+        $$orderBefore1000{$step}=$$hashOrder{$step};
+    }
+    else
+    {
+        $$orderAfter1000{$step}=$$hashOrder{$step};
     }
 }
+
+
+#########################################
+# Launching the generated script on all subfolders if steps lower than 1000
+#########################################
+
+if ($orderBefore1000)
+{
+    onTheFly::generateScript($orderBefore1000,$scriptSingle);
+    my $listSamples=toolbox::readDir($workingDir);
+
+    foreach my $currentDir(@{$listSamples})
+    {
+        next unless $currentDir =~ m/:$/; # Will work only on folders
+        $currentDir =~ s/:$//;
+        my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile";
+    
+        if(toolbox::run($launcherCommand)==1)       #Execute command
+        {
+            toolbox::exportLog("INFOS: $0 : Correctly launched $scriptSingle\n",1);
+        }
+    }
+}
+
+if ($orderAfter1000)
+{
+    onTheFly::generateScript($orderAfter1000,$scriptMultiple);
+
+    my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile";
+   
+    if(toolbox::run($launcherCommand)==1)       #Execute command
+    {
+        toolbox::exportLog("INFOS: $0 : Correctly launched $scriptMultiple\n",1);
+    }
+}
+
 exit;

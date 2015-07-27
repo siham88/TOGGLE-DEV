@@ -42,7 +42,7 @@ use localConfig;
 
 #Global infos
 our @ISA=qw(Exporter);
-our @EXPORT=qw($configInfos);
+#our @EXPORT=qw($configInfos);
 our $configInfos; #Config informations, ref of an hash
 
 

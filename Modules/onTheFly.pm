@@ -124,8 +124,7 @@ sub checkOrder
 ################################################################################################
 sub generateScript
 {
-    my ($hashConf,$script)=@_;
-    my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
+    my ($hashOrder,$script,$limit)=@_;
     
     #Picking up input output for each software
     my $hashSoftware=toolbox::readFileConf("$toggle/softwareFormats.txt");

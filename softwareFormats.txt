@@ -18,4 +18,6 @@ $fastqc
 IN=fastq,bam
 OUT=NA
 
-
+$gatkHaplotypeCaller
+IN=bam,vcf
+OUT=vcf

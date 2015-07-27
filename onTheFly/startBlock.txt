@@ -59,6 +59,7 @@ use pairing;
 use picardTools;
 use samTools;
 use toolbox;
+use onTheFly;
 #TO BE COMPLETED ex topHat...
 
 
@@ -139,17 +140,6 @@ my $optionRef=toolbox::readFileConf($fileConf);
 
 my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the options for the order of the pipeline
 
-
-my @dirList; #List that will contain in order the different step directories
-foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
-{
-  my $directory = $initialDir."/".$position."_".$$hashOrder{$position};
-  $directory =~ s/ /_/g; #Removing the spaces
-  toolbox::makeDir($directory); # Create the folder associated with each steps
-  push (@dirList,$directory); # Adding the newly created folder to the list of folders
-}
-
-
 #Switch and populating variable
 
 #Standard variables
@@ -159,6 +149,7 @@ my ($softParameters, $newDir);
 #Variable variables
 my ($fastq1,$fastq2,$sam,$bam,$vcf);
 my $fileList=toolbox::readDir($previousDir);
+my $globalAnalysis=0; #to check if all data are to be treated one by one  (0) or in group (1)
 
 switch (1)
 {
@@ -167,11 +158,32 @@ switch (1)
   case (scalar @$fileList == 1 && $$fileList[0] =~ m/sam$/) {$sam=$$fileList[0]; print "\nSingle SAM file"} # single SAM file
   case (scalar @$fileList == 1 && $$fileList[0] =~ m/bam$/) {$bam = $$fileList[0]; print "\nSingle BAM file"} # single BAM file
   case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf$/) {$vcf = $$fileList[0]; print "\nSingle VCF file"} #single VCF file
-  case (scalar @$fileList > 2 && $$fileList[0] =~ m/sam|bam|vcf$/) {print "Multiple files, steps higher than 1000"} #multiple file for the case of step higher than 1000
+  case (scalar @$fileList > 2 && $$fileList[0] =~ m/sam|bam|vcf$/) {$globalAnalysis =1;print "Multiple files, steps higher than 1000"} #multiple file for the case of step higher than 1000
   else { toolbox::exportLog("ERROR: The input files are not in a format usable by TOGGLE",0); } # Not the good formats
   
 }
 
+
+my @dirList; #List that will contain in order the different step directories
+foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
+{
+  if ($globalAnalysis == 0)
+  {
+    last if ($position >= 1000);
+    my $directory = $initialDir."/".$position."_".$$hashOrder{$position};
+    $directory =~ s/ /_/g; #Removing the spaces
+    toolbox::makeDir($directory); # Create the folder associated with each steps
+    push (@dirList,$directory); # Adding the newly created folder to the list of folders
+  }
+  else
+  {
+    next if ($position < 1000);
+    my $directory = $initialDir."/".$position."_".$$hashOrder{$position};
+    $directory =~ s/ /_/g; #Removing the spaces
+    toolbox::makeDir($directory); # Create the folder associated with each steps
+    push (@dirList,$directory); # Adding the newly created folder to the list of folders
+  }
+}
 
 
 
