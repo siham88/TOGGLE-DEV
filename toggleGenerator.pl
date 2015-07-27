@@ -147,24 +147,47 @@ onTheFly::generateScript($configInfo,$script);
 # Transferring data in the output folder and organizing
 #########################################
 
-my $loop = 0;                       # for the second loop
+#Checking if inly regular files are present in the initial directory
+my $initialDirContent=toolbox::readDir($initialDir);
 
-my $listOfFiles = toolbox::readDir($initialDir);           # read it to recover files in it
-##DEBUG toolbox::exportLog("INFOS toolbox ReadDir: @$listOfFiles\n",1);
-my @listOfFiles = @$listOfFiles;
+my $initialDirFolder=toolbox::checkInitialDirContent($initialDir);
 
-#########################################
-# check if initial directory contain folder or not
-#########################################
+if ($initialDirFolder != 0)#The initial dir contains subdirectories, so dying
+{
+    toolbox::exportLog("ERROR : $0 : The initial data directory $initialDir contains subdirectories and not only regular files.\n",0);
+}
+
+#Checking input data homogeneity
+
+my $previousExtension=0;
+foreach my $file (@{$initialDirContent})
+{
+    $file =~ m/\.(\w+)$/;
+    my $extension = $1;
+    if ($extension eq "fq" or $extension eq "fastq") #homogeneisation for fastq extension
+    {
+        $extension = "fastq";
+    }
+    if ($previousExtension == 0) #first round
+    {
+        $previousExtension = $extension;
+        next;
+    }
+    if ($previousExtension ne $extension) #not the same extension
+    {
+        toolbox::exportLog("ERROR : $0 : The file type in the initial directory are not homogeneous : $previousExtension and $extension are not compatible in the same analysis.\n",0);
+    }
+    next;
+}
+
 
 #Linking the original data to the output dir
-my $initialDirContent=toolbox::readDir($initialDir);
 
 my $workingDir = $outputDir."/Results";
 toolbox::makeDir($workingDir);
 
 foreach my $file (@{$initialDirContent})
-{
+{    
     my ($shortName)=toolbox::extractPath($file);
     my $lnCommand = "ln -s $file $workingDir/$shortName";
     ##DEBUG print $lnCommand,"\n";
@@ -176,10 +199,8 @@ foreach my $file (@{$initialDirContent})
 }
 toolbox::exportLog("----------------------------------------",1);
 
-my $folder = toolbox::checkInitialDirContent($workingDir);
 
-
-if ($folder == 0)               # if folder = 0, it's mean that there is only files in initial directory
+if ($previousExtension eq "fastq")               # if folder = 0, it's mean that there is only files in initial directory
 {
     #########################################
     # recognition of pairs of files and create a folder for each pair
@@ -187,15 +208,11 @@ if ($folder == 0)               # if folder = 0, it's mean that there is only fi
     my $pairsInfos = pairing::pairRecognition($workingDir);            # from files fasta recognition of paired files
     pairing::createDirPerCouple($pairsInfos,$workingDir);              # from infos of pairs, construction of the pair folder
     
-    $listOfFiles = toolbox::readDir($workingDir);                     # read it to recover files in it
+    my $listOfFiles = toolbox::readDir($workingDir);                     # read it to recover files in it
     toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
-    @listOfFiles = @$listOfFiles;
     
 }
-else
-{
-    my @listOfFolder = @$folder;                                                                            # if contain folder, recovery if the list of them in this table
-}
+
 
 
 #exit;
