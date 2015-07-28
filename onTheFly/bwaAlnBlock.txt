@@ -2,10 +2,14 @@
 # Block for bwa::bwaAln
 ##############################################
 
-# A FAIRE SUR TOUT LES FICHIERS
+# Mandatory beginning
 $fileList = toolbox::readDir($previousDir);
 $newDir = shift @dirList; #Picking up the current working directory
-##DEBUG print LOG "INFOS toolbox ReadDir: @$repairingList\n";
+print F1 "bwaAln\n";
+print LOG "INFOS: $0 : Start BWA Aln\n";
+
+##DEBUG print LOG "INFOS toolbox ReadDir: @$fileList\n";
+
 my @fileList = @$fileList;
 for (my $i=0; $i<=$#fileList; $i++)
 {
@@ -19,7 +23,3 @@ for (my $i=0; $i<=$#fileList; $i++)
 }
 
 $previousDir = $newDir;
-
-exit;
-
-__END__

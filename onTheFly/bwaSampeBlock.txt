@@ -1,14 +1,46 @@
 
-
 ##########################################
 # Block for bwa::bwaSampe
 ##########################################
-print LOG "INFOS: $0 : Start BWA sampe\n";
-$newDir = toolbox::changeDirectoryArbo($initialDir,4);                                                      # change for the bwa direcotry
+
+# Mandatory beginning
+$fileList = toolbox::readDir($previousDir);
+$newDir = shift @dirList;                                                                   #Picking up the current working directory
+print F1 "bwaSampe\n";
 ##DEBUG print LOG "CHANGE DIRECTORY TO $newDir\n";
-my $listOfSai = toolbox::readDir($bwaDir);                                                                  # read it to recover files in it
-my @listOfSai = @$listOfSai;
-my $fileWithoutExtention = pairing::extractName($listOfSai[0]);                                             # extract name of file without the extention
+
+
+if ($$fileList[0] !~ m/\.sai$/) # There are no .sai, the bwaAln was not performed before
+{
+    for (my $i=0; $i<scalar @{$fileList}; $i++)
+    {
+        ##########################################
+        # bwa::bwaAln
+        ##########################################
+        print LOG "INFOS: $0 : Start BWA Aln\n";
+        $softParameters = toolbox::extractHashSoft($optionRef,"bwaAln");                                       # recovery of specific parameters of bwa aln
+        my $fileWithoutExtention = toolbox::extractName($$fileList[$i]);                                         # extract name of file without the extention
+        my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                   # name for the output file of bwa aln
+        bwa::bwaAln($refFastaFile,$$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
+    }
+    $fileList = toolbox::readDir($newDir);
+}
+
+my @listOfSai = @$fileList; #Recovery of list of sai
+
+if (scalar @listOfSai != 2) # Two sai and only two are required for bwa sampe
+{
+    toolbox::exportLog("ERROR : $0 : BWA sampe requires two and only two sai files.\n",0);
+}
+
+print LOG "INFOS: $0 : Start BWA sampe\n";
+my $fileWithoutExtention = toolbox::extractName($listOfSai[0]);                                             # extract name of file without the extention
 my $samFileOut = "$newDir"."/"."$fileWithoutExtention".".BWASAMPE.sam";                                     # name for the output file of bwa sampe
-$softParameters = toolbox::extractHashSoft($optionref,"BWA sampe");                                      # recovery of specific parameters of bwa sampe
-bwa::bwaSampe($samFileOut,$refFastaFile,$listOfSai[0],$listOfSai[1],$repairingList[0],$repairingList[1],$fileWithoutExtention,$softParameters); # generate alignement in SAM format
+$softParameters = toolbox::extractHashSoft($optionRef,"bwaSampe");                                      # recovery of specific parameters of bwa sampe
+bwa::bwaSampe($samFileOut,$refFastaFile,$listOfSai[0],$listOfSai[1],$fastq1,$fastq2,$fileWithoutExtention,$softParameters); # generate alignement in SAM format
+
+$previousDir = $newDir;
+
+exit;
+
+__END__

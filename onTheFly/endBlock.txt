@@ -2,4 +2,6 @@
 
 print "\nLast block\n";
 
+close F1;
+
 exit;
