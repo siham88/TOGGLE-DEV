@@ -65,6 +65,7 @@ sub checkOrder
     foreach my $step (sort {$a<=> $b} keys %{$hashOrder})
     {
 	my $currentSoft=$$hashOrder{$step};
+        $currentSoft =~ s/\d+$//; # Removing number if a software is used more than once with different options
 	##DEBUG print $previousSoft,"->",$currentSoft,"\n";
 	#if first round
 	if (!defined $previousFormat && $$hashInOut{$currentSoft}{"OUT"} ne "NA")
@@ -135,6 +136,7 @@ sub generateScript
     {
         my $currentSoft=$$hashOrder{$step}; #Picking up the step name
         $currentSoft =~ s/ /_/g; #Removing extraspace
+        $currentSoft =~ s/\d+$//; #Removing numbers if a soft is called more than once
         $catCommand .= " ".$toggle."/onTheFly/".$currentSoft."Block.txt"; #Adding the code block for the corresponding step in the cat command, as all txt files with these blocks are name as softBlock.txt
 	
     }

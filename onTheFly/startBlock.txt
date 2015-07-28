@@ -144,7 +144,7 @@ my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the opti
 
 #Standard variables
 
-my ($softParameters, $newDir);
+my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$samFile,$extension,$samFileOut);
 
 #Variable variables
 my ($fastq1,$fastq2,$sam,$bam,$vcf);

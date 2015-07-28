@@ -1,3 +1,38 @@
+##########################################
+# Block for samTools::samToolsView
+##########################################
 
-print "\nsamtools view\n";
+# Mandatory beginning
+$fileList = toolbox::readDir($previousDir);
+$newDir = shift @dirList;                                                                   #Picking up the current working directory
+($stepOrder,$stepName)= split /_/,$newDir;
+print F1 "$stepName\n";
+print LOG "INFOS: $0 : Start $stepName\n";
 
+$samFile=0;
+foreach my $file (@{$fileList}) #Checking the type of files that must be SAM or BAM
+{
+    if ($file =~ m/sam$|bam$/) # the file type is normally sam of bam
+    {
+        if ($samFile != 0) # Already a sam of a bam recognized, but more than one in the previous folder
+        {
+            toolbox::exportLog("ERROR : $0 : there are more than one single SAM/BAM file at $stepName step.\n",0);
+        }
+        $samFile = $file;
+    }
+}
+
+if ($samFile eq '0') #No SAM/BAM file found in the previous folder
+{
+    toolbox::exportLog("ERROR : $0 : No SAM/BAM file found in $previousDir at step $stepName.\n",0);
+}
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools view pair
+#Verifying the output type
+$extension = ".sam";
+$extension = ".bam" if (defined $$softParameters{'-b'}); # If the -b option is specified the output file is a BAM
+$fileWithoutExtention=toolbox::extractName($samFile);
+$samFileOut = "$newDir"."/"."$fileWithoutExtention".".SAMTOOLSVIEW".$extension;                         # name for the output file of samtools view
+samTools::samToolsView($samFile,$samFileOut,$softParameters);
+
+$previousDir=$newDir;

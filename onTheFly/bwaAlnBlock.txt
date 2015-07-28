@@ -4,9 +4,10 @@
 
 # Mandatory beginning
 $fileList = toolbox::readDir($previousDir);
-$newDir = shift @dirList; #Picking up the current working directory
-print F1 "bwaAln\n";
-print LOG "INFOS: $0 : Start BWA Aln\n";
+$newDir = shift @dirList;                                                                   #Picking up the current working directory
+($stepOrder,$stepName)= split /_/,$newDir;
+print F1 "$stepName\n";
+print LOG "INFOS: $0 : Start $stepName\n";
 
 ##DEBUG print LOG "INFOS toolbox ReadDir: @$fileList\n";
 
@@ -16,8 +17,8 @@ for (my $i=0; $i<=$#fileList; $i++)
     ##########################################
     # bwa::bwaAln
     ##########################################
-    $softParameters = toolbox::extractHashSoft($optionRef,"bwaAln");                                       # recovery of specific parameters of bwa aln
-    my $fileWithoutExtention = toolbox::extractName($fileList[$i]);                                         # extract name of file without the extention
+    $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                       # recovery of specific parameters of bwa aln
+    $fileWithoutExtention = toolbox::extractName($fileList[$i]);                                         # extract name of file without the extention
     my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                   # name for the output file of bwa aln
     bwa::bwaAln($refFastaFile,$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
 }
