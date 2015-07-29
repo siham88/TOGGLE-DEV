@@ -1,7 +1,15 @@
+##########################################
+# Block for ending toggleSingle
+##########################################
+
+# Mandatory beginning
+$fileList = toolbox::readDir($previousDir);
+my $lastDir = "bb";
 
 
-print "\nLast block\n";
 
+
+print LOG "#########################################\nINFOS: Analysis done correctly\nThe final data are in the $lastDir directory#########################################\n";
 close F1;
 
 exit;

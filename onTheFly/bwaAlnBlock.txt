@@ -5,7 +5,10 @@
 # Mandatory beginning
 $fileList = toolbox::readDir($previousDir);
 $newDir = shift @dirList;                                                                   #Picking up the current working directory
-($stepOrder,$stepName)= split /_/,$newDir;
+($shortDirName)=toolbox::extractPath($newDir);
+##DEBUG print LOG $shortDirName."\n";
+($stepOrder)= split /_/,$shortDirName;
+$stepName = $$hashOrder{$stepOrder};
 print F1 "$stepName\n";
 print LOG "INFOS: $0 : Start $stepName\n";
 

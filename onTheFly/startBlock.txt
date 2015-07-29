@@ -138,13 +138,14 @@ foreach my $currentFile (@$initialFileList)
 }
 my $optionRef=toolbox::readFileConf($fileConf);
 
+
 my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the options for the order of the pipeline
 
 #Switch and populating variable
 
 #Standard variables
 
-my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$samFile,$extension,$samFileOut);
+my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$samFile,$extension,$samFileOut,$shortDirName);
 
 #Variable variables
 my ($fastq1,$fastq2,$sam,$bam,$vcf);
@@ -171,7 +172,7 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
   {
     last if ($position >= 1000);
     my $directory = $initialDir."/".$position."_".$$hashOrder{$position};
-    $directory =~ s/ /_/g; #Removing the spaces
+    $directory =~ s/ //g; #Removing the spaces
     toolbox::makeDir($directory); # Create the folder associated with each steps
     push (@dirList,$directory); # Adding the newly created folder to the list of folders
   }
