@@ -79,10 +79,10 @@ Mesg
 
 my %param = @ARGV;                                                                                          # get the parameters 
 @param{ map { lc $_ } keys %param } = values %param;
-if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}))
+if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}) or not defined ($param{'-o'}))
 {
   print <<"Mesg";
-  ERROR: Parameters -d and -c and -r are required.
+  ERROR: Parameters -d and -c and -r and -o are required.
   perldoc $nomprog display the help
 Mesg
   exit;
@@ -92,10 +92,32 @@ Mesg
 ##########################################
 # recovery of initial informations/files
 ##########################################
-my $initialDir = $param{'-d'};                                                # recovery of the name of the directory to analyse
-my $fileConf = $param{'-c'};                                                                                # recovery of the name of the software.configuration.txt file
-my $refFastaFile = $param{'-r'};                                                                               # recovery of the reference file
-toolbox::existsDir($initialDir);                                                                            # check if this directory exists                                                                          # recovery of the reference file
+my $initialDir = $param{'-d'};               # recovery of the name of the directory to analyse
+my $fileConf = $param{'-c'};                 # recovery of the name of the software.configuration.txt file
+my $refFastaFile = $param{'-r'};             # recovery of the reference file
+my $lastDir = $param{'-o'};                  # recovery of the last directory
+
+toolbox::existsDir($initialDir);        # check if this directory exists
+
+
+##########################################
+# if $initialDir is the same as $lastDir, we have a global like analysis
+# Need to change the adresses
+##########################################
+
+if ($initialDir eq $lastDir) # the two folders are the same, meaning we have a before 1000 and an after 1000
+{
+  $initialDir =~ s/finalResults[\/]?$/results\/finalResults/; # change the folder name
+  my $tempDir = $initialDir;
+  $tempDir =~ s/finalResults$/intermediateResults/;
+  my $changeNameCommand = "mv $initialDir $tempDir "; # Changing name of internediary data
+  if(toolbox::run($changeNameCommand)==1)       #Execute command
+    {
+        toolbox::exportLog("INFOS: $0 : Switching to $tempDir as initial directory\n",1);
+    }
+  $initialDir = $tempDir;
+  
+}
 
 
 ##########################################
@@ -145,7 +167,7 @@ my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the opti
 
 #Standard variables
 
-my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$samFile,$extension,$samFileOut,$shortDirName);
+my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$samFile,$extension,$samFileOut,$shortDirName,$stepF1);
 
 #Variable variables
 my ($fastq1,$fastq2,$sam,$bam,$vcf);

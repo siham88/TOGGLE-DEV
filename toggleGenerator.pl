@@ -84,7 +84,7 @@ Mesg
 my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};      # recovery of the reference file
-my $outputDir = $param{'-o'};      # recovery of the output folder
+my $outputDir = $param{'-o'};         # recovery of the output folder
 
 ##########################################
 # Creation of the output folder
@@ -179,7 +179,7 @@ if ($previousExtension !~ m/fastq|vcf|sam|bam/)
 
 #Linking the original data to the output dir
 
-my $workingDir = $outputDir."/Results";
+my $workingDir = $outputDir."/results";
 toolbox::makeDir($workingDir);
 
 foreach my $file (@{$initialDirContent})
@@ -259,6 +259,12 @@ foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash 
 # Launching the generated script on all subfolders if steps lower than 1000
 #########################################
 
+#Creating global output folder
+
+
+my $finalDir = $outputDir."/finalResults";
+
+
 if ($orderBefore1000)
 {
     onTheFly::generateScript($orderBefore1000,$scriptSingle);
@@ -268,7 +274,7 @@ if ($orderBefore1000)
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
         $currentDir =~ s/:$//;
-        my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile";
+        my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile -o $finalDir";
     
         if(toolbox::run($launcherCommand)==1)       #Execute command
         {
@@ -280,8 +286,10 @@ if ($orderBefore1000)
 if ($orderAfter1000)
 {
     onTheFly::generateScript($orderAfter1000,$scriptMultiple);
+    
+    $workingDir = $finalDir if ($orderBefore1000);
 
-    my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile";
+    my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile -o $finalDir";
    
     if(toolbox::run($launcherCommand)==1)       #Execute command
     {

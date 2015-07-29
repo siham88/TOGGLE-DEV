@@ -21,3 +21,7 @@ OUT=NA
 $gatkHaplotypeCaller
 IN=bam,vcf
 OUT=vcf
+
+$tophat2
+IN=fastq,sam
+OUT=sam

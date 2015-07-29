@@ -1,15 +1,43 @@
 ##########################################
-# Block for ending toggleSingle
+# Block for ending toggleAnalysis
 ##########################################
 
 # Mandatory beginning
 $fileList = toolbox::readDir($previousDir);
-my $lastDir = "bb";
+print F1 "endOfAnalysis\n";
+my @listPath = toolbox::extractPath($initialDir);
+my $globalDir = $listPath[1]."/finalResults";
+toolbox::makeDir($globalDir) unless (-d $globalDir);
+
+# linking the dir while file in "hard" to a symbolic link at $lastDir
+my $lnCommand = "unlink $lastDir ; ln -s $globalDir $lastDir";
+
+if(toolbox::run($lnCommand)==1)       #Execute command
+{
+    toolbox::exportLog("INFOS: $0 : Linking $globalDir to $lastDir\n",1);
+}
+
+    #Will create a finalDir and a link to this finalDir
+
+foreach my $file (@{$fileList})
+{
+    my ($shortName)=toolbox::extractPath($file);
+    next if ($shortName eq "finalResults");
+    
+    #Linking  last data to local final one
+    my $cpCommand = "ln -s $file $globalDir/$shortName";
+    ##DEBUG print $cpCommand,"\n";
+    
+    if(toolbox::run($cpCommand)==1)       #Execute command
+    {
+        toolbox::exportLog("INFOS: $0 : Transferring $file to $globalDir\n",1);
+    }
+    
+  
+}
 
 
-
-
-print LOG "#########################################\nINFOS: Analysis done correctly\nThe final data are in the $lastDir directory#########################################\n";
+print LOG "#########################################\nINFOS: Analysis done correctly\nThe final data are in the $lastDir directory. #########################################\n";
 close F1;
 
 exit;
