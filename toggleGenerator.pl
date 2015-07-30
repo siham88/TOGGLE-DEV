@@ -179,7 +179,11 @@ if ($previousExtension !~ m/fastq|vcf|sam|bam/)
 
 #Linking the original data to the output dir
 
-my $workingDir = $outputDir."/results";
+#Creating a specific name for the working directory depending on the type of analysis
+
+my $resultsDir = "output";
+
+my $workingDir = $outputDir."/$resultsDir";
 toolbox::makeDir($workingDir);
 
 foreach my $file (@{$initialDirContent})
@@ -263,7 +267,7 @@ foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash 
 
 
 my $finalDir = $outputDir."/finalResults";
-
+my $intermediateDir = $workingDir."/intermediateResults";
 
 if ($orderBefore1000)
 {
@@ -274,14 +278,69 @@ if ($orderBefore1000)
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
         $currentDir =~ s/:$//;
-        my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile -o $finalDir";
+        my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile";
     
-        if(toolbox::run($launcherCommand)==1)       #Execute command
+        if(toolbox::run($launcherCommand))       #Execute command
         {
             toolbox::exportLog("INFOS: $0 : Correctly launched $scriptSingle\n",1);
         }
     }
+    
+    #Populationg the intermediate directory
+
+    if ($orderAfter1000) #There is a global analysis afterward
+    {
+        #Creating intermediate directory
+        toolbox::makeDir($intermediateDir);
+                
+        # Going through the individual tree
+        foreach my $currentDir (@{$listSamples})
+        {
+            next unless $currentDir =~ m/\//; # Will work only on folders
+            my $lastDir = $currentDir."/".$lastOrder."_".$$orderBefore1000{$lastOrder};
+            $lastDir =~ s/ //g;
+            my $fileList = toolbox::readDir($lastDir);
+            foreach my $file (@{$fileList}) #Copying intermediate data in the intermediate directory
+            {
+                my ($basicName)=toolbox::extractPath($file);
+                my $lnCommand="ln -s $file $intermediateDir/$basicName";
+                if(toolbox::run($lnCommand))       #Execute command
+                {
+                    toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $intermediateDir\n",1);
+                }   
+            }
+        }
+    }
+    else #There is no global analysis afterward
+    {
+        ##DEBUG toolbox::exportLog("After everything\n",1);
+        #Creating final directory
+        toolbox::makeDir($finalDir);
+                
+        # Going through the individual tree
+        foreach my $currentDir (@{$listSamples})
+        {
+            ##DEBUG toolbox::exportLog($currentDir,1);
+
+            next unless $currentDir =~ m/\//; # Will work only on folders
+            my $lastDir = $currentDir."/".$lastOrder."_".$$orderBefore1000{$lastOrder};
+            $lastDir =~ s/ //g;
+            ##DEBUG toolbox::exportLog($lastDir,1);
+            my $fileList = toolbox::readDir($lastDir);
+            foreach my $file (@{$fileList}) #Copying the final data in the final directory
+            {
+                my ($basicName)=toolbox::extractPath($file);
+                my $cpLnCommand="cp $file $finalDir/$basicName && rm -f $file && ln -s $finalDir/$basicName $file";
+                ##DEBUG toolbox::exportLog($cpLnCommand,1);
+                if(toolbox::run($cpLnCommand))       #Execute command
+                {
+                    toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $finalDir\n",1);
+                }   
+            }
+        }
+    }
 }
+
 
 if ($orderAfter1000)
 {
@@ -289,7 +348,7 @@ if ($orderAfter1000)
     
     $workingDir = $finalDir if ($orderBefore1000);
 
-    my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile -o $finalDir";
+    my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile";
    
     if(toolbox::run($launcherCommand)==1)       #Execute command
     {
