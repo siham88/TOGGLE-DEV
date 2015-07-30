@@ -137,8 +137,9 @@ sub generateScript
         my $currentSoft=$$hashOrder{$step}; #Picking up the step name
         $currentSoft =~ s/ \d+$//; #Removing numbers if a soft is called more than once
         $currentSoft =~ s/ /_/g; #Removing extraspace
+        $catCommand .= " ".$toggle."/onTheFly/previousBlock.txt"; # adding the infos of previous block
         $catCommand .= " ".$toggle."/onTheFly/".$currentSoft."Block.txt"; #Adding the code block for the corresponding step in the cat command, as all txt files with these blocks are name as softBlock.txt
-	
+	$catCommand .= " ".$toggle."/onTheFly/afterBlock.txt"; # adding infos for next block
     }
     
     $catCommand .= " $toggle/onTheFly/endBlock.txt > $script && chmod 775 $script"; #Adding the end of the script and rending it executable

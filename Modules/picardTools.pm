@@ -104,7 +104,7 @@ sub picardToolsCreateSequenceDictionary
 sub picardToolsSortSam
 {
     my($bamOrSamFileIn,$bamOrSamFileOut,$optionsHachees)= @_;       # recovery of informations
-    if ((toolbox::checkSamOrBamFormat($bamOrSamFileIn)==1) && (toolbox::sizeFile($bamOrSamFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
+    if ((toolbox::checkSamOrBamFormat($bamOrSamFileIn)) && (toolbox::sizeFile($bamOrSamFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
     {
         my $options="";
         if ($optionsHachees)

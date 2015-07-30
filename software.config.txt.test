@@ -66,22 +66,17 @@ $GATK gatkRealignerTargetCreator
 $GATK gatkIndelRealigner
 -T=IndelRealigner
 
-$GATK gatkHaplotypeCaller
+$gatkHaplotypeCaller
 -T=HaplotypeCaller
 
 
-$picardTools sortsam pair
+$picardToolsSortSam
 SORT_ORDER=coordinate
 VALIDATION_STRINGENCY=SILENT
 
-$picardTools sortsam single
-SORT_ORDER=coordinate
 
 
 
 $order
-1=bwaAln
-2=bwaSampe
-3=samtoolsView
-4=samtoolsView 2434
 
+1000=gatkHaplotypeCaller

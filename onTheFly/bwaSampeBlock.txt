@@ -3,18 +3,6 @@
 # Block for bwa::bwaSampe
 ##########################################
 
-# Mandatory beginning
-$fileList = toolbox::readDir($previousDir);
-$newDir = shift @dirList;                                                                   #Picking up the current working directory
-($shortDirName)=toolbox::extractPath($newDir);
-##DEBUG print LOG $shortDirName."\n";
-($stepOrder)= split /_/,$shortDirName;
-$stepName = $$hashOrder{$stepOrder};
-$stepF1=$stepName;
-$stepF1 =~ s/ /_/g;
-print F1 "$stepF1\n";
-print LOG "INFOS: $0 : Start $stepName\n";
-
 
 if ($$fileList[0] !~ m/\.sai$/) # There are no .sai, the bwaAln was not performed before
 {
@@ -45,4 +33,3 @@ $samFileOut = "$newDir"."/"."$fileWithoutExtention".".BWASAMPE.sam";            
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                      # recovery of specific parameters of bwa sampe
 bwa::bwaSampe($samFileOut,$refFastaFile,$listOfSai[0],$listOfSai[1],$fastq1,$fastq2,$fileWithoutExtention,$softParameters); # generate alignement in SAM format
 
-$previousDir = $newDir;

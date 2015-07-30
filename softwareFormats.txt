@@ -25,3 +25,7 @@ OUT=vcf
 $tophat2
 IN=fastq,sam
 OUT=sam
+
+$picardToolsSortSam
+IN=sam,bam
+OUT=sam,bam

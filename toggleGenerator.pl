@@ -244,13 +244,14 @@ my $scriptSingle = "toggleBzz.pl";
 my $scriptMultiple = "toggleMultiple.pl";
 my $hashOrder=toolbox::extractHashSoft($configInfo,"order"); #Picking up the options for the order of the pipeline
 
-my ($orderBefore1000,$orderAfter1000);
+my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
 
 foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash for the order, to launch twice the generateScript
 {
     if ($step < 1000)
     {
         $$orderBefore1000{$step}=$$hashOrder{$step};
+        $lastOrderBefore1000 = $step;
     }
     else
     {
@@ -297,7 +298,7 @@ if ($orderBefore1000)
         foreach my $currentDir (@{$listSamples})
         {
             next unless $currentDir =~ m/\//; # Will work only on folders
-            my $lastDir = $currentDir."/".$lastOrder."_".$$orderBefore1000{$lastOrder};
+            my $lastDir = $currentDir."/".$lastOrderBefore1000."_".$$orderBefore1000{$lastOrderBefore1000};
             $lastDir =~ s/ //g;
             my $fileList = toolbox::readDir($lastDir);
             foreach my $file (@{$fileList}) #Copying intermediate data in the intermediate directory
@@ -323,7 +324,7 @@ if ($orderBefore1000)
             ##DEBUG toolbox::exportLog($currentDir,1);
 
             next unless $currentDir =~ m/\//; # Will work only on folders
-            my $lastDir = $currentDir."/".$lastOrder."_".$$orderBefore1000{$lastOrder};
+            my $lastDir = $currentDir."/".$lastOrderBefore1000."_".$$orderBefore1000{$lastOrderBefore1000};
             $lastDir =~ s/ //g;
             ##DEBUG toolbox::exportLog($lastDir,1);
             my $fileList = toolbox::readDir($lastDir);
@@ -346,7 +347,7 @@ if ($orderAfter1000)
 {
     onTheFly::generateScript($orderAfter1000,$scriptMultiple);
     
-    $workingDir = $finalDir if ($orderBefore1000);
+    $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 
     my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile";
    
@@ -354,6 +355,28 @@ if ($orderAfter1000)
     {
         toolbox::exportLog("INFOS: $0 : Correctly launched $scriptMultiple\n",1);
     }
+    
+    #Creating final directory
+    toolbox::makeDir($finalDir);
+            
+    # Going through the individual tree
+    my $lastDir = $workingDir."/".$lastOrder."_".$$orderAfter1000{$lastOrder};
+    $lastDir =~ s/ //g;
+    ##DEBUG toolbox::exportLog($lastDir,1);
+    my $fileList = toolbox::readDir($lastDir);
+    foreach my $file (@{$fileList}) #Copying the final data in the final directory
+    {
+        my ($basicName)=toolbox::extractPath($file);
+        my $cpLnCommand="cp $file $finalDir/$basicName && rm -f $file && ln -s $finalDir/$basicName $file";
+        ##DEBUG toolbox::exportLog($cpLnCommand,1);
+        if(toolbox::run($cpLnCommand))       #Execute command
+        {
+            toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $finalDir\n",1);
+        }   
+    }
+    
 }
+
+close F1;
 
 exit;
