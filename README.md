@@ -1,4 +1,4 @@
-TOGGLE : Toolbox for generic NGS analyses => version test: development for RnaSEQ 
+TOGGLE : Toolbox for generic NGS analyses  - TEST VERSION FOR ONTHEFLY creation of PIPELINES
 ===========
 
 TOGGLE (TOolbox for Generic nGs anaLysEs) is a suite of 10 packages and more than 110 modules able to manage a large set of NGS softwares
@@ -12,8 +12,8 @@ in different environments (single machine to HPC clusters).
 ##  Contributing
 
 * Licencied under CeCill-C (http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html) and GPLv3
-* Intellectual property belongs to IRD, CIRAD and SouthGreen developpement plateform
-* Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+* Intellectual property belongs to IRD, CIRAD, INRA, ADNid and SouthGreen development platform
+* Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 
 ## REQUIREMENTS
 
@@ -25,9 +25,11 @@ in different environments (single machine to HPC clusters).
 * Test::More
 * Test::Deep
 * Capture::Tiny
+* List::Compare
+* Switch
 
 
-#### Bioinformatics software 
+#### Bioinformatics software (minimal version)
 
 * java 1.7
 * fastQC v0.10.1
@@ -63,18 +65,24 @@ TOGGLE
 |
 |_ Modules
 |
+            |____ HTSeq.pm
             |———— bwa.pm
             |———— cufflinks.pm
             |———— cutadapt.pm
             |———— fastqUtils.pm
             |———— fastqc.pm
+            |____ fastxToolkit.pm
             |———— gatk.pm
             |———— localConfig.pm
+            |____ module_template.pm
+            |____ onTheFly.pm
             |———— pairing.pm
             |———— picardTools.pm
             |———— samTools.pm
+            |____ snpEff.pm
             |____ toolbox.pm
             |____ tophat.pm
+
 |
 |_ TEST
             |———— adaptator.txt
@@ -94,6 +102,20 @@ TOGGLE
             |———— software.config.txt
             |———— toolbox_test.t
             |———— tophat_test.t
+|
+|_ onTheFly
+            |____ afterBlock.txt
+            |____ bwaAlnBlock.txt
+            |____ bwaSampeBlock.txt
+            |____ endBlock.txt
+            |____ gatkHaplotypeCallerBlock.txt
+            |____ picardToolsSortSamBlock.txt
+            |____ previousBlock.txt
+            |____ samtoolsIndexBlock.txt
+            |____ samtoolsSortBlock.txt
+            |____ samtoolsViewBlock.txt
+            |____ startBlock.txt
+            |____ tophat2Block.txt
 |_ LICENSE
 |_ README.md
 |_ adaptator.txt
@@ -103,6 +125,8 @@ TOGGLE
 |_ singleAnalysis.pl
 |_ software.config.txt
 |_ software.config.txt.test
+|_ softwareFormat.txt
+|_ toggleGenerator.pl
 ````
 
 #### INSTALL
@@ -168,7 +192,7 @@ $globalAnalysis.pl $PATH_INSTALL/DATA/arcardTest/ $PATH_INSTALL/software.config.
 $globalAnalysis.pl $PATH_INSTALL/DATA/iriginTest/ $PATH_INSTALL/software.config.txt $PATH_INSTALL/DATA/referenceIrigin.fasta
 ````
 
-* Check the good running 
+* Check the good running
 > > * No error message
 > > * BamDirectory has been well created into $PATH_INSTALL/DATA
 > > * the data generated are good
@@ -194,9 +218,8 @@ tail $PATH_INSTALL/DATA/BamDirectory/GATKVARIANTFILTRATION.vcf
 $globalAnalysisRnaSeq.pl $PATH_INSTALL/DATA/rnaseqTest/ $PATH_INSTALL/software.config.txt $PATH_INSTALL/DATA/referenceRnaseq.fa $PATH_INSTALL/DATA/referenceRnaseq.gff3
 ````
 
-##  Versions Notes - branche dev
+##  Versions Notes - onTheFlyv2 branch
 
-Release 0.2, 14st of March, 2015
+Release 0.3, xxxxxxx
 
-Second version release
-
+Third beta version release
