@@ -39,6 +39,7 @@ use Exporter;
 
 use lib qw(.);
 use localConfig;
+use namingConvention;
 
 #Global infos
 our @ISA=qw(Exporter);
@@ -544,6 +545,8 @@ sub readFileConf
         }
     }
   
+    $configInfos=namingConvention::softwareNomenclature($configInfos); # will correct the configInfo names
+    
     return $configInfos;
 
 }
