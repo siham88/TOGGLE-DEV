@@ -74,9 +74,18 @@ $picardToolsSortSam
 SORT_ORDER=coordinate
 VALIDATION_STRINGENCY=SILENT
 
+$cleaner
+1
+2
+3
+4
 
 
 
 $order
+1=fastqc
+2=bwaSampe
+3=samtoolsView
+4=samtoolsView 2434
+5=picardToolsSortSam
 
-1000=gatkHaplotypeCaller

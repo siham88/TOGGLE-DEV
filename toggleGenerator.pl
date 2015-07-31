@@ -243,6 +243,7 @@ onTheFly::indexCreator($configInfo,$refFastaFile);
 my $scriptSingle = "toggleBzz.pl";
 my $scriptMultiple = "toggleMultiple.pl";
 my $hashOrder=toolbox::extractHashSoft($configInfo,"order"); #Picking up the options for the order of the pipeline
+my $hashCleaner=toolbox::extractHashSoft($configInfo,"cleaner"); #Picking up infos for steps to be cleaned / data to be removed all along the pipeline
 
 my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
 
@@ -272,7 +273,7 @@ my $intermediateDir = $workingDir."/intermediateResults";
 
 if ($orderBefore1000)
 {
-    onTheFly::generateScript($orderBefore1000,$scriptSingle);
+    onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner);
     my $listSamples=toolbox::readDir($workingDir);
 
     foreach my $currentDir(@{$listSamples})
@@ -345,7 +346,7 @@ if ($orderBefore1000)
 
 if ($orderAfter1000)
 {
-    onTheFly::generateScript($orderAfter1000,$scriptMultiple);
+    onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner);
     
     $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 

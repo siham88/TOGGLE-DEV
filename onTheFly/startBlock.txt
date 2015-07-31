@@ -136,8 +136,7 @@ foreach my $currentFile (@$initialFileList)
   print $mvCommand,"\n";
   toolbox::run($mvCommand);
 }
-my $optionRef=toolbox::readFileConf($fileConf);
-
+my $optionRef=toolbox::readFileConf($fileConf); # Picking up the global options
 
 my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the options for the order of the pipeline
 
@@ -145,7 +144,7 @@ my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the opti
 
 #Standard variables
 
-my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$samFile,$extension,$samFileOut,$shortDirName,$stepF1,$vcfCalled,$listOfBam,$bamFileOut);
+my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$samFile,$extension,$samFileOut,$shortDirName,$stepF1,$vcfCalled,$listOfBam,$bamFileOut,$cleanerCommand);
 
 #Variable variables
 my ($fastq1,$fastq2,$sam,$bam,$vcf);
