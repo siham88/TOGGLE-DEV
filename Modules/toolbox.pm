@@ -42,9 +42,9 @@ use localConfig;
 use namingConvention;
 
 #Global infos
-our @ISA=qw(Exporter);
+#our @ISA=qw(Exporter);
 #our @EXPORT=qw($configInfos);
-our $configInfos; #Config informations, ref of an hash
+#my $configInfos; #Config informations, ref of an hash
 
 
 
@@ -504,7 +504,7 @@ sub extractPath
 sub readFileConf
 {
     my($fileConf) = @_;
-    
+    my $configInfos;
     #chech if the configuration file is readable
     readFile($fileConf) or exportLog("ERROR: toolbox::readFileConf : Cannot read the configuration file $fileConf\n$!\n",0);
  

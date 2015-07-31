@@ -55,10 +55,13 @@ use picardTools;
 sub checkOrder
 {
     my ($hashConf)=@_;
+    ##DEBUG print Dumper $hashConf;
+    
     my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
     
     #Picking up input output for each software
     my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt");
+    ##DEBUG print Dumper $hashInOut;
     
     #Verifying the coherence of input/output
     my ($previousSoft,$previousFormat,$currentFormat,$initialStep,$lastStep);
@@ -67,6 +70,7 @@ sub checkOrder
 	my $currentSoft=$$hashOrder{$step};
         $currentSoft =~ s/ \d+$//; # Removing number if a software is used more than once with different options
 	##DEBUG print $previousSoft,"->",$currentSoft,"\n";
+        ##DEBUG print "**",$$hashInOut{$currentSoft}{"OUT"},"\n";
 	#if first round
 	if (!defined $previousFormat && $$hashInOut{$currentSoft}{"OUT"} ne "NA")
 	{ 

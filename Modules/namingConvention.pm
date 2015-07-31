@@ -56,12 +56,26 @@ sub softwareNomenclature # Will rewrite the correct name in the hash of configur
         if ($currentSoft eq "order") # We aredealing with the order hash...
         {
             #Specific treatment
+            my $hashOrder = $$hash{$currentSoft};
+            foreach my $step (keys %{$hashOrder})
+            {
+                $$hashOrder{$step}=correctName($$hashOrder{$step}); # will change in order accordingly
+            }
             
             next;
         }
+        ##DEBUG print "---------------$currentSoft-->";
         $correctName=correctName($currentSoft);
-        $$hash{$correctName}=$$hash{$currentSoft};
-        undef $$hash{$currentSoft};
+        ##DEBUG print "$correctName--------\n";
+        if ($currentSoft ne $correctName) # the name has changed
+        {
+            ##DEBUG print Dumper($hash);
+            $$hash{$correctName}=\%{$$hash{$currentSoft}};
+            ##DEBUG print Dumper($hash);
+            delete $$hash{$currentSoft};
+            ##DEBUG print Dumper($hash);
+        }
+        
     }
     return $hash;
 }
@@ -70,13 +84,16 @@ sub correctName
 {
     my ($name)=@_;
     my $correctedName="NA";
-    
-    switch
+    my $order;
+    ## DEBUG toolbox::exportLog("++++++++++++++$name\n",1);
+    my @list = split /\s/,$name;
+    $order = pop @list if ($list[-1] =~ m/^\d+/); # This is for a repetition of the same step
+    switch (1)
     {
         #FOR bwa.pm
-        case ($name =~ m/bwa[\s*]aln/i){$correctedName="bwaAln"} #Correction for bwaAln
-        case ($name =~ m/bwa[\s*]sampe/i){$correctedName="bwaSampe"} # Correction for bwaSampe
-        case ($name =~ m/bwa[\s*]index/i){$correctedName="bwaIndex"} # Correction for bwaIndex
+        case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
+        case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*sampe/i){$correctedName="bwaSampe"} # Correction for bwaSampe
+        case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*index/i){$correctedName="bwaIndex"} # Correction for bwaIndex
         
         #FOR samTools.pm
         
@@ -88,8 +105,10 @@ sub correctName
         
         #FOR tophat.pm
         
-        
+        else {$correctedName = $name;}; # To be modified at the end of the dev!!
     }
+    $correctedName .= " ".$order if ($order);
+    ##DEBUG toolbox::exportLog("$correctedName\n",1);
     return $correctedName;
 }
 

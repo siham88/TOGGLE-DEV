@@ -46,8 +46,6 @@ use onTheFly;
 
 
 
-
-
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
@@ -126,6 +124,7 @@ toolbox::existsDir($initialDir);                            # check if this dire
 toolbox::checkFile($refFastaFile);                          #Retriving the configuration
 
 my $configInfo=toolbox::readFileConf($fileConf);
+
 
 
 #Verifying the correct ordering for the experiment, based on input output files and recovering the last step value

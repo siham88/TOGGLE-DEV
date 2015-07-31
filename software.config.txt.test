@@ -22,14 +22,10 @@ $samtoolsView
 -F=0x02
 -S
 
-$samtoolsView 2434
--h
--b
--S
 
 
 #3nd program config
-$bwaAln
+$bwa Aln 1
 -n=5
 -o=1
 -e=-1
@@ -83,9 +79,6 @@ $cleaner
 
 
 $order
-1=fastqc
+1=bwaAln 1
 2=bwaSampe
-3=samtoolsView
-4=samtoolsView 2434
-5=picardToolsSortSam
 
