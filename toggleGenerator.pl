@@ -380,3 +380,27 @@ if ($orderAfter1000)
 close F1;
 
 exit;
+
+=head1 Name
+
+toggleGenerator.pl - Automatic pipeline generator
+
+=head1 Usage
+
+
+toggleGenerator.pl -d DIR -c FILE -r FILE -o DIR
+
+=head1 Required Arguments
+
+      -d DIR    The directory containing initial files
+      -c FILE   The configuration file
+      -r FILE   The reference sequence (fasta)
+      -o DIR    The directory containing output files
+
+=head1  Authors
+
+Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+
+Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
+
+=cut
