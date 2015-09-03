@@ -2,7 +2,7 @@ package namingConvention;
 
 ###################################################################################################################################
 #
-# Copyright 2014-2015 IRD-CIRAD
+# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,11 +23,12 @@ package namingConvention;
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
-# Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+# Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
-
 ###################################################################################################################################
 #
 # This package will change the names of softwares to be coherent through the toggle hashes.
@@ -157,3 +158,44 @@ sub correctName
 }
 
 1;
+
+=head1 NAME
+
+    Package I<namingConvention> 
+
+=head1 SYNOPSIS
+
+	use namingConvention;
+    
+	namingConvention::softwareNomenclature ($hashSoftware);
+    
+	namingConvention::correctName ($softwareName);
+
+=head1 DESCRIPTION
+
+    Package namingConvention will reformat the softwares/steps names in the software.config.txt to be able to manage them correctly in the $configInfo hash.
+
+=head2 FUNCTIONS
+
+=head3 namingConvention::softwareNomenclature
+
+This module will check and modify the $configInfo hash.
+It takes a single argument: the configInfo hash (from toolbox::readFileConf).
+
+=head3 namingConvention::correctName
+
+This module will correct the name in order to be usable in TOGGLE
+It takes a single argument: the software name.
+
+
+
+=head1 AUTHORS
+
+Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+Written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+
+=head1 SEE ALSO
+
+L<http://www.southgreen.fr/>
+
+=cut
