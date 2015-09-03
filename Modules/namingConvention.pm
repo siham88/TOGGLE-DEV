@@ -93,19 +93,63 @@ sub correctName
         #FOR bwa.pm
         case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
         case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*sampe/i){$correctedName="bwaSampe"} # Correction for bwaSampe
+        case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*samse/i){$correctedName="bwaSamse"} # Correction for bwaSamse
         case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*index/i){$correctedName="bwaIndex"} # Correction for bwaIndex
+        case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*mem/i){$correctedName="bwaMem"} # Correction for bwaMem
+
         
         #FOR samTools.pm
+        case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*faidx/i){$correctedName="samToolsFaidx"} # Correction for samToolsFaidx
+        case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*index/i){$correctedName="samToolsIndex"} # Correction for samToolsIndex
+        case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*view/i){$correctedName="samToolsView"} # Correction for samToolsView
+        case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*sort/i){$correctedName="samToolsSort"} # Correction for samToolsSort
+        case ($name =~ m/merge[\s|\.|\-| \/|\\|\|]*header/i){$correctedName="mergeHeader"} # Correction for mergeHeader
+        case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*merge/i){$correctedName="samToolsMerge"} # Correction for samToolsMerge
+        case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*idxstats/i){$correctedName="samToolsIdxstats"} # Correction for samToolsIdxstats
+        case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*depth/i){$correctedName="samToolsDepth"} # Correction for samToolsDepth
+        case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*flagstat/i){$correctedName="samToolsFlagstat"} # Correction for samToolsFlagstat
         
         #FOR picardTools.pm
+        case ($name =~ m/picardtools[\s|\.|\-| \/|\\|\|]*mark[\s|\.|\-| \/|\\|\|]*duplicates/i){$correctedName="picardToolsMarkDuplicates"} # Correction for picardToolsMarkDuplicates
+        case ($name =~ m/picardtools[\s|\.|\-| \/|\\|\|]*create[\s|\.|\-| \/|\\|\|]*sequence[\s|\.|\-| \/|\\|\|]*dictionary/i){$correctedName="picardToolsCreateSequenceDictionary"} # Correction for picardToolsCreateSequenceDictionary
+        case ($name =~ m/picardtools[\s|\.|\-| \/|\\|\|]*sort[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="picardToolsSortSam"} # Correction for picardToolsSortSam
         
         #FOR gatk.pm
+        case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*base[\s|\.|\-| \/|\\|\|]*recalibrator/i){$correctedName="gatkBaseRecalibrator"} # Correction for gatkBaseRecalibrator
+        case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*realigner[\s|\.|\-| \/|\\|\|]*target[\s|\.|\-| \/|\\|\|]*creator/i){$correctedName="gatkRealignerTargetCreator"} # Correction for gatkRealignerTargetCreator
+        case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*indel[\s|\.|\-| \/|\\|\|]*realigner/i){$correctedName="gatkIndelRealigner"} # Correction for gatkIndelRealigner
+        case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*haplotype[\s|\.|\-| \/|\\|\|]*caller/i){$correctedName="gatkHaplotypeCaller"} # Correction for gatkHaplotypeCaller
+        case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*select[\s|\.|\-| \/|\\|\|]*variants/i){$correctedName="gatkSelectVariants"} # Correction for gatkSelectVariants
+        case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*variant[\s|\.|\-| \/|\\|\|]*filtration/i){$correctedName="gatkVariantFiltration"} # Correction for gatkVariantFiltration
+        case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*unified[\s|\.|\-| \/|\\|\|]*genotyper/i){$correctedName="gatkUnifiedGenotyper"} # Correction for gatkUnifiedGenotyper
+        case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*read[\s|\.|\-| \/|\\|\|]*backed[\s|\.|\-| \/|\\|\|]*phasing/i){$correctedName="gatkReadBackedPhasing"} # Correction for gatkReadBackedPhasing
         
-        #FOR fastqc.pm
+        #FOR fastqc
+        case ($name =~ m/fastqc/i){$correctedName="fastqc"} # Correction for fastqc
         
+        #FOR fastqUtils.pm
+        case ($name =~ m/check[\s|\.|\-| \/|\\|\|]*encode[\s|\.|\-| \/|\\|\|]*by[\s|\.|\-| \/|\\|\|]*ascii[\s|\.|\-| \/|\\|\|]*control/i){$correctedName="checkEncodeByASCIIcontrol"} # Correction for checkEncodeByASCIIcontrol
+        case ($name =~ m/change[\s|\.|\-| \/|\\|\|]*encode/i){$correctedName="changeEncode"} # Correction for changeEncode
+        
+        #FOR fastxToolkit
+        case ($name =~ m/fastx[\s|\.|\-| \/|\\|\|]*trimmer/i){$correctedName="fastxTrimmer"} # Correction for fastxTrimmer
+
         #FOR tophat.pm
         
-        else {$correctedName = $name;}; # To be modified at the end of the dev!!
+        #FOR cufflinks.pm
+        
+        #FOR HTSeq.pm
+        
+        #FOR snpeff.pm
+        case ($name =~ m/snpeff[\s|\.|\-| \/|\\|\|]*annotation/i){$correctedName="snpeffAnnotation"} # Correction for snpeffAnnotation
+
+        
+        #FOR cutadapt functions
+        case ($name =~ m/cutadapt/i){$correctedName="cutadapt"} # Correction for cutadapt step
+     
+        
+        
+        else {toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
     }
     $correctedName .= " ".$order if ($order);
     ##DEBUG toolbox::exportLog("$correctedName\n",1);
