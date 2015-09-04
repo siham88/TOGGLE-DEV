@@ -1,0 +1,13 @@
+
+##########################################
+# Block for gatk::gatkIndelRealigner
+##########################################
+
+#########################################
+# GATK IndelRealigner
+#########################################
+
+
+$softParameters = toolbox::extractHashSoft($optionref,$stepName);                       # recovery of specific parameters of GATK Indel Realigner
+my $bamRealigned = "$newDir"."/"."$fileWithoutExtention".".GATKINDELREALIGNER.bam";                     # name for the output file of gatk indel realigner
+gatk::gatkIndelRealigner($refFastaFile, $bamFileOut, $intervalsFile, $bamRealigned, $softParameters);   # run the realigner over the intervals producted by gatk::gatkRealignerTargetCreator (see above)
