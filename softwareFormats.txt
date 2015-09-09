@@ -6,49 +6,49 @@ $bwaSampe
 IN=fastq,sai
 OUT=sam
 
-$bwaSamse
-IN=fastq,sai
-OUT=sam
+#$bwaSamse
+#IN=fastq,sai
+#OUT=sam
 
-$bwaIndex
-IN=fasta
-OUT=NA
+#$bwaIndex
+#IN=fasta
+#OUT=NA
 
-$samToolsSort
-IN=bam
-OUT=bam
+#$samToolsSort
+#IN=bam
+#OUT=bam
 
 $samToolsView
 IN=sam,bam
 OUT=sam,bam
 
-$samToolsFaidx
-IN=fasta
-OUT=NA
+#$samToolsFaidx
+#IN=fasta
+#OUT=NA
 
 $samToolsIndex
 IN=bam
 OUT=NA
 
-$mergeHeader
-IN=bam
-OUT=bam
+#$mergeHeader
+#IN=bam
+#OUT=bam
 
-$samToolsMerge
-IN=bam
-OUT=bam
+#$samToolsMerge
+#IN=bam
+#OUT=bam
 
-$samToolsIdxstat
-IN=bam
-OUT=NA
+#$samToolsIdxstat
+#IN=bam
+#OUT=NA
 
-$samToolsDepth
-IN=bam
-OUT=NA
+#$samToolsDepth
+#IN=bam
+#OUT=NA
 
-$samToolsFlagstat
-IN=bam
-OUT=NA
+#$samToolsFlagstat
+#IN=bam
+#OUT=NA
 
 $fastqc
 IN=fastq,bam
@@ -58,9 +58,9 @@ $gatkHaplotypeCaller
 IN=bam,vcf
 OUT=vcf
 
-$gatkBaseRecalibrator
-IN=bam,fasta
-OUT=NA
+#$gatkBaseRecalibrator
+#IN=bam,fasta
+#OUT=NA
 
 $gatkRealignerTargetCreator
 IN=bam,fasta
@@ -70,55 +70,55 @@ $gatkIndelRealigner
 IN=bam,fasta
 OUT=bam
 
-$gatkSelectVariants
-IN=vcf
-OUT=vcf
+#$gatkSelectVariants
+#IN=vcf
+#OUT=vcf
 
-$gatkVariantFiltration
-IN=vcf
-OUT=vcf
+#$gatkVariantFiltration
+#IN=vcf
+#OUT=vcf
 
-$gatkUnifiedGenotyper
-IN=bam,vcf
-OUT=vcf
+#$gatkUnifiedGenotyper
+#IN=bam,vcf
+#OUT=vcf
 
-$gatkReadBackedPhasing
-IN=vcf,bam
-OUT=vcf
+#$gatkReadBackedPhasing
+#IN=vcf,bam
+#OUT=vcf
 
-$checkEncodeByASCIIcontrol
-IN=fastq
-OUT=NA
+#$checkEncodeByASCIIcontrol
+#IN=fastq
+#OUT=NA
 
-$changeEncode
-IN=fastq
-OUT=fastq
+#$changeEncode
+#IN=fastq
+#OUT=fastq
 
-$fastxTrimmer
-IN=fastq
-OUT=fastq
+#$fastxTrimmer
+#IN=fastq
+#OUT=fastq
 
-$snpeffAnnotation
-IN=vcf,gff
-OUT=vcf
+#$snpeffAnnotation
+#IN=vcf,gff
+#OUT=vcf
 
 $cutadapt
 IN=fastq
 OUT=fastq
 
-$tophat2
-IN=fastq,sam
-OUT=sam
+#$tophat2
+#IN=fastq,sam
+#OUT=sam
 
 $picardToolsSortSam
 IN=sam,bam
 OUT=sam,bam
 
-$picardToolsMarkDuplicates
-IN=bam
-OUT=bam
+#$picardToolsMarkDuplicates
+#IN=bam
+#OUT=bam
 
-$picardToolsCreateSequenceDictionary
-IN=fasta
-OUT=NA
+#$picardToolsCreateSequenceDictionary
+#IN=fasta
+#OUT=NA
 
