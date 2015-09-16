@@ -127,10 +127,9 @@ sub splitKeyFile
 sub parseDirectory
 {
 	toolbox::exportLog("ERROR: radseq::parseDirectory : should get exactly one argument\n",0) if (@_ != 1); ## Test nombre d'arguments attendu
-	my ($initialDir)=@_;
+	my ($initialDir,$temporaryDir)=@_;
 	#print "DIR: $initialDir\n";
-	my $outDir=$initialDir;
-	$outDir=~s/(^.+\/).+\/$/$1/;
+	$temporaryDir=~s/(^.+\/).+\/$/$1/;
 	my $listOfFiles = toolbox::readDir($initialDir);		# list of files/folder present in $initialDir
 	#print Dumper $listOfFiles;
 	my ($fileFastq, $laneDirectory, @laneDirectories);
@@ -142,11 +141,12 @@ sub parseDirectory
 			#print "$listOfFiles[$i]\n";
 			$fileFastq="$listOfFiles[$i]";
 			toolbox::exportLog("INFOS: radseq::parseDirectory : running the file $fileFastq\n", 1);
+			toolbox::checkFormatFastq($fileFastq);
 			open(FASTQ,"<", $fileFastq) or toolbox::exportLog("ERROR: radseq::parseDirectory : Cannot open the file $fileFastq\n$!\n",0);
 			if ($fileFastq=~m/.+_([0-9]).fastq$/)
 			{
 				#print "$1\n";
-				$laneDirectory="$outDir"."/lane$1";
+				$laneDirectory="$temporaryDir"."/lane$1";
 				#print "LANEDIRECTORY : $laneDirectory\n";
 				mkdir $laneDirectory if !(-e $laneDirectory);
 				push(@laneDirectories, $laneDirectory) if !($laneDirectory ~~ @laneDirectories); 
@@ -180,7 +180,7 @@ sub parseDirectory
 # arguments :
 # 	- $keyFile : the keyFile to analyze
 #	- $initialDir : the directory that contains all the files fastq
-#	- $outDir : the directory output with the o 
+#	- $options : at least the options -e (enzyme) is necessary; use the option -P if paired-end or others options from process_radtags of stacks 
 ################################################################################################
 # return boolean :
 #	- 1 if processRadtags runned correctly
@@ -190,13 +190,21 @@ sub processRadtags
 
 {
 	toolbox::exportLog("ERROR: radseq::processRadtags : should get at least two arguments\n",0) if (@_ < 2);
-	my ($keyFile,$initialDir,$options, $outDir)=@_;
+	my ($keyFile,$initialDir,$options)=@_;
+	toolbox::exportLog("ERROR: radseq::processRadtags : you need to specify at least -e process_radtags option of stacks\n",0) if ($options=="");
 	
 	toolbox::exportLog("INFOS: radseq::processRadtags : running\n", 1);
-	my @barcodeList = radseq::splitKeyFile($keyFile, $outDir); # Verify the conformity of keyFile and split le file by lane
+	my $pathDir = `dirname $initialDir` or toolbox::exportLog("ERROR: radseq::processRadtags : error in dirname unix command using $initialDir directory\n",0);
+	my $outDir="$pathDir/outputRadseq/"; # output directory contains the demultiplexed fastq files
+	my $temporaryDir="$pathDir/temporaryRadseq/"; #temporary directory contains the barcode and lanes directories
+	my $barcodeDir="$temporaryDir/barcode/";
+	toolbox::makedir($outDir);			 # make an output directory to run process radtags
+	toolbox::makedir($barcodeDir);		 # make an barcode directory to run process radtags
+							  
+	my @barcodeList = radseq::splitKeyFile($keyFile, $barcodeDir); # Verify the conformity of keyFile and split le file by lane
 	#print Dumper @barcodeList;
 		
-	my @laneDirectories=radseq::parseDirectory($initialDir);	#make a directory by lane and distribute fastq files in the laneDirectory. 
+	my @laneDirectories=radseq::parseDirectory($initialDir, $temporaryDir);	#make a directory by lane and distribute fastq files in the laneDirectory. 
 			
 	for my $barcode (0 .. $#barcodeList) 						#Iteration of each barcode file name
 		{
@@ -246,7 +254,7 @@ package I<radseq>
 
 	use radseq;
 
-	radseq::processRadtags($keyFile,$initialDir,$options, $outDir); 
+	radseq::processRadtags($keyFile,$initialDir,$options); 
 	
 	radseq::parseDirectory($initialDir);
 	
@@ -276,7 +284,7 @@ This function analyze a set of fastq files and rearrange each fastq file in a la
 
 One argument is required: the directory with fastq files
 
-C<radseq::parseDirectory($initialDir);>
+C<radseq::parseDirectory($initialDir, $temporaryRadseq);>
 
 =head3 splitKeyFile()
 
@@ -287,7 +295,7 @@ and check if "DNASample" don't contain "."'.
 Return 1 if radseq::splitKeyFile has ran correctly else 0.
 
 Example :
-C<radseq::splitKeyFile($keyFile, $outDir);>
+C<radseq::splitKeyFile($keyFile, $barcodeDir);>
 
 
 =head1 AUTHORS
