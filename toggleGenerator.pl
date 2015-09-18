@@ -84,6 +84,20 @@ my $fileConf = $param{'-c'};          # recovery of the name of the software.con
 my $refFastaFile = $param{'-r'};      # recovery of the reference file
 my $outputDir = $param{'-o'};         # recovery of the output folder
 
+
+##########################################
+# transforming relative path in absolute in necessary
+##########################################
+
+my $localDir= `pwd`;
+chomp $localDir;
+
+if ($initialDir !~ m/^\//) # the initialDir is in relative form
+{
+  $initialDir=toolbox::relativeToAbsolutePath($initialDir,$localDir);
+}
+
+
 ##########################################
 # Creation of the output folder
 ##########################################
