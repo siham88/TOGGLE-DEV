@@ -239,8 +239,8 @@ onTheFly::indexCreator($configInfo,$refFastaFile);
 
 #Generate script
 
-my $scriptSingle = "toggleBzz.pl";
-my $scriptMultiple = "toggleMultiple.pl";
+my $scriptSingle = $outputDir."/toggleBzz.pl";
+my $scriptMultiple = $outputDir."/toggleMultiple.pl";
 my $hashOrder=toolbox::extractHashSoft($configInfo,"order"); #Picking up the options for the order of the pipeline
 my $hashCleaner=toolbox::extractHashSoft($configInfo,"cleaner"); #Picking up infos for steps to be cleaned / data to be removed all along the pipeline
 
