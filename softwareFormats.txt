@@ -114,9 +114,9 @@ $picardToolsSortSam
 IN=sam,bam
 OUT=sam,bam
 
-#$picardToolsMarkDuplicates
-#IN=bam
-#OUT=bam
+$picardToolsMarkDuplicates
+IN=bam
+OUT=bam
 
 #$picardToolsCreateSequenceDictionary
 #IN=fasta
