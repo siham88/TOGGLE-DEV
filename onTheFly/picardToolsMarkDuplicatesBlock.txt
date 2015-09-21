@@ -3,7 +3,6 @@
 # picardToolsMarkDuplicates
 ##########################################
 
-my $fileIn;
 foreach my $file (@{$fileList})
 {
     ## DEBUG toolbox::exportLog($file,1);
