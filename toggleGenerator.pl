@@ -76,26 +76,27 @@ Mesg
 }
 
 
+
+
 ##########################################
 # recovery of initial informations/files
 ##########################################
+##########################################
+# transforming relative path in absolute
+##########################################
+foreach my $inputParameters (keys %param)
+{
+  $initialDir=toolbox::relativeToAbsolutePath($param{$inputParameters});
+}
+
 my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};      # recovery of the reference file
 my $outputDir = $param{'-o'};         # recovery of the output folder
 
 
-##########################################
-# transforming relative path in absolute in necessary
-##########################################
 
-my $localDir= `pwd`;
-chomp $localDir;
 
-if ($initialDir !~ m/^\//) # the initialDir is in relative form
-{
-  $initialDir=toolbox::relativeToAbsolutePath($initialDir);
-}
 
 
 ##########################################
