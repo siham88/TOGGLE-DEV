@@ -1362,31 +1362,22 @@ sub checkFormatFasta{
 ################################################################################################
 # arguments :
 # 	- relative path
-#	- local directory
 # returns :
 #	- absoluth path
 ################################################################################################
 sub relativeToAbsolutePath{
-    my ($relative,$localDir)=@_;
+    my ($relative)=@_;
     
     my $absolute;
-    
-    if ($localDir =~ m/^\//) # Correct syntax for $localDir
+    if ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
     {
-	if ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
-	{
-	    $absolute=$localDir."/".$relative;
-	    $absolute =~ s/\/\//\//; # Remove the double // by a single //
+	    $absolute=`readlink -f $relative`;
+	    chomp $absolute;
 	    toolbox::exportLog("INFOS : $0 : toolbox::relativeToAbsolutePath : the relative path $relative has been modified as an absolute path in $absolute.",1);
-	}
-	else #relative is in fact an absolute path, send a warning
-	{
-	    toolbox::exportLog("WARNING : $0 : toolbox::relativeToAbsolutePath : the relative path $relative is not a relative but an absolute. Will not modify it",2);
-	}
     }
-    else #Absolute path provided is not an absolute -> error thrown
+    else #relative is in fact an absolute path, send a warning
     {
-	toolbox:exportLog("ERROR : $0 : toolbox::relativeToAbsolutePath : the local directory provided $localDir is not an absolute one, cannot change the path",0)
+	    toolbox::exportLog("WARNING : $0 : toolbox::relativeToAbsolutePath : the relative path $relative is not a relative but an absolute. Will not modify it",2);
     }
     
 }
