@@ -94,7 +94,7 @@ chomp $localDir;
 
 if ($initialDir !~ m/^\//) # the initialDir is in relative form
 {
-  $initialDir=toolbox::relativeToAbsolutePath($initialDir,$localDir);
+  $initialDir=toolbox::relativeToAbsolutePath($initialDir);
 }
 
 
