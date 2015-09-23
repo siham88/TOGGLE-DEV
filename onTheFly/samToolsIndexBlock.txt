@@ -16,4 +16,4 @@ for (my $i=0; $i<=$#fileList; $i++)
     $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                       # recovery of specific parameters of bwa aln
     samTools::samToolsIndex($fileList[$i]);
 }
-~        
+
