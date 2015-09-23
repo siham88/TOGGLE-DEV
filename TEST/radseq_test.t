@@ -11,8 +11,9 @@
 
 use strict;
 use warnings;
+use Data::Dumper;
 
-use Test::More tests => 8;
+use Test::More tests => 7;
 use lib qw(../Modules/);
 
 
@@ -32,13 +33,13 @@ use radseq;
 #######################################
 #Creating the IndividuSoft.txt file
 #######################################
-#my $creatingCommand="echo \"cutadapt\nTEST\" > individuSoft.txt";
-#system($creatingCommand) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCommand\n$!\n");
+my $creatingCommand="echo \"radseq\nTEST\" > individuSoft.txt";
+system($creatingCommand) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCommand\n$!\n");
 
 #######################################
 #Cleaning the logs for the test
 #######################################
-my $cleaningCommand="rm -Rf radseq_TEST_log.*";
+my $cleaningCommand="rm -f radseq_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCommand \n$!\n");
 
 #########################################
@@ -61,7 +62,7 @@ system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with 
 #Copying keyFile into testingDir
 my $originalKeyFile = "../DATA/expectedData/radseq/keyFileTest.txt";        # Keyfile
 my $keyFile = "$testingDir/keyFileTest.txt";                                # Keyfile for test
-my $FileCopyCom = "cp $originalKeyFile $KeyFile";                           # command to copy the original keyFile into the test directory
+my $FileCopyCom = "cp $originalKeyFile $keyFile";                           # command to copy the original keyFile into the test directory
 system ($FileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalKeyFile in the test directory with the command $FileCopyCom\n$!\n");    # RUN the copy command
 
 #Copying fastq directory into testingDir
@@ -78,9 +79,13 @@ my $options="-e apeKI ";                                                        
 
 ### Test of radseq::processRadtags ###
 is ((radseq::processRadtags($keyFile, $initialDir, $options)),1, 'radseq::processRadtags');         # TEST IF FONCTION WORKS
-my @expectedOutput = toolbox::readDir("../DATA/expectedData/radseq/outputRadseq");
-my @observedOutput=toolbox::readDir($testingDir);
-is_deeply (@expectedOutput, \@observedOutput, "radseq output checkout");                             # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
+my $expectedOutput = `ls ../DATA/expectedData/radseq/outputRadseq/` or die ("ERROR: $0 : Cannot list the directory ../DATA/expectedData/radseq/outputRadseq with the command ls \n$!\n");
+my @expectedOutput = split(/\n/,$expectedOutput);
+
+my $observedOutput = `ls $testingDir/outputRadseq/` or die ("ERROR: $0 : Cannot list the directory .$testingDir/outputRadseq/ with the command ls \n$!\n");
+my @observedOutput = split(/\n/,$observedOutput);
+
+is_deeply (\@expectedOutput, \@observedOutput, "radseq output checkout");                             # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
 ##############################
 
 exit;

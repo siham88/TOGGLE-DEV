@@ -126,7 +126,7 @@ sub splitKeyFile
 
 sub parseDirectory
 {
-	toolbox::exportLog("ERROR: radseq::parseDirectory : should get exactly one argument\n",0) if (@_ != 1); ## Test nombre d'arguments attendu
+	toolbox::exportLog("ERROR: radseq::parseDirectory : should get exactly one argument\n",0) if (@_ != 2); ## Test nombre d'arguments attendu
 	my ($initialDir,$temporaryDir)=@_;
 	#print "DIR: $initialDir\n";
 	$temporaryDir=~s/(^.+\/).+\/$/$1/;
@@ -141,7 +141,7 @@ sub parseDirectory
 			#print "$listOfFiles[$i]\n";
 			$fileFastq="$listOfFiles[$i]";
 			toolbox::exportLog("INFOS: radseq::parseDirectory : running the file $fileFastq\n", 1);
-			toolbox::checkFormatFastq($fileFastq);
+			#toolbox::checkFormatFastq($fileFastq);
 			open(FASTQ,"<", $fileFastq) or toolbox::exportLog("ERROR: radseq::parseDirectory : Cannot open the file $fileFastq\n$!\n",0);
 			if ($fileFastq=~m/.+_([0-9]).fastq$/)
 			{
@@ -191,15 +191,18 @@ sub processRadtags
 {
 	toolbox::exportLog("ERROR: radseq::processRadtags : should get at least two arguments\n",0) if (@_ < 2);
 	my ($keyFile,$initialDir,$options)=@_;
-	toolbox::exportLog("ERROR: radseq::processRadtags : you need to specify at least -e process_radtags option of stacks\n",0) if ($options=="");
+	toolbox::exportLog("ERROR: radseq::processRadtags : you need to specify at least -e process_radtags option of stacks\n",0) if ($options eq "");
 	
 	toolbox::exportLog("INFOS: radseq::processRadtags : running\n", 1);
 	my $pathDir = `dirname $initialDir` or toolbox::exportLog("ERROR: radseq::processRadtags : error in dirname unix command using $initialDir directory\n",0);
+	chomp($pathDir);
 	my $outDir="$pathDir/outputRadseq/"; # output directory contains the demultiplexed fastq files
+	#toolbox::exportLog("DEBUG: radseq::processRadtags : *$outDir*\n",1);
 	my $temporaryDir="$pathDir/temporaryRadseq/"; #temporary directory contains the barcode and lanes directories
 	my $barcodeDir="$temporaryDir/barcode/";
-	toolbox::makedir($outDir);			 # make an output directory to run process radtags
-	toolbox::makedir($barcodeDir);		 # make an barcode directory to run process radtags
+	toolbox::makeDir($outDir);			 # make an output directory to run process radtags
+	toolbox::makeDir($temporaryDir);	 # make an temporary directory
+	toolbox::makeDir($barcodeDir);		 # make an barcode directory to run process radtags
 							  
 	my @barcodeList = radseq::splitKeyFile($keyFile, $barcodeDir); # Verify the conformity of keyFile and split le file by lane
 	#print Dumper @barcodeList;
@@ -225,7 +228,12 @@ sub processRadtags
 							
 							if(toolbox::run($cmd_line)==1)		## if the command has been excuted correctly, export the log
 							{
-							   toolbox::exportLog("INFOS: radseq::processRadtags : correctly done\n",1);						   	
+							   toolbox::exportLog("INFOS: radseq::processRadtags : correctly done\n",1);
+							   my $logBrut = "$outDir/process_radtags.log";
+							   my $logTarget = "$outDir/process_radtags_$dr.log";
+							   my $command = "mv $logBrut $logTarget";
+							   toolbox::run($command);
+							   #`cp $outDir"process_radtags.log  "$outDir"process_radtags_"$dr".log"` or toolbox::exportLog("ERROR: radseq::processRadtags : error mv Log file using mv $outDir/process_radtags.log $outDir/process_radtags_$dr.log\n",0);				   	
 							}
 							else								## else erreur
 							{
@@ -237,7 +245,7 @@ sub processRadtags
 			}
 		}
 		
-	return $outDir;
+	return 1;
 }
 ################################################################################################
 # END sub radseq::processRadtags
