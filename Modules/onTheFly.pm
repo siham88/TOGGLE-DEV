@@ -281,6 +281,27 @@ package I<onTheFly>
 	
 =head1 DESCRIPTION
 
-
+	This package is used mainly by toggleGenerator.pl that will allow to generate scripts based on the user definition.
 
 =head2 Functions
+
+=over 4
+
+=item checkOrder (Verifies that the order provided by user is correct in term of input/output)
+
+=item generateScript (Assembles the code block into a script based on the user request)
+
+=item indexCreator (Creates all references index/dictionary requested by the given pipeline)
+
+=back
+
+=head1 AUTHORS
+
+Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+
+=head1 SEE ALSO
+
+L<http://www.southgreen.fr/>		# SOUTH GREEN
+
+=cut
