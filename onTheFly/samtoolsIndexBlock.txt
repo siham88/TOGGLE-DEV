@@ -1,4 +1,0 @@
-
-##########################################
-# gatk HAPLOTYPE CALLER, VARIANT FILTRATION and SELECT VARIANTS
-##########################################
