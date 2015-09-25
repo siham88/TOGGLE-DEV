@@ -70,9 +70,9 @@ $gatkIndelRealigner
 IN=bam,fasta
 OUT=bam
 
-#$gatkSelectVariants
-#IN=vcf
-#OUT=vcf
+$gatkSelectVariants
+IN=vcf
+OUT=vcf
 
 $gatkVariantFiltration
 IN=vcf
