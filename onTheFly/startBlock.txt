@@ -186,6 +186,6 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
   }
 }
 
-# Getting the readGroud
+# Getting the readGroup used as part of next filenames created
 my ($fineName,$readGroup) = pairing::extractName($$fileList[0]);                                                  # extract name of file without the extention
 
