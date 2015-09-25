@@ -11,5 +11,5 @@ foreach my $file (@{$fileList})
 {
     $vcfCalled=$file if ($file =~ m/vcf$/);   
 }
-gatk::gatkVariantFiltration($refFastaFile, $vcfFiltered, $vcfCalled, $softParameters);
+gatk::gatkVariantFiltration($refFastaFile, $vcfOut, $vcfCalled, $softParameters);
 
