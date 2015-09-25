@@ -4,7 +4,7 @@
 # gatk variant filtration block
 ##########################################
 
-$vcfFiltered = $newDir."/".$readGroup.".GATKVARIANTFILTRATION.vcf";                                      # name of the first VCF file
+$vcfOut = $newDir."/".$readGroup.".GATKVARIANTFILTRATION.vcf";                                      # name of the first VCF file
 $softParameters = toolbox::extractHashSoft($optionRef, "gatkVariantFiltration");                       # recovery of specific parameters of gatk haplotype caller
 ##DEBUG print "###DEBUG : $softParameters";
 foreach my $file (@{$fileList})
