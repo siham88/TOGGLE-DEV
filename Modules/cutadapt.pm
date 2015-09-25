@@ -128,7 +128,7 @@ sub execution
 
     toolbox::exportLog("ERROR: cutadapt::execution : should get exactly three arguments\n",0) if (@_ !=3 );	# Check if the number of arguments is good
 
-    my ($fileConf,fileIn1,$fileOut1,$fileIn2, $fileOut2)=@_;	 # recovery of arguments
+    my ($fileConf,$fileIn1,$fileOut1,$fileIn2, $fileOut2)=@_;	 # recovery of arguments
     my $cmd;
     my $pairedMode=0;
     $pairedMode=1 if (not defined $fileIn2 or not defined $fileOut2);
