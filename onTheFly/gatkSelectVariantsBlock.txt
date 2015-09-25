@@ -11,4 +11,4 @@ foreach my $file (@{$fileList})
 {
     $vcfCalled=$file if ($file =~ m/vcf$/);   
 }
-gatk::gatkSelectVariants($refFastaFile, $vcfOut, $vcfCalled, $softParameters);
+gatk::gatkSelectVariants($refFastaFile, $vcfCalled, $vcfOut, $softParameters);
