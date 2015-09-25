@@ -12,9 +12,9 @@ if ($$fileList[0] !~ m/\.sai$/) # There are no .sai, the bwaAln was not performe
         # bwa::bwaAln
         ##########################################
         print LOG "INFOS: $0 : Start BWA Aln\n";
-        $softParameters = toolbox::extractHashSoft($optionRef,"bwaAln");                                       # recovery of specific parameters of bwa aln
-        my $fileWithoutExtention = toolbox::extractName($$fileList[$i]);                                         # extract name of file without the extention
-        my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                   # name for the output file of bwa aln
+        $softParameters = toolbox::extractHashSoft($optionRef,"bwaAln");                                      # recovery of specific parameters of bwa aln
+        ($fileWithoutExtention,$readGroup) = pairing::extractName($fileList[$i]);                          # extract name of file without the extention
+        my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                 # name for the output file of bwa aln
         bwa::bwaAln($refFastaFile,$$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
     }
     $fileList = toolbox::readDir($newDir);
@@ -28,8 +28,7 @@ if (scalar @listOfSai != 2) # Two sai and only two are required for bwa sampe
 }
 
 print LOG "INFOS: $0 : Start $stepName\n";
-$fileWithoutExtention = toolbox::extractName($listOfSai[0]);                                             # extract name of file without the extention
-$samFileOut = "$newDir"."/"."$fileWithoutExtention".".BWASAMPE.sam";                                     # name for the output file of bwa sampe
+$samFileOut = "$newDir"."/"."$readGroup".".BWASAMPE.sam";                                     # name for the output file of bwa sampe
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                      # recovery of specific parameters of bwa sampe
 bwa::bwaSampe($samFileOut,$refFastaFile,$listOfSai[0],$listOfSai[1],$fastq1,$fastq2,$fileWithoutExtention,$softParameters); # generate alignement in SAM format
 
