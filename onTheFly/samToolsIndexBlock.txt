@@ -30,4 +30,11 @@ if ($bamFile eq '0') #No BAM file found in the previous folder
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                       # recovery of specific parameters of bwa aln
 samTools::samToolsIndex($bamFile);
 
+#########################################
+#Modifying the folder in a link to previousDir, to avoid empty data transfer is samtools index is the last dir.
+#########################################
+
+my $replacementCommand = "rm -Rf $newDir && ln -s $previousDir $newDir"
+toolbox::run($replacementCommand);
+
 
