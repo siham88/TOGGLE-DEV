@@ -130,8 +130,8 @@ sub execution
 
     my ($fileConf,$fileIn1,$fileOut1,$fileIn2, $fileOut2)=@_;	 # recovery of arguments
     my $cmd;
-    my $pairedMode=0;
-    $pairedMode=1 if (not defined $fileIn2 or not defined $fileOut2);
+    my $singleMode=0;
+    $singleMode=1 if (not defined $fileIn2 or not defined $fileOut2);
     
     ## Lancement de cutadapt        
     open(ADAPT, "<", $fileConf) or toolbox::exportLog("ERROR: cutadapt::execution : Cannot open the file $fileConf $!\n",0);
@@ -143,7 +143,7 @@ sub execution
     }
     close ADAPT;
     
-    if ($pairedMode)
+    if ($singleMode)
     {
 	$cmd="$cutadapt $adaptors -o $fileOut1 $fileIn1";			# command line to execute cutadapt
     }
