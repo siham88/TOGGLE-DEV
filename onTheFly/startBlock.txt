@@ -145,7 +145,7 @@ my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the opti
 #Standard variables
 
 my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$fastqForward,$fastqReverse,$samFile,$extension,$samFileOut,$shortDirName,$stepF1,
-    $vcfCalled,$listOfBam,$bamFile,$bamFileOut,$cleanerCommand);
+    $vcfCalled,$listOfBam,$bamFile,$bamFileOut,$cleanerCommand,$intervalsFile);
 
 #Variable variables
 my ($fastq1,$fastq2,$sam,$bam,$vcf);
