@@ -4,7 +4,7 @@
 # gatk HAPLOTYPE CALLER block
 ##########################################
 
-$vcfCalled = $newDir."/GATKHAPLOTYPECALLER.vcf";                                         # name of the first VCF file
+$vcfCalled = $newDir."/".$readGroup.".GATKHAPLOTYPECALLER.vcf";                                         # name of the first VCF file
 $softParameters = toolbox::extractHashSoft($optionRef, "gatkHaplotypeCaller");                         # recovery of specific parameters of gatk haplotype caller
 ##DEBUG print "###DEBUG : $softParameters";
 foreach my $file (@{$fileList})
