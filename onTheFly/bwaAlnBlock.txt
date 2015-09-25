@@ -11,9 +11,9 @@ for (my $i=0; $i<=$#fileList; $i++)
     ##########################################
     # bwa::bwaAln
     ##########################################
-    $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                       # recovery of specific parameters of bwa aln
-    my ($fileWithoutExtention,$readGroup) = pairing::extractName($fileList[$i]);                                         # extract name of file without the extention
-    my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                   # name for the output file of bwa aln
+    $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                    # recovery of specific parameters of bwa aln
+   ($fileWithoutExtention,$readGroup) = pairing::extractName($fileList[$i]);                             # extract name of file without the extention
+    my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                # name for the output file of bwa aln
     bwa::bwaAln($refFastaFile,$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
 }
 
