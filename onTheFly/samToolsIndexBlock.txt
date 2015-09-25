@@ -34,7 +34,7 @@ samTools::samToolsIndex($bamFile);
 #Modifying the folder in a link to previousDir, to avoid empty data transfer is samtools index is the last dir.
 #########################################
 
-my $replacementCommand = "rm -Rf $newDir && ln -s $previousDir $newDir"
+my $replacementCommand = "rm -Rf $newDir && ln -s $previousDir $newDir";
 toolbox::run($replacementCommand);
 
 
