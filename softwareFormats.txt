@@ -74,9 +74,9 @@ OUT=bam
 #IN=vcf
 #OUT=vcf
 
-#$gatkVariantFiltration
-#IN=vcf
-#OUT=vcf
+$gatkVariantFiltration
+IN=vcf
+OUT=vcf
 
 #$gatkUnifiedGenotyper
 #IN=bam,vcf
