@@ -1,15 +1,14 @@
 
 ##########################################
-# Block for cutadapt::createConfFile and cutadapt::execution and pairing::repairing
+# Block for cutadapt::createConfFile and cutadapt::execution
 ##########################################
 
 ##########################################
 # cutadapt::createConfFile
 ##########################################
 my $cutadaptSpecificFileConf = "$newDir"."/cutadapt.conf";                                       # name for the cutadapt specific configuration file
-$softParameters = toolbox::extractHashSoft($optionref, $stepName);                               # recovery of specific informations for cutadapt
-cutadapt::createConfFile($fileAdaptator, $cutadaptSpecificFileConf, $softParameters);            # create the configuration file specific to cutadapt software
-
+$softParameters = toolbox::extractHashSoft($optionRef, $stepName);                               # recovery of specific informations for cutadapt
+cutadapt::createConfFile($cutadaptSpecificFileConf, $softParameters);            # create the configuration file specific to cutadapt software
 
 
 # For each files
@@ -24,32 +23,3 @@ for (my $i=0; $i<=$#fileList; $i++)
     my $fastqFileOut = "$newDir"."/"."$fileWithoutExtention".".CUTADAPT.fastq";                         # name for the output file of cutadapt execution
     cutadapt::execution($fileList[$i],$cutadaptSpecificFileConf,$fastqFileOut);                         # run cutadapt program on current file
 }
-
-##########################################
-# pairing::repairing
-##########################################
-print LOG "----------------------------------------\n";
-print LOG "INFOS: $0 : Start pairing sequences\n";
-print F1 "PairingSequences\n";
-$newDir = toolbox::changeDirectoryArbo($initialDir,3);                                                  # change for the pairing_sequences directory
-my $repairingDir = $newDir;                                                                             # to keep the information of repairing folder for the following analysis
-##DEBUG print LOG "CHANGE DIRECTORY TO $newDir\n";
-my $cutadaptList = toolbox::readDir($cutadaptDir);                                                      # read it to recover files in it
-##DEBUG print LOG "INFOS toolbox ReadDir: @$cutadaptList\n";
-my @cutadaptList = @$cutadaptList;
-my @finalCutadaptList;
-
-
-for (my $i=0; $i<=$#cutadaptList; $i++)
-{
-    if ($cutadaptList[$i]=~m/cutadapt.conf/)
-    {
-        next;
-    }
-    else
-    {
-        push (@finalCutadaptList,"$cutadaptList[$i]");
-    }
-}
-
-pairing::repairing($finalCutadaptList[0],$finalCutadaptList[1],$newDir);                                                    # from two de-paired files, forward + reverse, will create three files, forward, reverse and singl
