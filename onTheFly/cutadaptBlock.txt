@@ -11,13 +11,13 @@ $softParameters = toolbox::extractHashSoft($optionRef, $stepName);              
 cutadapt::createConfFile($cutadaptFileConf, $softParameters);                                       # create the configuration file specific to cutadapt software
 
 $fastqForward=$$fileList[0];
-$fileWithoutExtention = toolbox::extractName($fastqForward);                                        # extract name of forward file without the extention
+($fileWithoutExtention,$readGroup) = pairing::extractName($fastqForward);                           # extract name of file without the extention
 my $fastqForwardOut = "$newDir"."/"."$fileWithoutExtention".".CUTADAPT.fastq";                      # name for the forward output file of cutadapt execution
 
 if (scalar(@{$fileList})==2)                                                                        # paired mode
 {
     $fastqReverse=$$fileList[1];
-    $fileWithoutExtention = toolbox::extractName($fastqReverse);                                    # extract name of reverse fastq file without the extention
+    ($fileWithoutExtention,$readGroup) = pairing::extractName($fastqReverse);                           # extract name of file without the extention
     my $fastqReverseOut = "$newDir"."/"."$fileWithoutExtention".".CUTADAPT.fastq";                  # name for the reverse output file of cutadapt execution
     
     ##########################################
