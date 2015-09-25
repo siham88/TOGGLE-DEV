@@ -11,7 +11,7 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be SAM or 
 
     if ($file =~ m/bam$/) # the file type is normally bam
     {
-        if ($samFile != 0) # Already a sam of a bam recognized, but more than one in the previous folder
+        if ($bamFile != 0) # Already a sam of a bam recognized, but more than one in the previous folder
         {
             toolbox::exportLog("ERROR : $0 : there are more than one single SAM/BAM file at $stepName step.\n",0);
         }
