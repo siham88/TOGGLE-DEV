@@ -14,8 +14,6 @@ toolbox::exportLog("ERROR : $0 : No SAM/BAM file provided at step $stepName\n",0
 my $path;
 ($path,$fileWithoutExtention) = pairing::extractName($fileIn);                                                  # extract name of file without the extention
 
-toolbox::exportLog("$path --- $fileWithoutExtention\n",1);
-
 $bamFileOut = $newDir."/"."$fileWithoutExtention".".PICARDTOOLSSORT.bam";                              # name for the output file of picardtools sort sam
 $softParameters = toolbox::extractHashSoft($optionRef,"picardToolsSortSam");                           # recovery of specific parameters of picard sort sam
 picardTools::picardToolsSortSam($fileIn,$bamFileOut,$softParameters); 

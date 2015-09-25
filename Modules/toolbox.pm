@@ -625,7 +625,8 @@ sub extractName
 {
     my $bruteName=shift @_;	# get the complete path of the file
     
-    $bruteName=~ s/^.+\/(.+)\..+/$1/; # get just the name of the file after the last /
+    $bruteName=`basename $bruteName` or toolbox::exportLog("ERROR : $0 : toolbox::extractName cannot work on $bruteName name\n",0); # get just the name of the file after the last /
+    chomp $bruteName;
 					    ##### REVUE CODE CD 18-09 : et s'il y a un autre point dans le nom de fichier??? ou pas de point
     ##DEBUG print Dumper($bruteName);
     return $bruteName;

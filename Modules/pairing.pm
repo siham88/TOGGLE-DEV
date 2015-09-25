@@ -282,7 +282,7 @@ sub extractName
     my ($file)=@_;		# recovery of informations
     chomp $file; 
 
-    my $name=`basename $file`;		# recovery of the last name present in the path, normally the name of the file
+    my $name=`basename $file` or toolbox::exportLog("ERROR : $0 : pairing::extractName cannot work on $file name\n",0);		# recovery of the last name present in the path, normally the name of the file
 
     chomp $name;
     
