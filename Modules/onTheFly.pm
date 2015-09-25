@@ -138,7 +138,7 @@ sub generateScript
     
     my $catCommand = "cat $toggle/onTheFly/startBlock.txt"; #Will create the preambule for the pipeline code, including paths, use modules, etc...
     my @stepsList = sort{$a <=> $b} keys %{$hashOrder};
-    
+    my $cleanerCounter=1; #
     foreach my $step (@stepsList)
     {
         my $currentSoft=$$hashOrder{$step}; #Picking up the step name
@@ -146,9 +146,17 @@ sub generateScript
         $currentSoft =~ s/ /_/g; #Removing extraspace
         $catCommand .= " ".$toggle."/onTheFly/previousBlock.txt"; # adding the infos of previous block
         $catCommand .= " ".$toggle."/onTheFly/".$currentSoft."Block.txt"; #Adding the code block for the corresponding step in the cat command, as all txt files with these blocks are name as softBlock.txt
-        $catCommand .= " ".$toggle."/onTheFly/cleanerBlock.txt" if (defined $$hashCleaner{$step-1}); # The previous step has to be cleaned
-        next if ($$hashSoftware{$currentSoft}{'OUT'} eq "NA"); # will not add the switcher of previous directory for 'dead end' protgrams such as fastqc, samtools flagstats....
-        
+	if ($$hashSoftware{$currentSoft}{'OUT'} eq "NA")
+	{# will not add the switcher of previous directory for 'dead end' protgrams such as fastqc, samtools flagstats....
+	    $cleanerCounter++;
+	    next;
+	}
+        if (defined $$hashCleaner{$step-$cleanerCounter})
+	{# The previous step has to be cleaned
+	    $catCommand .= " ".$toggle."/onTheFly/cleanerBlock.txt";
+	    $cleanerCounter=1;
+	}
+	
 	$catCommand .= " ".$toggle."/onTheFly/afterBlock.txt"; # adding infos for next block
     }
     
