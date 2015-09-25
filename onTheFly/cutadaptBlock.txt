@@ -6,20 +6,28 @@
 ##########################################
 # cutadapt::createConfFile
 ##########################################
-my $cutadaptSpecificFileConf = "$newDir"."/cutadapt.conf";                                       # name for the cutadapt specific configuration file
-$softParameters = toolbox::extractHashSoft($optionRef, $stepName);                               # recovery of specific informations for cutadapt
-cutadapt::createConfFile($cutadaptSpecificFileConf, $softParameters);            # create the configuration file specific to cutadapt software
+my $cutadaptFileConf = "$newDir"."/cutadapt.conf";                                                  # name for the cutadapt specific configuration file
+$softParameters = toolbox::extractHashSoft($optionRef, $stepName);                                  # recovery of specific informations for cutadapt
+cutadapt::createConfFile($cutadaptSpecificFileConf, $softParameters);                               # create the configuration file specific to cutadapt software
 
+$fastqForward=$$fileList[0];
+$fileWithoutExtention = toolbox::extractName($fastqForward);                                        # extract name of forward file without the extention
+my $fastqForwardOut = "$newDir"."/"."$fileWithoutExtention".".CUTADAPT.fastq";                      # name for the forward output file of cutadapt execution
 
-# For each files
-for (my $i=0; $i<=$#fileList; $i++)
+if (scalar(@{$fileList})==2)                                                                        # paired mode
 {
+    $fastqReverse=$$fileList[1];
+    $fileWithoutExtention = toolbox::extractName($fastqReverse);                                    # extract name of reverse fastq file without the extention
+    my $fastqReverseOut = "$newDir"."/"."$fileWithoutExtention".".CUTADAPT.fastq";                  # name for the reverse output file of cutadapt execution
+    
     ##########################################
     # cutadapt::execution
     ##########################################
-    print LOG "INFOS: $0 : Start cutadapt execution on file $initialsFiles[$i]\n";
+    print LOG "INFOS: $0 : Start cutadapt execution on file $fastqForward and $fastqReverse\n";
     ##DEBUG print LOG "CHANGE DIRECTORY TO $newDir\n";
-    $fileWithoutExtention = toolbox::extractName($fileList[$i]);                                        # extract name of file without the extention
-    my $fastqFileOut = "$newDir"."/"."$fileWithoutExtention".".CUTADAPT.fastq";                         # name for the output file of cutadapt execution
-    cutadapt::execution($fileList[$i],$cutadaptSpecificFileConf,$fastqFileOut);                         # run cutadapt program on current file
+    cutadapt::execution($cutadaptFileConf,$fastqForward,,$fastqForwardOut,$fastqReverse,$fastqReverseOut);                     # run cutadapt program on current file
+}
+else                                                                                                 # single mode
+{
+    cutadapt::execution($cutadaptFileConf,$fastqForward,,$fastqForwardOut);                          # run cutadapt program on current file
 }
