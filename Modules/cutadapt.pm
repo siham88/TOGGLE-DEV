@@ -62,6 +62,20 @@ sub createConfFile
     my ($fileAdaptator, $fileConf, $optionref)=@_;							# recovery of arguments
     
     open(CONF, ">", $fileConf) or toolbox::exportLog("ERROR: cutadapt::createConfFile : Can't open the configuration file $fileConf $!\n",0); 	# opening the configuration file to fill
+     
+    ##DEBUG : print Data::Dumper::Dumper(\%$optionref);
+    my %optionsRef = %$optionref;
+    foreach my $parameter (keys %optionsRef)
+    {
+	if ($parameter eq 'adaptatorFile')
+	{
+	    $fileAdaptator=$optionsRef{$parameter};
+	    next;
+	}
+	print CONF "$parameter $optionsRef{$parameter}\n";							# print in the configuration file the parameter and the options cooresponding to
+    }
+    
+   
     open(ADAPTATOR, "<", $fileAdaptator) or toolbox::exportLog("ERROR: cutadapt::createConfFile : Cannot open the adaptator file $fileAdaptator $!\n",0);	# opening the adaptators file
     while (my $seq=<ADAPTATOR>)
     {
@@ -74,13 +88,6 @@ sub createConfFile
         print CONF "-b $seq\n";										# print in the configuration file the "-b" parameter and the reverse adaptators sequence cooresponding
     }
     
-    ##DEBUG : print Data::Dumper::Dumper(\%$optionref);
-    my %optionsRef = %$optionref;
-    foreach my $parameter (keys %optionsRef)
-    {
-	print CONF "$parameter $optionsRef{$parameter}\n";							# print in the configuration file the parameter and the options cooresponding to
-    }
-
     close CONF;
     close ADAPTATOR;
     
