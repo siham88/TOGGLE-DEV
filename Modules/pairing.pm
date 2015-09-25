@@ -282,25 +282,17 @@ sub extractName
     my ($file)=@_;		# recovery of informations
     chomp $file; 
 
-    my @path=split /\//, $file;		# split the path of the file by "/"
+    my $name=`basename $file`;		# recovery of the last name present in the path, normally the name of the file
 
-    my $name=$path[$#path];		# recovery of the last name present in the path, normally the name of the file
-
+    chomp $name;
+    
     my @listName=split /\./, $name; #Separate in a list the filename and its format (ex file1.fastq is separated in file1 and fastq)
 
-    pop @listName if (scalar @listName > 1); #Will remove the last value of the list ONLY if there are more than one. ex: "file.fasta" will pop, but not "file"
-    
-    my $fileWithoutFormat = join ('.',@listName); #Will reconstitute the original name without the format. Ex, the file.one.fasta will be recovered as file.one
+    my $shortName = shift @listName ;#pick up what is before the first "."
 
-    
-    my $shortName=$fileWithoutFormat;#allows removing of format (fastq) and of all "." remaining in the name.
-
-    my $readGroup=$fileWithoutFormat; #Picking up the readGroup name as the returning of the previous line
-
-    $readGroup =~ s/\.[A-Z]+//; # Removing infos from names such as .CUTADAPT. Eg file_3.CUTADAPT.fastq is now file_3 
-    $readGroup =~ s/(^.*)_\d$/$1/;#Check if the file is named on the type readGroup_1 or even only readGroup
-    
-   
+    my $readGroup=$shortName; #Picking up the readGroup name as the returning of the previous line
+    $readGroup =~ s/_.*$//; # Removing what is after any "_" 
+       
     #cleaning name
     $shortName=~ s/ /_/g;#removing spaces
     $shortName=~ s/[é|è|ê]/e/g;#removing non utf8 accents from e
