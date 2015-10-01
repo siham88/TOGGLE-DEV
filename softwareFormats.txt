@@ -10,9 +10,13 @@ $bwaSamse
 IN=fastq,sai
 OUT=sam
 
-#$bwaIndex
-#IN=fasta
-#OUT=NA
+$bowtieBuild
+IN=fasta
+OUT=NA
+
+$bwaIndex
+IN=fasta
+OUT=NA
 
 #$samToolsSort
 #IN=bam
