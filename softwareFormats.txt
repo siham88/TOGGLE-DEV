@@ -6,9 +6,9 @@ $bwaSampe
 IN=fastq,sai
 OUT=sam
 
-#$bwaSamse
-#IN=fastq,sai
-#OUT=sam
+$bwaSamse
+IN=fastq,sai
+OUT=sam
 
 #$bwaIndex
 #IN=fasta
