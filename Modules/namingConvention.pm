@@ -139,7 +139,7 @@ sub correctName
         case ($name =~ m/fastx[\s|\.|\-| \/|\\|\|]*trimmer/i){$correctedName="fastxTrimmer"} # Correction for fastxTrimmer
 
         #FOR tophat.pm
-        
+        case ($name =~ m/bowtie[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtieBuild"; } #Correction for bwaAln
         #FOR cufflinks.pm
         
         #FOR HTSeq.pm
