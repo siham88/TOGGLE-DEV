@@ -268,6 +268,46 @@ sub indexCreator
                 }
             }
         }
+	
+	#INDEXING for topHat
+        if ($currentSoft =~ m/bowtie/i or $currentSoft =~ m/tophat/i) #Any step involving BWA
+        {
+            if ($currentSoft eq "bowtieBuild") # If the index is expressely asked
+            {
+                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtieBuild");                                  # recovery of specific parameters of bwa index
+                tophat::bowtieBuild($refFastaFile,$softParameters);  
+            }
+            else #We check if the index is present or not
+            {
+                my $refIndexedFile = $reference.".ebwt";
+                if (-e $refIndexedFile)
+                {# The index is already created
+                    toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for bowtie-built already exists, skipped...\n",1);
+                    next;
+                }
+                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtieBuild");                                  # recovery of specific parameters of bwa index
+                tophat::bowtieBuild($refFastaFile,$softParameters);  
+            }
+	    
+	    if ($currentSoft eq "bowtie2-Build") # If the index is expressely asked
+            {
+                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bwa index
+                tophat::bowtie2Build($refFastaFile,$softParameters);  
+            }
+            else #We check if the index is present or not
+            {
+                my $refIndexedFile = $reference.".bt2";
+                if (-e $refIndexedFile)
+                {# The index is already created
+                    toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for bowtie2-built already exists, skipped...\n",1);
+                    next;
+                }
+                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bwa index
+                tophat::bowtie2Build($refFastaFile,$softParameters);  
+            }
+	    
+	    
+        }
     }
     
     
