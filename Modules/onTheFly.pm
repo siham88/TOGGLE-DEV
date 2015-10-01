@@ -275,7 +275,7 @@ sub indexCreator
             if ($currentSoft eq "bowtieBuild") # If the index is expressely asked
             {
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bowtieBuild");                                  # recovery of specific parameters of bwa index
-                tophat::bowtieBuild($refFastaFile,$softParameters);  
+                tophat::bowtieBuild($reference,$softParameters);  
             }
             else #We check if the index is present or not
             {
@@ -286,13 +286,13 @@ sub indexCreator
                     next;
                 }
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bowtieBuild");                                  # recovery of specific parameters of bwa index
-                tophat::bowtieBuild($refFastaFile,$softParameters);  
+                tophat::bowtieBuild($reference,$softParameters);  
             }
 	    
 	    if ($currentSoft eq "bowtie2-Build") # If the index is expressely asked
             {
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bwa index
-                tophat::bowtie2Build($refFastaFile,$softParameters);  
+                tophat::bowtie2Build($reference,$softParameters);  
             }
             else #We check if the index is present or not
             {
@@ -303,7 +303,7 @@ sub indexCreator
                     next;
                 }
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bwa index
-                tophat::bowtie2Build($refFastaFile,$softParameters);  
+                tophat::bowtie2Build($reference,$softParameters);  
             }
 	    
 	    
