@@ -67,9 +67,9 @@ sub createConfFile
 
     toolbox::exportLog("INFO: cutadapt::createConfFile : $optionsRef{'adaptatorFile'}",2);	
     my $fileAdaptator="$toggle/adaptator.txt";
-    if (exists $optionsRef{'adaptatorFile'})
+    if (exists $optionsRef{"-adaptatorFile"sq})
     {
-	    $fileAdaptator=$optionsRef{'adaptatorFile'};
+	    $fileAdaptator=$optionsRef{'-adaptatorFile'};
 	    delete($optionsRef{'adaptatorFile'});
     }
  
