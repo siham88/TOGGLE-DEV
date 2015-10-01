@@ -60,10 +60,11 @@ sub createConfFile
 {
     
     my ($fileConf, $optionref)=@_;							# recovery of arguments
-        
+    my %optionsRef = %$optionref;      
+    
     ##DEBUG :
     print Dumper(\%$optionref);
-    my %optionsRef = %$optionref;
+
     toolbox::exportLog("INFO: cutadapt::createConfFile : $optionsRef{'adaptatorFile'}",2);	
     my $fileAdaptator="$toggle/adaptator.txt";
     if (exists $optionsRef{'adaptatorFile'})
