@@ -295,24 +295,26 @@ sub generateGraphviz
 
     
     #Verification if dot can work on this installation
-    my $dotHelpCommand = `dot --help`;
-    if ($dotHelpCommand !~ m/Usage: dot [-Vv?]/)
+    my $dotHelpCommand = `dot -?`;
+    if ($dotHelpCommand !~ m/Usage: dot/)
     {
 	#The dot soft is not installed on this machine
-	toolbox::exportLog("WARNING : $0 : Cannot generate graphical view of the current pipeline through toolbox::generateGraphviz as Graphviz is not installed.\n",2);
+	toolbox::exportLog("WARNING : $0 : Cannot generate graphical view of the current pipeline through onTheFly::generateGraphviz as Graphviz is not installed.\n",2);
 	return 1;
     }
     
     #Log info
-    toolbox::exportLog("INFOS : $0 : toolbox::generateGraphviz is creating the graphical view of the current pipeline.\n",1);
+    toolbox::exportLog("INFOS : $0 : onTheFly::generateGraphviz is creating the graphical view of the current pipeline.\n",1);
     
     open(OUT,">", $dotFileOut) or die "Cannot create $dotFileOut: $0\n";
     print OUT "digraph G {\n\tnode [shape=box,style=filled,color=lightblue]\n";
     
     my ($previousSoft,$input,$output);
-    foreach my $step (sort keys {$a <=>$b} %{$hashOrder})
+    foreach my $step (sort {$a <=> $b} keys %{$hashOrder})
 	{
 	my $soft=$$hashOrder{$step};
+	##DEBUG toolbox::exportLog("DEBUG : $0 : onTheFly::generateGraphviz, step = $step, soft = $soft.\n",2);
+
 	$input=$$hashInOut{$soft}{"IN"};
 	$output=$$hashInOut{$soft}{"OUT"};
 	$soft.="_$step";
@@ -347,8 +349,7 @@ sub generateGraphviz
     close OUT;
     
     my $dotCom="dot -Tpng -o$graphicFileOut $dotFileOut";
-    system("$dotCom") and die ("Cannot execute dot: $0\n");
-    print "\nDone\n";
+    toolbox::run("$dotCom");
     
 }
 

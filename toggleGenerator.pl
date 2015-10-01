@@ -273,8 +273,6 @@ my $intermediateDir = $workingDir."/intermediateResults";
 #Graphviz Graphic generator
 onTheFly::generateGraphviz($hashOrder,$outputDir);
 
-exit;
-
 if ($orderBefore1000)
 {
     onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner);
