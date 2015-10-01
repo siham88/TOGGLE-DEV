@@ -31,3 +31,6 @@ else                                                                            
 {
     cutadapt::execution($cutadaptFileConf,$fastqForward,,$fastqForwardOut);                          # run cutadapt program on current file
 }
+
+$cmd = "rm $cutadaptFileConf";
+toolbox::run($cmd);
