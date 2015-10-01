@@ -270,6 +270,11 @@ foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash 
 my $finalDir = $outputDir."/finalResults";
 my $intermediateDir = $workingDir."/intermediateResults";
 
+#Graphviz Graphic generator
+onTheFly::generateGraphviz($hashOrder,$outputDir);
+
+exit;
+
 if ($orderBefore1000)
 {
     onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner);

@@ -275,6 +275,83 @@ sub indexCreator
 }
 
 
+
+################################################################################################
+# sub generateGraphviz =>  will generate graphical view of the pipeline on the fly 
+################################################################################################
+# arguments :
+# 	- hash of complete configuration
+#       - output directory
+################################################################################################
+
+sub generateGraphviz
+{
+    my ($hashOrder,$outDir)=@_;
+    
+    my $dotFileOut=$outDir."/togglePipeline.dot"; #Creation of the dot file
+    my $graphicFileOut=$outDir."/togglePipeline.png"; #Creation of the figure file in png
+    
+    my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt"); #We need the format IN/OUT
+
+    
+    #Verification if dot can work on this installation
+    my $dotHelpCommand = `dot --help`;
+    if ($dotHelpCommand !~ m/Usage: dot [-Vv?]/)
+    {
+	#The dot soft is not installed on this machine
+	toolbox::exportLog("WARNING : $0 : Cannot generate graphical view of the current pipeline through toolbox::generateGraphviz as Graphviz is not installed.\n",2);
+	return 1;
+    }
+    
+    #Log info
+    toolbox::exportLog("INFOS : $0 : toolbox::generateGraphviz is creating the graphical view of the current pipeline.\n",1);
+    
+    open(OUT,">", $dotFileOut) or die "Cannot create $dotFileOut: $0\n";
+    print OUT "digraph G {\n\tnode [shape=box,style=filled,color=lightblue]\n";
+    
+    my ($previousSoft,$input,$output);
+    foreach my $step (sort keys {$a <=>$b} %{$hashOrder})
+	{
+	my $soft=$$hashOrder{$step};
+	$input=$$hashInOut{$soft}{"IN"};
+	$output=$$hashInOut{$soft}{"OUT"};
+	$soft.="_$step";
+	unless ($previousSoft) #first line, initiation
+	    {
+	    $previousSoft=$soft;
+	    my $outline = "\t".$input."->".$soft." ;\n";
+	    print OUT $outline;
+	    next;
+	    }
+	if ($output eq "NA")
+	{
+	    #The soft is a 'dead-end'
+	    print OUT "\tnode [shape=ellipse,style=filled,color=\".7 .3 1.0\"];\n";
+	    my $outline = "\t".$previousSoft."->".$soft." [style=dotted];\n";
+	    $outline .= "\t".$soft."->".$previousSoft." [style=dotted];\n";
+	    $outline .= "\tnode [shape=box,style=filled,color=lightblue]";
+	    print OUT $outline;
+	    next;
+	}
+	
+	 
+	my $outline = "\t".$previousSoft."->".$soft.";\n";
+	print OUT $outline;
+	$previousSoft = $soft;
+	}
+	
+    my $trueName=$previousSoft;
+    $trueName =~ s/_\d{1,}$//;
+    my $lastLine="\t".$previousSoft."->".$$hashInOut{$trueName}{"OUT"}.";\n\t}\n";
+    print OUT $lastLine;
+    close OUT;
+    
+    my $dotCom="dot -Tpng -o$graphicFileOut $dotFileOut";
+    system("$dotCom") and die ("Cannot execute dot: $0\n");
+    print "\nDone\n";
+    
+}
+
 1;
 
 =head1 NAME
