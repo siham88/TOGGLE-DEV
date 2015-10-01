@@ -13,7 +13,7 @@ if ($$fileList[0] !~ m/\.sai$/) # There are no .sai, the bwaAln was not performe
         ##########################################
         print LOG "INFOS: $0 : Start BWA Aln\n";
         $softParameters = toolbox::extractHashSoft($optionRef,"bwaAln");                                      # recovery of specific parameters of bwa aln
-        ($fileWithoutExtention,$readGroup) = pairing::extractName($fileList[$i]);                          # extract name of file without the extention
+        ($fileWithoutExtention,$readGroup) = pairing::extractName($$fileList[$i]);                          # extract name of file without the extention
         my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                 # name for the output file of bwa aln
         bwa::bwaAln($refFastaFile,$$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
     }
