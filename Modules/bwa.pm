@@ -142,7 +142,7 @@ sub bwaSampe
 sub bwaSamse
 {
     my($samFileOut,$refFastaFileIn,$saiFileIn,$fastqFileIn,$readGroupLine,$optionsHachees)=@_;
-    print LOG "=========$samFileOut,$refFastaFileIn,$saiFileIn,$fastqFileIn,$readGroupLine========";
+    toolbox::exportLog("DEBUG: bwa::bwaSamse : =========$samFileOut,$refFastaFileIn,$saiFileIn,$fastqFileIn,$readGroupLine========\n",1);
     if ((toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($saiFileIn)==1) and (toolbox::sizeFile($fastqFileIn)==1))		##Check if entry files exist and are not empty
     {
         my $options="";
