@@ -73,6 +73,14 @@ Mesg
 }
 
 
+##########################################
+# transforming relative path in absolute
+##########################################
+foreach my $inputParameters (keys %param)
+{
+  $param{$inputParameters}=toolbox::relativeToAbsolutePath($param{$inputParameters});
+}
+
 my $initialDir = $param{'-d'};                                                                                  # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};                                                                                    # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};                                                                                # recovery of the reference file

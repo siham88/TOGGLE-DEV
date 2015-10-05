@@ -86,15 +86,18 @@ Mesg
 ##########################################
 foreach my $inputParameters (keys %param)
 {
-  $initialDir=toolbox::relativeToAbsolutePath($param{$inputParameters});
+  ##DEBUG print $param{$inputParameters},"**";
+  $param{$inputParameters}=toolbox::relativeToAbsolutePath($param{$inputParameters});
 }
 
 my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
+##DEBUG print "init Dir = $initialDir\n";
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
+##DEBUG print "file Conf = $fileConf\n";
 my $refFastaFile = $param{'-r'};      # recovery of the reference file
+##DEBUG print "reference = $refFastaFile\n";
 my $outputDir = $param{'-o'};         # recovery of the output folder
-
-
+##DEBUG print "out Dir = $outputDir\n";
 
 
 
@@ -254,8 +257,8 @@ onTheFly::indexCreator($configInfo,$refFastaFile);
 
 #Generate script
 
-my $scriptSingle = "toggleBzz.pl";
-my $scriptMultiple = "toggleMultiple.pl";
+my $scriptSingle = "$outputDir/toggleBzz.pl";
+my $scriptMultiple = "$outputDir/toggleMultiple.pl";
 my $hashOrder=toolbox::extractHashSoft($configInfo,"order"); #Picking up the options for the order of the pipeline
 my $hashCleaner=toolbox::extractHashSoft($configInfo,"cleaner"); #Picking up infos for steps to be cleaned / data to be removed all along the pipeline
 
