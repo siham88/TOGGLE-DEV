@@ -28,6 +28,6 @@ if ($bamFile eq '0') #No BAM file found in the previous folder
 # SAMtools FLAGSTAT  
 #########################################    
 ($fileWithoutExtention,$readGroup) = pairing::extractName($bamFile); 
-my $bamStatOut=$newDir."/".$fileWithoutExtension.".samtoolsFlagstat";
+my $bamStatOut=$newDir."/".$fileWithoutExtention.".samtoolsFlagstat";
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                       # recovery of specific parameters of bwa aln
 samTools::samToolsFlagstat($bamFile,$bamStatOut);
