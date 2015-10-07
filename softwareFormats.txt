@@ -50,9 +50,9 @@ OUT=NA
 #IN=bam
 #OUT=NA
 
-#$samToolsFlagstat
-#IN=bam
-#OUT=NA
+$samToolsFlagstat
+IN=bam
+OUT=NA
 
 $fastqc
 IN=fastq,bam
