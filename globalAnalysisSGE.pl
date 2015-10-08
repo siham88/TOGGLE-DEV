@@ -255,7 +255,7 @@ for (my $i=0; $i<=$#listOfFiles; $i++)                                          
     {
         $gatkPath.="/7_GATK";
         ##DEBUG toolbox::exportLog("DEBUG: $0 : if File directory eq 7_GATK : $listOfFiles[$i]\n",1);
-        my $copyCom = "cp $gatkPath/*.GATKINDELREALIGNER.ba* $bamDirPath.";                                 # command to move bam files just created into the directory appropriate for the pipeline
+        my $copyCom = "cp $gatkPath/*.PICARDTOOLSMARKDUPLICATES.ba* $bamDirPath.";                                 # command to move bam files just created into the directory appropriate for the pipeline
         ##DEBUG toolbox::exportLog("DEBUG: $0 : Check bam cp command: $copyCom\n",1);
         $okFinal = toolbox::run($copyCom);                                                                  # move the files
         undef($gatkPath);
@@ -280,3 +280,25 @@ toolbox::exportLog("#########################################\nCONGRATS: SNP cal
 
 close F1;
 exit;
+
+=head1 Name
+
+globalAnalysisSGE.pl
+
+=head1 Usage
+
+globalAnalysisSGE.pl -d DIR-c FILE -r FILE [-a FILE]
+
+=head1 Required arguments
+
+      -d DIR    The directory containing fastq file
+      -c FILE   The configuration file
+      -r FILE   The reference sequence (fasta)
+
+=head1 Optional argument
+      -a FILE   The file containig the adaptator sequences
+
+=head1  Author
+Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+
+=cut
