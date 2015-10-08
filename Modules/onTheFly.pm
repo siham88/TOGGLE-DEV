@@ -40,7 +40,6 @@ use warnings;
 use Data::Dumper;
 use List::Compare;
 
-use lib qw(.);
 use localConfig;
 use toolbox;
 use bwa;
