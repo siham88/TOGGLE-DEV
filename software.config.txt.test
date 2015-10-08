@@ -57,7 +57,7 @@ $GATK gatkBaseRecalibrator
 
 $GATK gatkRealignerTargetCreator
 -T=RealignerTargetCreator
--nt=4
+--fix_misencoded_quality_scores -fixMisencodedQual
 
 $GATK gatkIndelRealigner
 -T=IndelRealigner
