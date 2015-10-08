@@ -35,7 +35,6 @@
 
 use strict;
 use warnings;
-use lib qw(./Modules);
 use localConfig;
 use Data::Dumper;
 
