@@ -56,11 +56,9 @@ $GATK gatkBaseRecalibrator
 
 $GATK gatkRealignerTargetCreator
 -T=RealignerTargetCreator
---fix_misencoded_quality_scores -fixMisencodedQuals
 
 $GATK gatkIndelRealigner
 -T=IndelRealigner
---fix_misencoded_quality_scores -fixMisencodedQuals
 
 $GATK gatkHaplotypeCaller
 -T=HaplotypeCaller
