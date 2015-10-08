@@ -251,9 +251,9 @@ for (my $i=0; $i<=$#listOfFiles; $i++)                                          
     {
         $gatkPath=$1;                                                                                       # recovery of the current GATK's folder path
     }
-    elsif ($listOfFiles[$i]=~m/(7_GATK)$/)
+    elsif ($listOfFiles[$i]=~m/(5_PICARDTOOLS)$/)
     {
-        $gatkPath.="/7_GATK";
+        $gatkPath.="/5_PICARDTOOLS";
         ##DEBUG toolbox::exportLog("DEBUG: $0 : if File directory eq 7_GATK : $listOfFiles[$i]\n",1);
         my $copyCom = "cp $gatkPath/*.PICARDTOOLSMARKDUPLICATES.ba* $bamDirPath.";                                 # command to move bam files just created into the directory appropriate for the pipeline
         ##DEBUG toolbox::exportLog("DEBUG: $0 : Check bam cp command: $copyCom\n",1);
