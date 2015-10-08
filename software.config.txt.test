@@ -28,7 +28,6 @@ $samtoolsView
 $bwa Aln 1
 -n=5
 -o=1
--e=-1
 
 $bwaIndex
 -a=is
