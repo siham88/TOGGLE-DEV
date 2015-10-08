@@ -246,7 +246,7 @@ for (my $i=0; $i<=$#listOfFiles; $i++)                                          
     {
         $gatkPath.="/7_GATK";
         ##DEBUG toolbox::exportLog("DEBUG: $0 : if File directory eq 7_GATK : $listOfFiles[$i]\n",1);
-        my $copyCom = "cp $gatkPath/*.GATKINDELREALIGNER.ba* $bamDirPath.";                                 # command to move bam files just created into the directory appropriate for the pipeline
+        my $copyCom = "cp $gatkPath/*.PICARDTOOLSMARKDUPLICATES.ba* $bamDirPath.";                                 # command to move bam files just created into the directory appropriate for the pipeline
         ##DEBUG toolbox::exportLog("DEBUG: $0 : Check bam cp command: $copyCom\n",1);
         $okFinal = toolbox::run($copyCom);                                                                  # move the files
         undef($gatkPath);
