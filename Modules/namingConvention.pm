@@ -43,7 +43,6 @@ use warnings;
 use Data::Dumper;
 use Switch;
 
-use lib qw(.);
 use localConfig;
 
 
