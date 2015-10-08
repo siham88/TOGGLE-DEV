@@ -76,11 +76,6 @@ $picardTools markDuplicates
 VALIDATION_STRINGENCY=SILENT
 REMOVE_DUPLICATES=TRUE
 
-$SGE
--q -q bioinfo.q@node13.alineos.net
--N -V
--b Y
-
 #RNASEQ analysis
 $fastx_trimmer
 -f 8
