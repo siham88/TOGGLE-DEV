@@ -60,6 +60,7 @@ $GATK gatkRealignerTargetCreator
 
 $GATK gatkIndelRealigner
 -T=IndelRealigner
+--fix_misencoded_quality_scores -fixMisencodedQuals
 
 $GATK gatkHaplotypeCaller
 -T=HaplotypeCaller
