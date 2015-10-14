@@ -158,12 +158,12 @@ sub tophat2
 	    my ($fineName,$readGroup) = pairing::extractName($forwardFastqFileIn); 
 	    my $fileList=toolbox::readDir($tophatDirOut);
 	    my @fileList=@$fileList;
-	    for (my $i=0; $i<=$#fileList;$i ++)
+	    for (my $i=0; $i<$#fileList;$i ++)
 	    {
 		my ($file,$path)=toolbox::extractPath($fileList[$i]);
 		##DEBUG
 		toolbox::exportLog("DEBUG: tophat : $fileList[$i] -$file-$readGroup-$fineName- \n",1);
-		my $command="cp $tophatDirOut/$file $tophatDirOut/$readGroup".".".$file;
+		my $command="mv $tophatDirOut/$file $tophatDirOut/$readGroup".".".$file;
 		toolbox::run($command);
 	    }
             toolbox::exportLog("INFOS: tophat : correctly done\n",1);
