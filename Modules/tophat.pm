@@ -157,7 +157,7 @@ sub tophat2
         {
 	    my $fileWithoutExtension=toolbox::extractName($forwardFastqFileIn);
 	    my $fileList=toolbox::readDir($tophatDirOut);
-	    my @fileList=\$fileList;
+	    my @fileList=@$fileList;
 	    for (my $i=0; $i<=$#fileList;$i ++)
 	    {
 		my $command="cp $fileList[$i] ".$fileWithoutExtension.".".$fileList[$i];
