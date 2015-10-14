@@ -57,6 +57,8 @@ use picardTools;
 use samTools;
 use toolbox;
 use onTheFly;
+use tophat;
+
 #TO BE COMPLETED ex topHat...
 
 
