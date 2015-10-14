@@ -26,7 +26,6 @@ $samtoolsView
 $bwaAln1
 -n=5
 -o=1
--e=-1
 
 $bwaIndex
 -a=is
@@ -55,7 +54,6 @@ $GATK gatkBaseRecalibrator
 
 $GATK gatkRealignerTargetCreator
 -T=RealignerTargetCreator
--nt=4
 
 $GATK gatkIndelRealigner
 -T=IndelRealigner

@@ -43,7 +43,6 @@ use warnings;
 use Data::Dumper;
 use Switch;
 
-use lib qw(.);
 use localConfig;
 
 
@@ -140,6 +139,7 @@ sub correctName
 
         #FOR tophat.pm
         case ($name =~ m/bowtie[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtieBuild"; } #Correction for bwaAln
+	case ($name =~ m/bowtie2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtie2Build"; } #Correction for bwaAln
         #FOR cufflinks.pm
         
         #FOR HTSeq.pm

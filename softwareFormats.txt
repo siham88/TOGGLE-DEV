@@ -14,6 +14,10 @@ $bowtieBuild
 IN=fasta
 OUT=NA
 
+$bowtie2Build
+IN=fasta
+OUT=NA
+
 $bwaIndex
 IN=fasta
 OUT=NA
@@ -50,9 +54,9 @@ OUT=NA
 #IN=bam
 #OUT=NA
 
-#$samToolsFlagstat
-#IN=bam
-#OUT=NA
+$samToolsFlagstat
+IN=bam
+OUT=NA
 
 $fastqc
 IN=fastq,bam
