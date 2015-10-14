@@ -161,7 +161,7 @@ sub tophat2
 	    toolbox::exportLog("DEBUG: tophat : @fileList\n",1);
 	    for (my $i=0; $i<=$#fileList;$i ++)
 	    {
-		next if (not defined $fileList[$i]);
+		next if ($fileList[$i] eq '');
 		
 		my ($file,$path)=toolbox::extractPath($fileList[$i]);
 		##DEBUG
