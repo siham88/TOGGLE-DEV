@@ -155,12 +155,13 @@ sub tophat2
         # Command is executed with the run function (package toolbox)
         if (toolbox::run($command)==1)
         {
-	    my $fileWithoutExtension=toolbox::extractName($forwardFastqFileIn);
+	    my ($fineName,$readGroup) = pairing::extractName($forwardFastqFileIn); 
 	    my $fileList=toolbox::readDir($tophatDirOut);
 	    my @fileList=@$fileList;
 	    for (my $i=0; $i<=$#fileList;$i ++)
 	    {
-		my $command="cp $fileList[$i] ".$fileWithoutExtension.".".$fileList[$i];
+		my ($file,$path)=toolbox::extractPath($fileList[$i]);
+		my $command="cp $tophatDirOut/$file $tophatDirout/$readGroup".".".$file;
 		toolbox::run($command);
 	    }
             toolbox::exportLog("INFOS: tophat : correctly done\n",1);
