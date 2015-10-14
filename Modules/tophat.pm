@@ -158,8 +158,10 @@ sub tophat2
 	    my ($fineName,$readGroup) = pairing::extractName($forwardFastqFileIn); 
 	    my $fileList=toolbox::readDir($tophatDirOut);
 	    my @fileList=@$fileList;
-	    for (my $i=0; $i<$#fileList;$i ++)
+	    for (my $i=0; $i<=$#fileList;$i ++)
 	    {
+		next if (not defined $fileList[$i]);
+		
 		my ($file,$path)=toolbox::extractPath($fileList[$i]);
 		##DEBUG
 		toolbox::exportLog("DEBUG: tophat : $fileList[$i] -$file-$readGroup-$fineName- \n",1);
