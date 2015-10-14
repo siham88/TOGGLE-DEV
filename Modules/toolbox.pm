@@ -36,6 +36,7 @@ use strict;
 use warnings;
 use Data::Dumper;
 use Exporter;
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 
 use localConfig;
 use namingConvention;
@@ -741,14 +742,20 @@ sub checkFormatFastq
         return 0;
     }
                                                                         # open and traite the file if the number of lines is a multiple of 4
-    open (F1, $fileToTest) or toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Cannot open the file $fileToTest\n$!\n",0); # open the file to test
+    open (my $inputHandle, $fileToTest) or toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Cannot open the file $fileToTest\n$!\n",0); # open the file to test
     
     my  @linesF1=();
     my $comp=0;
     my $countlines=0;
     my $stop=0;
     
-    while ((my $line = <F1>))                                           # scanning file and stocking in an array the four lines of a read.
+    #If $fileToTest is in gzip format
+    if($fileToTest =~ m/\.gz$/)
+	{
+	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Cannot open the gz file $fileToTest: $GunzipError\n",0);
+	}	
+    
+    while ((my $line = <$inputHandle>))                                           # scanning file and stocking in an array the four lines of a read.
     {
         chomp $line;
         $countlines++;
@@ -831,7 +838,7 @@ sub checkFormatFastq
 	return 0;
     }
     
-    close F1;
+    close $inputHandle;
     
 }
 ################################################################################################
@@ -1122,9 +1129,14 @@ sub checkVcfFormat
     #Parsing the file
     my @header;#List to gather the header
     my @listOfFields;
-    open(VCF, "<",$file) or toolbox::exportLog("ERROR: toolbox::checkVcfFormat : Cannot open the file $file\n$!\n",0); 
+    open(my $inputHandle, "<",$file) or toolbox::exportLog("ERROR: toolbox::checkVcfFormat : Cannot open the file $file\n$!\n",0);
     
-    while (my $line=<VCF>)
+    # if the input file is a gz file
+     if($file =~ m/\.gz$/)
+	{
+	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: toolbox::checkVcfFormat : Cannot open the gz file $file: $GunzipError\n",0);
+	}
+    while (my $line=<$inputHandle>)
     {
 	chomp $line;
 	
@@ -1155,7 +1167,7 @@ sub checkVcfFormat
     #Check if the second field (the position) is numerical
     eval ($listOfFields[1] == $listOfFields [1]) or exportLog("Cannot confirm that $file is a VCF.\nAborting.\n",0); #Verifying if numerical. Die if not
    
-    close VCF;
+    close $inputHandle;
 
     return 1; #Return correct if all check are Ok
 }

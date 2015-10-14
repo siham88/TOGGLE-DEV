@@ -43,6 +43,10 @@ use pairing;
 use toolbox;
 use onTheFly;
 
+#For gz files
+use IO::Compress::Gzip qw(gzip $GzipError);
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+
 
 
 ##########################################
@@ -153,6 +157,23 @@ foreach my $file (@{$initialDirContent})
 {
     $file =~ m/\.(\w+)$/;
     my $extension = $1;
+    #If the file is a compressed file in gz format
+    if ($extension eq "gz")
+    {
+      if ($file =~ m/fastq\.gz$/ or $file =~ m/fq\.gz$/)#The file is a gz compressed fastq
+      {
+        $extension = "fastq";
+      }
+      elsif ($file =~ m/vcf\.gz$/) #The file is a gz compressed vcf
+      {
+        $extension = "vcf";
+      }
+      else # The file is neither a fastq.gz nor a vcf.gz file
+      {
+        toolbox::exportLog("ERROR : $0 : The compressed file $file format in the initial directory is not taken in charge by TOGGLE.\n",0);
+      }
+    }
+    #The file is not a compressed one in gz
     if ($extension eq "fq" or $extension eq "fastq") #homogeneisation for fastq extension
     {
         $extension = "fastq";
