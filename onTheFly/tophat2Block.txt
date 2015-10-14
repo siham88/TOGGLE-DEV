@@ -11,7 +11,7 @@ if (scalar(@{$fileList})==2)                                                    
 }
 else
 {
-    $fastqReverse='';
+    $fastqReverse=undef;
 }
 
 print LOG "INFOS tophats argument: $newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile";
