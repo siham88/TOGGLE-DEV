@@ -114,9 +114,9 @@ $cutadapt
 IN=fastq
 OUT=fastq
 
-#$tophat2
-#IN=fastq,sam
-#OUT=sam
+$tophat2
+IN=fastq
+OUT=sam
 
 $picardToolsSortSam
 IN=sam,bam
