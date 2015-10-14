@@ -279,7 +279,7 @@ sub indexCreator
             }
             else #We check if the index is present or not
             {
-                my $refIndexedFile = $reference.".ebwt";
+                my $refIndexedFile = $reference.".1.ebwt";
                 if (-e $refIndexedFile)
                 {# The index is already created
                     toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for bowtie-built already exists, skipped...\n",1);
@@ -296,7 +296,7 @@ sub indexCreator
             }
             else #We check if the index is present or not
             {
-                my $refIndexedFile = $reference.".bt2";
+                my $refIndexedFile = $reference.".1.bt2";
                 if (-e $refIndexedFile)
                 {# The index is already created
                     toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for bowtie2-built already exists, skipped...\n",1);
