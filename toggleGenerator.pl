@@ -284,7 +284,7 @@ if ($orderBefore1000)
         next unless $currentDir =~ m/:$/; # Will work only on folders
         $currentDir =~ s/:$//;
         my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile";
-        $launchCommand.=" -g $gffFile" if (defined $gffFile);
+        $launcherCommand.=" -g $gffFile" if (defined $gffFile);
     
         if(toolbox::run($launcherCommand))       #Execute command
         {
@@ -355,7 +355,7 @@ if ($orderAfter1000)
     $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 
     my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile";
-    $launchCommand.=" -g $gffFile" if (defined $gffFile);
+    $launcherCommand.=" -g $gffFile" if (defined $gffFile);
         
     if(toolbox::run($launcherCommand)==1)       #Execute command
     {
