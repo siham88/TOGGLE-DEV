@@ -84,10 +84,14 @@ Mesg
 ##########################################
 # transforming relative path in absolute
 ##########################################
+my @logPathInfos;
 foreach my $inputParameters (keys %param)
 {
   ##DEBUG print $param{$inputParameters},"**";
-  $param{$inputParameters}=toolbox::relativeToAbsolutePath($param{$inputParameters});
+  
+  my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
+  $param{$inputParameters}=$newPath;
+  push @logPathInfos,$log;
 }
 
 my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
@@ -142,6 +146,14 @@ toolbox::existsDir($initialDir);                            # check if this dire
 toolbox::checkFile($refFastaFile);                          #Retriving the configuration
 
 my $configInfo=toolbox::readFileConf($fileConf);
+
+##########################################
+# Printing the absolutePath changing logs
+#########################################
+foreach my $logInfo (@logPathInfos)
+  {
+  toolbox::exportLog($logInfo,1);
+  }
 
 
 

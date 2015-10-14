@@ -1368,7 +1368,7 @@ sub checkFormatFasta{
 sub relativeToAbsolutePath{
     my ($relative)=@_;
   
-    my $absolutePath;
+    my ($absolutePath,$log);
     
     if ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
 	{
@@ -1376,15 +1376,15 @@ sub relativeToAbsolutePath{
 	    $absolutePath = `$com`;
 	    chomp $absolutePath;
 	    ##DEBUG print $relative,"--",$absolutePath,"\n";
-	    print "INFOS : $0 : toolbox::relativeToAbsolutePath : the relative path $relative has been modified as an absolute path in $absolutePath \n";
+	    $log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the relative path $relative has been modified as an absolute path in $absolutePath \n";
 	}
     else #relative is in fact an absolute path, send a warning
 	{
-	    print "WARNING : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a relative but an absolute. Will not modify it \n";
+	    $log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a relative but an absolute. TOGGLE will not modify it \n";
 	    ##DEBUG print "No NEED\n";
 	    $absolutePath = $relative;
 	}
-    return $absolutePath;
+    return ($absolutePath,$log);
     }
 
 ################################################################################################
