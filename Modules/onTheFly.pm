@@ -45,6 +45,7 @@ use toolbox;
 use bwa;
 use samTools;
 use picardTools;
+use tophat;
 
 ################################################################################################
 # sub checkOrder =>  Will verify the order of the softwares in the pipeline 
