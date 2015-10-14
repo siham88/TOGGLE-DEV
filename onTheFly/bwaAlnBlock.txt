@@ -9,7 +9,7 @@ my @fileList = @$fileList;
 for (my $i=0; $i<=$#fileList; $i++)
 {
 
-    next if ($fileList[$i] !~ m/fastq$/);
+    next if ($fileList[$i] !~ m/fastq|fastq\.gz$/);
     
     ##########################################
     # bwa::bwaAln

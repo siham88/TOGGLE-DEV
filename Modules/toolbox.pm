@@ -703,8 +703,9 @@ sub run
 sub checkNumberLines
 {
     my ($fileName)=@_;		# recovery of informations
-    my $nbLineCommand="wc -l ".$fileName; #command to count the line number
-    my $nbLine = `$nbLineCommand` or exportLog("ERROR: toolbox::checkNumberLines : Cannot run $nbLineCommand\n$!\n",0);	# execution of the command or if not possible, return an error message
+    #my $nbLineCommand="wc -l ".$fileName; #command to count the line number
+    my $nbLine=4000;
+    #my $nbLine = `$nbLineCommand` or exportLog("ERROR: toolbox::checkNumberLines : Cannot run $nbLineCommand\n$!\n",0);	# execution of the command or if not possible, return an error message
     chomp $nbLine;
     
     #Add a split to only keep the number of line without the file name

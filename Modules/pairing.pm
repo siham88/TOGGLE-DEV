@@ -87,7 +87,9 @@ sub pairRecognition
 	}
 	
 	# If the file is a fastq one:
-	my $firstLineComplete=`head -n 1 $currentFile`;		#Fetching the first line to obtain the ID sequence 
+	my $firstLineComplete=`head -n 1 $currentFile`;		#Fetching the first line to obtain the ID sequence
+	#if the file is a gz Compressed file
+	$firstLineComplete = `zcat $currentFile | head -n 1` if ($currentFile =~ m/gz$/);
 	chomp $firstLineComplete;
 	my $namingConvention;		#Infos for the type of modification
 	
