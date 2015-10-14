@@ -161,7 +161,7 @@ sub tophat2
 	    for (my $i=0; $i<=$#fileList;$i ++)
 	    {
 		my ($file,$path)=toolbox::extractPath($fileList[$i]);
-		my $command="cp $tophatDirOut/$file $tophatDirout/$readGroup".".".$file;
+		my $command="cp $tophatDirOut/$file $tophatDirOut/$readGroup".".".$file;
 		toolbox::run($command);
 	    }
             toolbox::exportLog("INFOS: tophat : correctly done\n",1);
