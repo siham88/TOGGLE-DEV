@@ -3,9 +3,16 @@
 # Block for tophat::tophat2
 ##########################################
 
+$fastqForward=$$fileList[0];
 
+if (scalar(@{$fileList})==2)                                                                        # paired mode
+{
+    $fastqReverse=$$fileList[1];
+}
+else
+{
+    $fastqReverse='';
+}
 
-
-
-
-
+print LOG "INFOS tophats argument: $newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile";
+tophat::tophat2($newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile,$softParameters);

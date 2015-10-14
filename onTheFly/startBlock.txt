@@ -93,6 +93,8 @@ my $initialDir = $param{'-d'};               # recovery of the name of the direc
 my $fileConf = $param{'-c'};                 # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};             # recovery of the reference file
 #my $lastDir = $param{'-o'};                  # recovery of the last directory
+my $gffFile;                                  # recovery of the gff file used by topHat and rnaseq analysis
+$gffFile = $param{'-g'} if (defined $param{'-g'}); 
 
 toolbox::existsDir($initialDir);        # check if this directory exists
 

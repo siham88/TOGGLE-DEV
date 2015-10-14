@@ -82,6 +82,8 @@ my $initialDir = $param{'-d'};        # recovery of the name of the directory to
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};      # recovery of the reference file
 my $outputDir = $param{'-o'};         # recovery of the output folder
+my $gffFile;                          # recovery of the gff file used by topHat and rnaseq analysis
+$gffFile = $param{'-g'} if (defined $param{'-g'});
 
 ##########################################
 # Creation of the output folder
@@ -390,7 +392,7 @@ toggleGenerator.pl - Automatic pipeline generator
 =head1 Usage
 
 
-toggleGenerator.pl -d DIR -c FILE -r FILE -o DIR
+toggleGenerator.pl -d DIR -c FILE -r FILE -o DIR -g FILE
 
 =head1 Required Arguments
 
@@ -398,6 +400,7 @@ toggleGenerator.pl -d DIR -c FILE -r FILE -o DIR
       -c FILE   The configuration file
       -r FILE   The reference sequence (fasta)
       -o DIR    The directory containing output files
+      -g FILE   The gff file containing reference annotations
 
 =head1  Authors
 
