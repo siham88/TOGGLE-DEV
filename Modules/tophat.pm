@@ -44,15 +44,12 @@ use Data::Dumper;
 sub bowtieBuild
 {
     my ($refFastaFileIn,$optionsHachees)=@_;
-    $refFastaFileIn =~ /^(.+)\.[^\.]+$/;  # catch only the file name without the file extension and store it into $prefixRef variable
-    my $prefixRef = $1;
-    ##DEBUG
-    toolbox::exportLog("DEBUG: tophat::bowtieBuild : $prefixRef\n",1);
+    ##DEBUG toolbox::exportLog("DEBUG: tophat::bowtieBuild : $prefixRef\n",1);
     
     if (toolbox::sizeFile($refFastaFileIn)==1)						# check if the reference file exist and is not empty
     {
         my $options=toolbox::extractOptions($optionsHachees, " ");			# Get given options
-        my $command=$bowtieBuild.$options." ".$refFastaFileIn." ".$prefixRef;		# command
+        my $command=$bowtieBuild.$options." ".$refFastaFileIn." ".$refFastaFileIn;		# command
         ##DEBUG toolbox::exportLog("DEBUG: tophat::bowtieBuild : $command\n",1);
         # Execute command
         if(toolbox::run($command)==1)							# The command should be executed correctly (ie return) before exporting the log
@@ -68,7 +65,7 @@ sub bowtieBuild
     {
         toolbox::exportLog("ERROR: tophat::bowtiebBuild : Problem with the file $refFastaFileIn\n",0);		# bowtiebuild can not function because of wrong/missing reference file
     }
-    return $prefixRef;
+    return $refFastaFileIn;
 }
 ################################################################################################
 # END sub bowtieBuild 
@@ -85,14 +82,12 @@ sub bowtieBuild
 sub bowtie2Build
 {
     my($refFastaFileIn,$optionsHachees)=@_;
-    $refFastaFileIn =~ /^(.+)\.[^\.]+$/;  						# catch only the file name without the file extension and store it into $prefixRef variable
-    my $prefixRef = $1;
     ##DEBUG toolbox::exportLog("DEBUG: tophat::bowtie2Build : $prefixRef\n",1);
     
     if (toolbox::sizeFile($refFastaFileIn)==1)						# Check if the reference file exist and is not empty
     {
         my $options=toolbox::extractOptions($optionsHachees, " ");			# Get given options
-        my $command=$bowtie2Build.$options." ".$refFastaFileIn." ".$prefixRef;		# command
+        my $command=$bowtie2Build.$options." ".$refFastaFileIn." ".$refFastaFileIn;		# command
         ##DEBUG
         toolbox::exportLog("INFOS: tophat::bowtie2Build : $command\n",1);
         #Execute command
@@ -111,7 +106,7 @@ sub bowtie2Build
         toolbox::exportLog("ERROR: tophat::bowtie2bBuild : Problem with the file $refFastaFileIn\n",0);		# bowtie2build can not function because of wrong/missing reference file
         return 0;
     }
-    return $prefixRef;
+    return $refFastaFileIn;
 }
 ################################################################################################
 # END sub bowtie2Build 
