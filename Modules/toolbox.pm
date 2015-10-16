@@ -729,20 +729,52 @@ sub checkFormatFastq
     my $notOk = 0;                                                      # counter of error(s)
     my ($fileToTest) = @_;                                              # recovery of file to test
     my $readOk = readFile($fileToTest);                                 # check if the file to test is readable
+
+    #The test of number of lines is too slow for large files
     
-    my $nbLines = toolbox::checkNumberLines(@_);                    # calculing number lines in file
-    my $modulo = ($nbLines % 4);
-    my $even   = ($nbLines % 2);
-    
-    if ( ($nbLines>0) and ($modulo==0) and ($even==0) )                # testing if the number of lines is a multiple of 4
-    {
-        #print "$nbLines is a multiple of 4\n";
-    }
-    else {
-        toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Number of lines is not a multiple of 4 in file $fileToTest.\n",0);
-        return 0;
-    }
+    #my $nbLines = toolbox::checkNumberLines(@_);                    # calculing number lines in file
+    #my $modulo = ($nbLines % 4);
+    #my $even   = ($nbLines % 2);
+    #
+    #if ( ($nbLines>0) and ($modulo==0) and ($even==0) )                # testing if the number of lines is a multiple of 4
+    #{
+    #    #print "$nbLines is a multiple of 4\n";
+    #}
+    #else {
+    #    toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Number of lines is not a multiple of 4 in file $fileToTest.\n",0);
+    #    return 0;
+    #}
                                                                         # open and traite the file if the number of lines is a multiple of 4
+									
+    #Checking the beginning and end structure
+    my ($beginLines, $endLines);
+    if ($fileToTest =~ m/gz$/)
+	{ # The file is in gzipped format
+	#using zcat command for head and tail
+	$beginLines = `zcat $fileToTest | head -n 4`;
+	$endLines = `zcat $fileToTest | tail -n 4`;
+	 }
+    else
+	{
+	$beginLines = `head -n 4 $fileToTest`;
+	$endLines = `tail -n 4 $fileToTest`;
+	}
+    chomp $beginLines;
+    chomp $endLines;
+    
+    my $valid=1;
+    
+    if ($beginLines !~ m/^@/ and $endLines !~ m/^@/)
+    {
+	$valid = 0; # The file is not containing a 4 lines sequence in FASTQ format
+    }
+    
+    if ($valid == 0)
+    {
+	toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Number of lines is not a multiple of 4 in file $fileToTest, thus not a FASTQ file.\n",0);
+    }
+    
+    
     open (my $inputHandle, $fileToTest) or toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Cannot open the file $fileToTest\n$!\n",0); # open the file to test
     
     my  @linesF1=();
