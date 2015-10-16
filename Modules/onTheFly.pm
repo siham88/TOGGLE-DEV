@@ -333,16 +333,6 @@ sub generateGraphviz
     
     my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt"); #We need the format IN/OUT
 
-    
-    #Verification if dot can work on this installation
-    my $dotHelpCommand = `dot -?`;
-    if ($dotHelpCommand !~ m/Usage: dot/)
-    {
-	#The dot soft is not installed on this machine
-	toolbox::exportLog("WARNING : $0 : Cannot generate graphical view of the current pipeline through onTheFly::generateGraphviz as Graphviz is not installed.\n",2);
-	return 1;
-    }
-    
     #Log info
     toolbox::exportLog("INFOS : $0 : onTheFly::generateGraphviz is creating the graphical view of the current pipeline.\n",1);
     
@@ -395,9 +385,17 @@ sub generateGraphviz
     print OUT $lastLine;
     close OUT;
     
+    #Verification if dot can work on this installation
+    my $dotHelpCommand = `dot -?`;
+    if ($dotHelpCommand !~ m/Usage: dot/)
+    {
+	#The dot soft is not installed on this machine
+	toolbox::exportLog("WARNING : $0 : Cannot generate graphical view of the current pipeline through onTheFly::generateGraphviz as Graphviz is not installed. Only the dot file will be created.\n",2);
+	return 1;
+    }
+    
     my $dotCom="dot -Tpng -o$graphicFileOut $dotFileOut";
     toolbox::run("$dotCom");
-    
 }
 
 1;
