@@ -53,6 +53,8 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 * picardTools 1.63
 * SAMtools 0.1.18
 
+#### OPTIONAL
+* Graphviz v2.xx
 
 
 ##  Versions Notes - onTheFlyv2 branch
