@@ -1,7 +1,5 @@
 package onTheFly;
 
-
-
 ###################################################################################################################################
 #
 # Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
@@ -31,9 +29,6 @@ package onTheFly;
 # Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
-
-
-
 
 use strict;
 use warnings;
