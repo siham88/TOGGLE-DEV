@@ -22,6 +22,8 @@ with
 
 > -o outputFolder: the current version of TOGGLE will not modify the initial data folder but will create an output directory with all analyses in.
 
+All the locations (reference, config file, folder in and out) can be provided as absolute (/home/mylogin/data/myRef.fasta) or in relative (../data/myRef.fasta).
+
 The *software.config.txt* file is an example of how to customize your pipeline.
 
 Any software configuration will start as follows:
@@ -126,6 +128,25 @@ $order
 
 The pipeline will treat the data as a global pipeline in this case, without separating the individual files.
 
-###Drawing the pipeline
+#Cleaning steps
+In order to gain hard drive space, you may want to remove some steps from your complete analysis.
+
+In this case, you can specify in the configuration file which step must be REMOVED along the pipeline (as soon as the step following them has been correctly completed), using the key *cleaner*.
+
+As an example
+````
+$order
+1=bwaAln
+2=bwaSampe
+3=samtools sort
+
+$cleaner
+1
+2
+````
+
+There only the last step result (samtools sort) will be conserved. The folders and logs of the cleaned steps are conserved, but not the resulting files.
+
+#Drawing the pipeline
 If *Graphviz* is installed on the running server, the **toggleGenerator.pl** script will also generate a graphical view of the pipeline in the output folder.
 If *Graphviz* is not installed, a .dot file is nevertheless created, allowing the user to create a graphical view on another machine having *Graphviz*
