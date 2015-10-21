@@ -23,7 +23,11 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 
 ##  INSTALLATION
 
-see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/master/INSTALL.md
+see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/INSTALL.md
+
+## MANUAL
+
+see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 
 ## REQUIREMENTS
 
