@@ -55,7 +55,7 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 
 #### Bioinformatics tools included
 
-#####BWA
+#####BWA (http://bio-bwa.sourceforge.net/)
 
 >bwaAln
 
@@ -67,7 +67,7 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 
 >bwaMem
       
-#####SamTools
+#####SamTools (http://samtools.sourceforge.net/)
 
 >samToolsFaidx
 
@@ -88,7 +88,7 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 >samToolsFlagstat
 
         
-#####PicardTools
+#####PicardTools (http://broadinstitute.github.io/picard/)
 
 >picardToolsMarkDuplicates
 
@@ -96,7 +96,7 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 
 >picardToolsSortSam
         
-#####Gatk
+#####Gatk (https://www.broadinstitute.org/gatk/)
 
 >gatkBaseRecalibrator
 
@@ -112,16 +112,16 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 
 >gatkReadBackedPhasing
         
-#####Fastqc
+#####Fastqc (http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
 >fastqc
 
 
-#####FastxToolkit
+#####FastxToolkit (http://hannonlab.cshl.edu/fastx_toolkit/)
 
 >fastxTrimmer
 
-#####Tophat
+#####Tophat (https://ccb.jhu.edu/software/tophat/index.shtml)
 
 >bowtiebuild
 
@@ -129,16 +129,16 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 
 >tophat2
 
-#####Snpeff
+#####Snpeff (http://snpeff.sourceforge.net/)
 
 >snpeffAnnotation
     
-#####Cutadapt
+#####Cutadapt (https://pypi.python.org/pypi/cutadapt)
 
 >cutadapt
 
 #### OPTIONAL
-* Graphviz v2.xx
+* Graphviz v2.xx (www.graphviz.org/)
 
 
 ##  Versions Notes - onTheFlyv2 branch
