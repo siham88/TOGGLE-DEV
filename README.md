@@ -19,7 +19,7 @@ in different environments (single machine to HPC clusters).
 
 ##  Citation
 **TOGGLE: Toolbox for generic NGS analyses**. Cécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique
-Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot. In Revision for *BMC Bioinformatics*.
+Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot. In press, *BMC Bioinformatics*.
 
 ##  INSTALLATION
 
