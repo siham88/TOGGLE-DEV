@@ -37,6 +37,10 @@ use toolbox;
 use Data::Translate;#To convert ASCII to decimal, required!
 use Data::Dumper;
 
+#For gz files
+use IO::Compress::Gzip qw(gzip $GzipError);
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+
 
 
 #########################################
@@ -57,12 +61,21 @@ sub checkEncodeByASCIIcontrol
     my $translator = new Data::Translate;		# ???
     return 0 unless toolbox::readFile($fileName);		#Check if file readable. Stop if not
 
-    open(IN, "<", $fileName) or toolbox::exportLog("ERROR: fastqUtils::checkEncodeByASCIIcontrol : Cannot open the file $fileName $!\n",0);		# open the file in, and if it can't, return and error message
-    <IN>;		#skip the line of the name of the sequence
-    <IN>;		#skip the line of the sequence
-    <IN>;		#skip the line of informations 
+    open(my $inputHandle, "<", $fileName) or toolbox::exportLog("ERROR: fastqUtils::checkEncodeByASCIIcontrol : Cannot open the file $fileName $!\n",0);		# open the file in, and if it can't, return and error message
+    
+     #If input files are gzipped
+    if($fileName =~ m/\.gz$/)
+    {
+	#Decompressing in input gz flux
+	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: fastqUtils::checkEncodeByASCIIcontrol : Can't open the gz file $fileName : $GzipError $!\n",0);
+	
+    }
+    
+    <$inputHandle>;		#skip the line of the name of the sequence
+    <$inputHandle>;		#skip the line of the sequence
+    <$inputHandle>;		#skip the line of informations 
 
-    my $qualityASCII=<IN>; #picking up the quality line
+    my $qualityASCII=<$inputHandle>; #picking up the quality line
     chomp $qualityASCII;
     
     my @listASCII=split //,$qualityASCII;		# split each symbol
@@ -95,13 +108,25 @@ sub changeEncode
 	toolbox::exportLog("ERROR: fastqUtils::changeEncode : The file $fileIn is not a fastq file\n",0);
     }
     
-    open (IN,"<",$fileIn) or toolbox::exportLog("ERROR: fastqUtils::changeEncode : Cannot open the file $fileIn $!\n",0); #Can read file
-    open(OUT,">", $fileOut) or toolbox::exportLog("ERROR: fastqUtils::changeEncode : Cannot create the file $fileOut\n$!\n",0); #Create the output and verify if any error
-    while (my $line = <IN>)	#Pick up the Sequence Name Line from the infile
+    open (my $inputHandle,"<",$fileIn) or toolbox::exportLog("ERROR: fastqUtils::changeEncode : Cannot open the file $fileIn $!\n",0); #Can read file
+    open(my $outputHandle,">", $fileOut) or toolbox::exportLog("ERROR: fastqUtils::changeEncode : Cannot create the file $fileOut\n$!\n",0); #Create the output and verify if any error
+    
+    #If input files are gzipped
+    if($fileIn =~ m/\.gz$/)
     {
-	$line .= <IN>; # Add the IUPAC line
-	$line .= <IN>; # Add the '+' line
-	my $qualityLine = <IN>;# recovery of quality line
+	#Transforming the output flux in a compressed gz format
+	$outputHandle = new IO::Compress::Gzip $outputHandle or toolbox::exportLog("ERROR: fastqUtils::changeEncode : Can't create the gz file $fileOut : $GzipError $!\n",0);
+	$outputHandle->autoflush(1);
+
+	#Decompressing in input gz flux
+	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: fastqUtils::changeEncode : Can't open the gz file $fileIn : $GzipError $!\n",0);
+    }
+    
+    while (my $line = <$inputHandle>)	#Pick up the Sequence Name Line from the infile
+    {
+	$line .= <$inputHandle>; # Add the IUPAC line
+	$line .= <$inputHandle>; # Add the '+' line
+	my $qualityLine = <$inputHandle>;# recovery of quality line
 	chomp $qualityLine;
 	
 	my $finalQuality;
@@ -114,10 +139,10 @@ sub changeEncode
 	    $finalQuality=convertLinePHRED33ToPHRED64($qualityLine);# execution of the conversion
 	}  
 	$line.=$finalQuality."\n";
-	print OUT $line; #Outputting in the outfile
+	print $outputHandle $line; #Outputting in the outfile
     }
-    close IN;
-    close OUT;
+    close $inputHandle;
+    close $outputHandle;
 
     toolbox::exportLog("INFOS: fastqUtils::changeEncode : The file $fileIn has been re-encoded from a PHRED $formatInit scale to a PHRED $formatOut scale in $fileOut\n",1);
     return 1;
@@ -180,7 +205,7 @@ Package fastqUtils is a set of modules which deals with issues relative to FASTQ
 
 =head3 fastqUtils::checkEncodeByASCIIcontrol
 
-This module check the FASTQ format of a given file
+This module check the FASTQ format of a given file, in plain text or in gz
 It takes only one argument, the file you want to know the encoding
 
 
@@ -188,7 +213,7 @@ It takes only one argument, the file you want to know the encoding
 =head3 fastqUtils::changeEncode
 
 This module change a FASTQ PHRED format in another
-it takes four arguments: the file you want to change encoding, the name of the outpur file, the PHRED format of your initial file, the PHRED format you want in the output file
+it takes four arguments: the file you want to change encoding (plain or gz), the name of the output file, the PHRED format of your initial file, the PHRED format you want in the output file
 
 
 

@@ -157,11 +157,14 @@ my $globalAnalysis=0; #to check if all data are to be treated one by one  (0) or
 switch (1)
 {
   case (scalar @$fileList == 2 && $$fileList[0] =~ m/fastq|fq$/ && $$fileList[1] =~ m/fastq|fq$/) {$fastq1=$$fileList[0];$fastq2=$$fileList[1]; print "\nPaired fastq files"} #Two paired fastq files
+    case (scalar @$fileList == 2 && $$fileList[0] =~ m/fastq\.gz|fq\.gz$/ && $$fileList[1] =~ m/fastq\.gz|fq\.gz$/) {$fastq1=$$fileList[0];$fastq2=$$fileList[1]; print "\nPaired fastq.gz files"} #Two paired fastq files
   case (scalar @$fileList == 1 && $$fileList[0] =~ m/fastq|fq$/) {$fastq1=$$fileList[0]; print "\nSingle fastq file"} # Single fastq file
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/fastq\.gz|fq\.gz$/) {$fastq1=$$fileList[0]; print "\nSingle fastq.gz file"} # Single fastq file
   case (scalar @$fileList == 1 && $$fileList[0] =~ m/sam$/) {$sam=$$fileList[0]; print "\nSingle SAM file"} # single SAM file
   case (scalar @$fileList == 1 && $$fileList[0] =~ m/bam$/) {$bam = $$fileList[0]; print "\nSingle BAM file"} # single BAM file
   case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf$/) {$vcf = $$fileList[0]; print "\nSingle VCF file"} #single VCF file
-  case (scalar @$fileList >= 2 && $$fileList[0] =~ m/sam|bam|vcf|bai$/) {$globalAnalysis =1;print "Multiple files, steps higher than 1000"} #multiple file for the case of step higher than 1000
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf\.gz$/) {$vcf = $$fileList[0]; print "\nSingle VCF.gz file"} #single VCF file
+  case (scalar @$fileList >= 2 && $$fileList[0] =~ m/sam|bam|vcf|bai|vcf\.gz$/) {$globalAnalysis =1;print "Multiple files, steps higher than 1000"} #multiple file for the case of step higher than 1000
   else { toolbox::exportLog("ERROR: The input files are not in a format usable by TOGGLE",0); } # Not the good formats
   
 }

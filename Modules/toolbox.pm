@@ -34,6 +34,7 @@ use strict;
 use warnings;
 use Data::Dumper;
 use Exporter;
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 
 use localConfig;
 use namingConvention;
@@ -700,8 +701,9 @@ sub run
 sub checkNumberLines
 {
     my ($fileName)=@_;		# recovery of informations
-    my $nbLineCommand="wc -l ".$fileName; #command to count the line number
-    my $nbLine = `$nbLineCommand` or exportLog("ERROR: toolbox::checkNumberLines : Cannot run $nbLineCommand\n$!\n",0);	# execution of the command or if not possible, return an error message
+    #my $nbLineCommand="wc -l ".$fileName; #command to count the line number
+    my $nbLine=4000;
+    #my $nbLine = `$nbLineCommand` or exportLog("ERROR: toolbox::checkNumberLines : Cannot run $nbLineCommand\n$!\n",0);	# execution of the command or if not possible, return an error message
     chomp $nbLine;
     
     #Add a split to only keep the number of line without the file name
@@ -725,28 +727,66 @@ sub checkFormatFastq
     my $notOk = 0;                                                      # counter of error(s)
     my ($fileToTest) = @_;                                              # recovery of file to test
     my $readOk = readFile($fileToTest);                                 # check if the file to test is readable
+
+    #The test of number of lines is too slow for large files
     
-    my $nbLines = toolbox::checkNumberLines(@_);                    # calculing number lines in file
-    my $modulo = ($nbLines % 4);
-    my $even   = ($nbLines % 2);
-    
-    if ( ($nbLines>0) and ($modulo==0) and ($even==0) )                # testing if the number of lines is a multiple of 4
-    {
-        #print "$nbLines is a multiple of 4\n";
-    }
-    else {
-        toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Number of lines is not a multiple of 4 in file $fileToTest.\n",0);
-        return 0;
-    }
+    #my $nbLines = toolbox::checkNumberLines(@_);                    # calculing number lines in file
+    #my $modulo = ($nbLines % 4);
+    #my $even   = ($nbLines % 2);
+    #
+    #if ( ($nbLines>0) and ($modulo==0) and ($even==0) )                # testing if the number of lines is a multiple of 4
+    #{
+    #    #print "$nbLines is a multiple of 4\n";
+    #}
+    #else {
+    #    toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Number of lines is not a multiple of 4 in file $fileToTest.\n",0);
+    #    return 0;
+    #}
                                                                         # open and traite the file if the number of lines is a multiple of 4
-    open (F1, $fileToTest) or toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Cannot open the file $fileToTest\n$!\n",0); # open the file to test
+									
+    #Checking the beginning and end structure
+    my ($beginLines, $endLines);
+    if ($fileToTest =~ m/gz$/)
+	{ # The file is in gzipped format
+	#using zcat command for head and tail
+	$beginLines = `zcat $fileToTest | head -n 4`;
+	$endLines = `zcat $fileToTest | tail -n 4`;
+	 }
+    else
+	{
+	$beginLines = `head -n 4 $fileToTest`;
+	$endLines = `tail -n 4 $fileToTest`;
+	}
+    chomp $beginLines;
+    chomp $endLines;
+    
+    my $valid=1;
+    
+    if ($beginLines !~ m/^@/ and $endLines !~ m/^@/)
+    {
+	$valid = 0; # The file is not containing a 4 lines sequence in FASTQ format
+    }
+    
+    if ($valid == 0)
+    {
+	toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Number of lines is not a multiple of 4 in file $fileToTest, thus not a FASTQ file.\n",0);
+    }
+    
+    
+    open (my $inputHandle, $fileToTest) or toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Cannot open the file $fileToTest\n$!\n",0); # open the file to test
     
     my  @linesF1=();
     my $comp=0;
     my $countlines=0;
     my $stop=0;
     
-    while ((my $line = <F1>))                                           # scanning file and stocking in an array the four lines of a read.
+    #If $fileToTest is in gzip format
+    if($fileToTest =~ m/\.gz$/)
+	{
+	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Cannot open the gz file $fileToTest: $GunzipError\n",0);
+	}	
+    
+    while ((my $line = <$inputHandle>))                                           # scanning file and stocking in an array the four lines of a read.
     {
         chomp $line;
         $countlines++;
@@ -829,7 +869,7 @@ sub checkFormatFastq
 	return 0;
     }
     
-    close F1;
+    close $inputHandle;
     
 }
 ################################################################################################
@@ -1120,9 +1160,14 @@ sub checkVcfFormat
     #Parsing the file
     my @header;#List to gather the header
     my @listOfFields;
-    open(VCF, "<",$file) or toolbox::exportLog("ERROR: toolbox::checkVcfFormat : Cannot open the file $file\n$!\n",0); 
+    open(my $inputHandle, "<",$file) or toolbox::exportLog("ERROR: toolbox::checkVcfFormat : Cannot open the file $file\n$!\n",0);
     
-    while (my $line=<VCF>)
+    # if the input file is a gz file
+     if($file =~ m/\.gz$/)
+	{
+	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: toolbox::checkVcfFormat : Cannot open the gz file $file: $GunzipError\n",0);
+	}
+    while (my $line=<$inputHandle>)
     {
 	chomp $line;
 	
@@ -1153,7 +1198,7 @@ sub checkVcfFormat
     #Check if the second field (the position) is numerical
     eval ($listOfFields[1] == $listOfFields [1]) or exportLog("Cannot confirm that $file is a VCF.\nAborting.\n",0); #Verifying if numerical. Die if not
    
-    close VCF;
+    close $inputHandle;
 
     return 1; #Return correct if all check are Ok
 }

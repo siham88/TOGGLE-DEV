@@ -12,20 +12,18 @@ $cutadapt
 --overlap=7
 
 #2nd program config
-$samtools view single
--h
--b
--F=0x04
+
 
 $samtoolsView
 -h
--F=0x02
+-f=0x02
 -S
+-b
 
 
 
 #3nd program config
-$bwa Aln 1
+$bwaAln1
 -n=5
 -o=1
 
@@ -69,14 +67,15 @@ SORT_ORDER=coordinate
 VALIDATION_STRINGENCY=SILENT
 
 $cleaner
-1
+
 2
 3
 4
 
 
-
 $order
-1=bwaAln 1
+1=bwaAln1
 2=bwaSampe
+3=samtoolsView
+4=picardToolsSortSam
 
