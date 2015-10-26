@@ -71,15 +71,40 @@ Mesg
 }
 
 
+
+
 ##########################################
 # recovery of initial informations/files
 ##########################################
+##########################################
+# transforming relative path in absolute
+##########################################
+my @logPathInfos;
+foreach my $inputParameters (keys %param)
+{
+  ##DEBUG print $param{$inputParameters},"**";
+  
+  my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
+  $param{$inputParameters}=$newPath;
+  push @logPathInfos,$log;
+}
+
 my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
+##DEBUG print "init Dir = $initialDir\n";
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
+##DEBUG print "file Conf = $fileConf\n";
 my $refFastaFile = $param{'-r'};      # recovery of the reference file
+##DEBUG print "reference = $refFastaFile\n";
 my $outputDir = $param{'-o'};         # recovery of the output folder
+
 my $gffFile;                          # recovery of the gff file used by topHat and rnaseq analysis
 $gffFile = $param{'-g'} if (defined $param{'-g'});
+
+##DEBUG print "out Dir = $outputDir\n";
+
+
+
+
 
 ##########################################
 # Creation of the output folder
@@ -121,6 +146,14 @@ toolbox::existsDir($initialDir);                            # check if this dire
 toolbox::checkFile($refFastaFile);                          #Retriving the configuration
 
 my $configInfo=toolbox::readFileConf($fileConf);
+
+##########################################
+# Printing the absolutePath changing logs
+#########################################
+foreach my $logInfo (@logPathInfos)
+  {
+  toolbox::exportLog($logInfo,1);
+  }
 
 
 
@@ -236,8 +269,13 @@ onTheFly::indexCreator($configInfo,$refFastaFile);
 
 #Generate script
 
-my $scriptSingle = $outputDir."/toggleBzz.pl";
-my $scriptMultiple = $outputDir."/toggleMultiple.pl";
+#####MERGE <<<<<<< HEAD
+#####MERGE my $scriptSingle = $outputDir."/toggleBzz.pl";
+#####MERGE my $scriptMultiple = $outputDir."/toggleMultiple.pl";
+#####MERGE =======
+my $scriptSingle = "$outputDir/toggleBzz.pl";
+my $scriptMultiple = "$outputDir/toggleMultiple.pl";
+#####MERGE >>>>>>> RelativePath
 my $hashOrder=toolbox::extractHashSoft($configInfo,"order"); #Picking up the options for the order of the pipeline
 my $hashCleaner=toolbox::extractHashSoft($configInfo,"cleaner"); #Picking up infos for steps to be cleaned / data to be removed all along the pipeline
 

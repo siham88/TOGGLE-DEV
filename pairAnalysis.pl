@@ -81,6 +81,20 @@ Mesg
 ##########################################
 # recovery of initial informations/files
 ##########################################
+
+##########################################
+# transforming relative path in absolute
+##########################################
+my @logPathInfos;
+foreach my $inputParameters (keys %param)
+{
+  ##DEBUG print $param{$inputParameters},"**";
+  
+  my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
+  $param{$inputParameters}=$newPath;
+  push @logPathInfos,$log;
+}
+
 my $initialDir = $param{'-d'};                                                # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};                                                                                # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};                                                                               # recovery of the reference file
@@ -109,6 +123,15 @@ chomp $indivName;
 my $logFile=$indivName."_Global"."_log";
 open (LOG, ">",$logFile) or die ("ERROR: $0 : Cannot open the file $logFile\n$!\n");
 print LOG "#########################################\nINFOS: Paired sequences analysis started\n#########################################\n\n";
+
+
+##########################################
+# Printing the absolutePath changing logs
+#########################################
+foreach my $logInfo (@logPathInfos)
+  {
+  toolbox::exportLog($logInfo,1);
+  }
 
 toolbox::checkFile($fileConf);                                                                              # check if this file exists
 toolbox::checkFile($refFastaFile);                                                                          # check if the reference file exists

@@ -70,6 +70,19 @@ Mesg
 }
 
 
+##########################################
+# transforming relative path in absolute
+##########################################
+my @logPathInfos;
+foreach my $inputParameters (keys %param)
+{
+  ##DEBUG print $param{$inputParameters},"**";
+  
+  my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
+  $param{$inputParameters}=$newPath;
+  push @logPathInfos,$log;
+}
+
 my $initialDir = $param{'-d'};                                                                                  # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};                                                                                    # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};                                                                                # recovery of the reference file
@@ -103,6 +116,14 @@ toolbox::existsDir($initialDir);                                                
 toolbox::checkFile($refFastaFile);                                                                          # check if the reference file exists
 toolbox::checkFile($gffFile);
 
+##########################################
+# Printing the absolutePath changing logs
+#########################################
+foreach my $logInfo (@logPathInfos)
+  {
+  toolbox::exportLog($logInfo,1);
+  }
+  
 my $loop = 0;                                                                                               # for the second loop
 
 

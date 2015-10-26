@@ -1355,6 +1355,41 @@ sub checkFormatFasta{
 ################################################################################################
 
 
+################################################################################################
+# sub relativeToAbsolutePath => modify a relative path in absolute one
+################################################################################################
+# arguments :
+# 	- relative path
+# returns :
+#	- absolute path
+################################################################################################
+sub relativeToAbsolutePath{
+    my ($relative)=@_;
+  
+    my ($absolutePath,$log);
+    
+    if ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
+	{
+	    my $com = "readlink -m $relative";
+	    $absolutePath = `$com`;
+	    chomp $absolutePath;
+	    ##DEBUG print $relative,"--",$absolutePath,"\n";
+	    $log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the relative path $relative has been modified as an absolute path in $absolutePath \n";
+	}
+    else #relative is in fact an absolute path, send a warning
+	{
+	    $log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a relative but an absolute. TOGGLE will not modify it \n";
+	    ##DEBUG print "No NEED\n";
+	    $absolutePath = $relative;
+	}
+    return ($absolutePath,$log);
+    }
+
+################################################################################################
+# END sub relativeToAbsolutePath 
+################################################################################################
+
+
 1;
 
 =head1 NAME
