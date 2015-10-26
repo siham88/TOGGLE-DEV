@@ -34,108 +34,87 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 #### Perl
 
 
-* Data::Translate
-* Data::Dumper
-* Test::More
-* Test::Deep
-* Capture::Tiny
-* List::Compare
+* [Data::Translate](http://search.cpan.org/~davieira/Data_Translate-0.3/Translate.pm)
+* [Data::Dumper](http://search.cpan.org/~smueller/Data-Dumper-2.154/Dumper.pm)
+* [Test::More](http://search.cpan.org/~exodist/Test-Simple-1.001014/lib/Test/More.pm)
+* [Test::Deep](http://search.cpan.org/~rjbs/Test-Deep-0.119/lib/Test/Deep.pm)
+* [Capture::Tiny](http://search.cpan.org/~dagolden/Capture-Tiny-0.30/lib/Capture/Tiny.pm)
+* [List::Compare](http://search.cpan.org/~jkeenan/List-Compare-0.53/lib/List/Compare.pm)
 * Switch
 
 
 #### Bioinformatics software (minimal version)
 
-* java 1.7
-* fastQC v0.10.1
-* cutadapt 1.2.1
-* BWA 0.7.2
-* gatk 3.3
-* picardTools 1.63
-* SAMtools 0.1.18
+* [java 1.7](https://www.java.com/fr/)
+* [BWA 0.7.2](http://bio-bwa.sourceforge.net/)
+* [SAMtools 0.1.18](http://samtools.sourceforge.net/)
+* [picardTools 1.63](http://broadinstitute.github.io/picard/)
+* [gatk 3.3](https://www.broadinstitute.org/gatk/)
+* [fastQC v0.10.1](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+* [cutadapt 1.2.1](https://pypi.python.org/pypi/cutadapt)
+* [FastxToolkit](http://hannonlab.cshl.edu/fastx_toolkit/)
+* [Tophat](https://ccb.jhu.edu/software/tophat/index.shtml)
+* [Snpeff](http://snpeff.sourceforge.net/)
 
 #### Bioinformatics tools included
 
 #####BWA (http://bio-bwa.sourceforge.net/)
 
->bwaAln
-
->bwaSampe
-
->bwaSamse
-
->bwaIndex
-
->bwaMem
+- bwaAln
+- bwaSampe
+- bwaSamse
+- bwaIndex
+- bwaMem
       
 #####SamTools (http://samtools.sourceforge.net/)
 
->samToolsFaidx
-
->samToolsIndex
-
->samToolsView
-
->samToolsSort
-
->mergeHeader
-
->samToolsMerge
-
->samToolsIdxstats
-
->samToolsDepth
-
->samToolsFlagstat
-
-        
+- samToolsFaidx
+- samToolsIndex
+- samToolsView
+- samToolsSort
+- mergeHeader
+- samToolsMerge
+- samToolsIdxstats
+- samToolsDepth
+- samToolsFlagstat
+       
 #####PicardTools (http://broadinstitute.github.io/picard/)
 
->picardToolsMarkDuplicates
-
->picardToolsCreateSequenceDictionary
-
->picardToolsSortSam
+- picardToolsMarkDuplicates
+- picardToolsCreateSequenceDictionary
+- picardToolsSortSam
         
 #####Gatk (https://www.broadinstitute.org/gatk/)
 
->gatkBaseRecalibrator
-
->gatkRealignerTargetCreator
-
->gatkIndelRealigner
-
->gatkHaplotypeCaller
-
->gatkSelectVariants
-
->gatkVariantFiltration
-
->gatkReadBackedPhasing
-        
+- gatkBaseRecalibrator
+- gatkRealignerTargetCreator
+- gatkIndelRealigner
+- gatkHaplotypeCaller
+- gatkSelectVariants
+- gatkVariantFiltration
+- gatkReadBackedPhasing
+    
 #####Fastqc (http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
->fastqc
-
+- fastqc
 
 #####FastxToolkit (http://hannonlab.cshl.edu/fastx_toolkit/)
 
->fastxTrimmer
+- fastxTrimmer
 
 #####Tophat (https://ccb.jhu.edu/software/tophat/index.shtml)
 
->bowtiebuild
-
->bowtie2build
-
->tophat2
+- bowtiebuild
+- bowtie2build
+- tophat2
 
 #####Snpeff (http://snpeff.sourceforge.net/)
 
->snpeffAnnotation
+- snpeffAnnotation
     
 #####Cutadapt (https://pypi.python.org/pypi/cutadapt)
 
->cutadapt
+- cutadapt
 
 #### OPTIONAL
 * Graphviz v2.xx (www.graphviz.org/)
