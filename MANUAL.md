@@ -16,7 +16,9 @@ $toggleGenerator.pl -d initialDirectory -r referenceFile -c configurationFile -o
 with
 > -d initialDirectory: a folder with raw data to be treated (FASTQ, FASTQ.GZ, SAM, BAM, VCF) 
 
->>!!! THE FILE NAMES MUST BE UNDER THE FORM individual1_1.fastq OR mapping1.sam !! THE ONLY DOT ('.') ALLOWED IN NAMES IS FOR THE EXTENSION !!
+>>!!! THE FILE NAMES MUST BE UNDER THE FORM **individual1_1.fastq** OR **mapping1.sam**
+
+>>!! THE ONLY DOT ('.') ALLOWED IN NAMES IS FOR THE EXTENSION !!
 
 > -r referenceFile: the reference FASTA file to be used. If no index exists it will be created accordingly to the pipeline requested index. If the index exist, they will not be re-created UNLESS the pipeline order (see below) expressively requests it (updating the index e.g.)
 
