@@ -336,15 +336,36 @@ if ($orderBefore1000)
 
     foreach my $currentDir(@{$listSamples})
     {
-        next unless $currentDir =~ m/:$/; # Will work only on folders
-        $currentDir =~ s/:$//;
+        my $lastIndex = 0; #needed to stop if we need it
+        my $multipleDirIndex = 0; #needed to continue 
+        if ($currentDir =~ m/:$/) # toolbox readDir sent infos about multiples folders, ie more than one individual
+        {
+          $currentDir =~ s/:$//;
+          $multipleDirIndex = 1; #There are more than one individual
+        }
+        elsif ($multipleDirIndex == 0 && $currentDir !~ m/:$/ && scalar @{$listSamples} == 2) #There is only one individual, the output of toolbox::readDir is only the file name
+        {
+          my @completePathList = split /\//, $currentDir; # from /path/to/file, we go to a list ('path','to','file')
+          pop @completePathList; #removing the last value, ie 'file'
+          $currentDir = join("/",@completePathList); #reconstructing the $currentDir
+          $lastIndex = 1;
+        }
+        else #The following values in the $listSamples list are the files from the folder
+        {
+          next;
+        }
+        
         my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile";
         $launcherCommand.=" -g $gffFile" if (defined $gffFile);
+        
+        ##DEBUG print "\n",$launcherCommand,"\n";
     
         if(toolbox::run($launcherCommand))       #Execute command
         {
             toolbox::exportLog("INFOS: $0 : Correctly launched $scriptSingle\n",1);
         }
+        
+        last if $lastIndex == 1; #Only one individual, no more run.
     }
     
     #Populationg the intermediate directory
