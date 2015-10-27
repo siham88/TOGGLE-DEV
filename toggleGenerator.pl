@@ -333,28 +333,23 @@ if ($orderBefore1000)
 {
     onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner);
     my $listSamples=toolbox::readDir($workingDir);
-
+    
+    #CORRECTING $listSamples if only one individual, ie readDir will provide only the list of files...
+    
+    if (scalar @{$listSamples} == 2) #ex: Data/file_1.fastq, Data/file_2.fastq
+    {
+      my @listPath = split /\//, $$listSamples[0];
+      pop @listPath;
+      my $trueDirName=join ("/",@listPath);
+      $trueDirName .= ":"; 
+      my @tempList = ($trueDirName);
+      $listSamples = \@tempList;
+    }
+    
     foreach my $currentDir(@{$listSamples})
     {
-        my $lastIndex = 0; #needed to stop if we need it
-        my $multipleDirIndex = 0; #needed to continue 
-        if ($currentDir =~ m/:$/) # toolbox readDir sent infos about multiples folders, ie more than one individual
-        {
-          $currentDir =~ s/:$//;
-          $multipleDirIndex = 1; #There are more than one individual
-        }
-        elsif ($multipleDirIndex == 0 && $currentDir !~ m/:$/ && scalar @{$listSamples} == 2) #There is only one individual, the output of toolbox::readDir is only the file name
-        {
-          my @completePathList = split /\//, $currentDir; # from /path/to/file, we go to a list ('path','to','file')
-          pop @completePathList; #removing the last value, ie 'file'
-          $currentDir = join("/",@completePathList); #reconstructing the $currentDir
-          $lastIndex = 1;
-        }
-        else #The following values in the $listSamples list are the files from the folder
-        {
-          next;
-        }
-        
+        next unless $currentDir =~ m/:$/; # Will work only on folders
+        $currentDir =~ s/:$//;
         my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile";
         $launcherCommand.=" -g $gffFile" if (defined $gffFile);
         
@@ -364,8 +359,6 @@ if ($orderBefore1000)
         {
             toolbox::exportLog("INFOS: $0 : Correctly launched $scriptSingle\n",1);
         }
-        
-        last if $lastIndex == 1; #Only one individual, no more run.
     }
     
     #Populationg the intermediate directory
