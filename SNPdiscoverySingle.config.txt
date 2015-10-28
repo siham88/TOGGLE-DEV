@@ -2,7 +2,7 @@ $order
 1=fastqc
 2=cutadapt
 3=bwaAln
-4=bwaSampe
+4=bwaSamse
 5=picardToolsSortSam
 6=samToolsView
 7=samToolsIndex
