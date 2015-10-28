@@ -19,6 +19,12 @@ $cleaner
 4
 9
 
+#PUT YOUR OWN SGE CONFIGURATION HERE
+#$sge
+#-q YOURQUEUE.q
+#-b Y
+#-V
+
 $cutadapt
 -O=10
 -m=35
