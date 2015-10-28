@@ -158,7 +158,18 @@ toolbox::checkFile($fileConf);                              # check if this file
 toolbox::existsDir($initialDir);                            # check if this directory exists
 toolbox::checkFile($refFastaFile);                          #Retriving the configuration
 
+##########################################
+# Charging config Infos and copying the software config file
+########################################
+
 my $configInfo=toolbox::readFileConf($fileConf);
+
+my $copyCommand = "cp $fileConf $outputDir/.";
+
+if(toolbox::run($copyCommand)==1)       #Execute command
+{
+  toolbox::exportLog("INFOS: $0 : Copying $fileConf to $outputDir\n",1);
+}
 
 ##########################################
 # Printing the absolutePath changing logs
@@ -476,6 +487,9 @@ toggleGenerator.pl -d DIR -c FILE -r FILE -o DIR -g FILE
       -c FILE   The configuration file
       -r FILE   The reference sequence (fasta)
       -o DIR    The directory containing output files
+      
+=head1 For RNAseq analysis
+
       -g FILE   The gff file containing reference annotations
 
 =head1  Authors
