@@ -388,7 +388,7 @@ if ($orderBefore1000)
           $currentJID = $infosList[2];
           push @jobList,$currentJID;
           toolbox::exportLog("DEBUG: $0 : "."@jobList"."\n",2);
-          toolbox::exportLog("INFOS: $0 : Correctly launched in qsub mode $scriptSingle\n",1);
+          toolbox::exportLog("INFOS: $0 : Correctly launched in qsub mode $scriptSingle through the command:\n\t$launcherCommand\n\n",1);
           next;
         }
     
