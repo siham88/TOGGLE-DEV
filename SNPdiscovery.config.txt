@@ -43,10 +43,10 @@ $samToolsView
 -f=0x02
 
 $gatkRealignerTargetCreator
--T=gatkRealignerTargetCreator
+-T=RealignerTargetCreator
 
 $gatkIndelRealigner
--T=gatkIndelRealigner
+-T=IndelRealigner
 
 $picardToolsMarkDuplicates
 VALIDATION_STRINGENCY=SILENT
@@ -54,13 +54,13 @@ CREATE_INDEX=TRUE
 REMOVE_DUPLICATES=TRUE
 
 $gatkHaplotypeCaller
--T=gatkHaplotypeCaller
+-T=HaplotypeCaller
 -rf BadCigar
 
 $gatkVariantFiltration
--T=gatkVariantFiltration
+-T=VariantFiltration
 --filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>600' --filterName 'LowQual' --filterExpression 'QUAL<30'
 
 $gatkSelectVariants
--T=gatkSelectVariants
+-T=SelectVariants
 -selectType=SNP
