@@ -412,9 +412,9 @@ if ($orderBefore1000)
       my $nbRunningJobs = 1;
       while ($nbRunningJobs)
       {  
-        my $date = `date`;
-        chomp $date;
-        toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
+        ##DEBUG my $date = `date`;
+        ##DEBUG chomp $date;
+        ##DEBUG toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
         #Picking up the number of currently running jobs
         my $qstatCommand = "qstat | egrep -c \"$jobList\"";
         $nbRunningJobs = `$qstatCommand`;
@@ -516,9 +516,9 @@ if ($orderAfter1000)
       my $nbRunningJobs = 1;
       while ($nbRunningJobs)
       {  
-        my $date = `date`;
-        chomp $date;
-        toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
+        ##DEBUG my $date = `date`;
+        ##DEBUG chomp $date;
+        ##DEBUG toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
         #Picking up the number of currently running jobs
         my $qstatCommand = "qstat | egrep -c \"$jobList\"";
         $nbRunningJobs = `$qstatCommand`;
