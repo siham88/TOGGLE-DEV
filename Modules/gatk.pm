@@ -43,6 +43,10 @@ sub gatkBaseRecalibrator
     if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($vcfSnpKnownFile)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T BaseRecalibrator";
+        }
         my $comGatkBaseRecalibrator = "$GATK"."$options"." -I $bamToRecalibrate -R $refFastaFileIn -knownSites $vcfSnpKnownFile -o $tableReport";       # command line
         toolbox::run($comGatkBaseRecalibrator);
         if(toolbox::run($comGatkBaseRecalibrator)==1)
@@ -69,6 +73,10 @@ sub gatkRealignerTargetCreator
     if ((toolbox::checkSamOrBamFormat($bamToRealigne)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRealigne)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T RealignerTargetCreator";
+        }
         my $comGatkRealignerTargetCreator = "$GATK"."$options"." -R $refFastaFileIn -I $bamToRealigne -o $intervalsFile ";#--fix_misencoded_quality_scores -fixMisencodedQuals";        # command line
         if(toolbox::run($comGatkRealignerTargetCreator)==1)     # command line execution
         {
@@ -89,6 +97,10 @@ sub gatkIndelRealigner
     if ((toolbox::checkSamOrBamFormat($bamToRealigne)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRealigne)==1) and (toolbox::readFile($intervalsFile)==1))      # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T IndelRealigner";
+        }
         my $comGatkIndelRealigner = "$GATK"."$options"." -R $refFastaFileIn -I $bamToRealigne -targetIntervals $intervalsFile -o $bamRealigned";# --fix_misencoded_quality_scores -fixMisencodedQuals";     # command line
         if(toolbox::run($comGatkIndelRealigner)==1)
         {                                                                                                                                                                               # command line execution
@@ -153,6 +165,10 @@ sub gatkHaplotypeCaller
         {
             $options=toolbox::extractOptions($optionsHachees);      ##Get given options
         }
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T HaplotypeCaller";
+        }
         my $comGatkHaplotypeCaller = "$GATK"."$options"." -R $refFastaFileIn $bamFiles_names $dbsnp $intervals -o $vcfCalled";      # command line
         if(toolbox::run($comGatkHaplotypeCaller)==1)        # command line execution
         {
@@ -179,6 +195,10 @@ sub gatkSelectVariants
     if ((toolbox::sizeFile($refFastaFileIn)==1)  and  (toolbox::sizeFile($vcfSnpKnownFile)==1))     # check if ref file exist and isn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T SelectVariants";
+        }
         my $comGatkSelectVariants = "$GATK"."$options"." -R $refFastaFileIn --variant $vcfSnpKnownFile -o $vcfVariantsSelected";        # command line
         if(toolbox::run($comGatkSelectVariants)==1)     # command line execution
         {
@@ -209,7 +229,11 @@ sub gatkVariantFiltration
         {
             $options=toolbox::extractOptions($optionsHachees);      ##Get given options
         }
-        print Dumper($options);     # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T VariantFiltration";
+        }
+        ##DEBUG print Dumper($options);     # extraction of options parameters
         my $comGatkVariantFiltration = "$GATK"."$options"." -R $refFastaFileIn -o $vcfFiltered --variant $vcfToFilter";     # command line
         if(toolbox::run($comGatkVariantFiltration)==1)      # command line execution
         {
@@ -236,6 +260,10 @@ sub gatkUnifiedGenotyper
     if ((toolbox::checkSamOrBamFormat($bamFileIn)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamFileIn)==1))     # check if ref file exist and isn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T UnifiedGenotyper";
+        }
         my $comGatkUnifiedGenotyper = "$GATK"."$options"." -R $refFastaFileIn -I $bamFileIn -o $vcfFileOut";        # command line
         if(toolbox::run($comGatkUnifiedGenotyper)==1)       # command line execution
         {
@@ -262,6 +290,10 @@ sub gatkReadBackedPhasing
     if ((toolbox::checkSamOrBamFormat($bamFileIn)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamFileIn)==1) and (toolbox::sizeFile($vcfVariant)==1))     # check if ref file exist and isn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T ReadBackedPhasing";
+        }
         my $comGatkReadBackedPhasing = "$GATK"."$options"." -R $refFastaFileIn -I $bamFileIn --variant $vcfVariant -o $vcfFileOut";     # command line
         if(toolbox::run($comGatkReadBackedPhasing)==1)      # command line execution
         {
