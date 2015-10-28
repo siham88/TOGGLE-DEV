@@ -526,7 +526,12 @@ sub readFileConf
         if ($currentLine =~ m/^\$/)		#New program to be configured, line starting by $
 	{
             $currentProgram=$currentLine;
-            $currentProgram =~ s/\$//;#remove the "$" in front of the name		
+            $currentProgram =~ s/\$//;#remove the "$" in front of the name
+	    
+	    if ($currentProgram =~ m/sge/i) #even if no options are provided, we must see the SGE key
+	    {
+		$configInfos->{$currentProgram}{' '}=' ';
+	    }
 		    
         }										
         else		#Config lines
