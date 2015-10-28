@@ -368,7 +368,7 @@ if ($orderBefore1000)
     }
     
     #FOR SGE launching
-    my @jobList;
+    my $jobList;
     
     foreach my $currentDir(@{$listSamples})
     {
@@ -386,7 +386,7 @@ if ($orderBefore1000)
           chomp $currentJID;
           my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
           $currentJID = $infosList[2];
-          push @jobList,$currentJID;
+          $jobList.= $currentJID."|";
           toolbox::exportLog("DEBUG: $0 : "."@jobList"."\n",2);
           toolbox::exportLog("INFOS: $0 : Correctly launched in qsub mode $scriptSingle through the command:\n\t$launcherCommand\n\n",1);
           next;
@@ -396,6 +396,23 @@ if ($orderBefore1000)
         {
             toolbox::exportLog("INFOS: $0 : Correctly launched $scriptSingle\n",1);
         }
+    }
+    #If qsub mode, we have to wait the end of jobs before populating
+    chop $jobList if ($jobList =~ m/\|$/);
+    if ($jobList ne "")
+    {
+      my $nbRunningJobs = 1;
+      while ($nbRunningJobs)
+      {  
+        #Picking up the number of currently running jobs
+        my $qstatCommand = "qstat | egrep -c \"$jobList\"";
+        $nbRunningJobs = `$qstatCommand`;
+        chomp $nbRunningJobs;
+        my $date = `date`;
+        chomp $date;
+        toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
+        sleep 50;
+      }
     }
     
     #Populationg the intermediate directory
