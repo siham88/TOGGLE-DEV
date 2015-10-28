@@ -23,7 +23,7 @@ $samtoolsView
 
 
 #3nd program config
-$bwaAln1
+$bwaAln
 -n=5
 -o=1
 
@@ -65,17 +65,14 @@ $gatkHaplotypeCaller
 $picardToolsSortSam
 SORT_ORDER=coordinate
 VALIDATION_STRINGENCY=SILENT
+CREATE_INDEX=TRUE
 
 $cleaner
-
+1
 2
-3
-4
-
 
 $order
-1=bwaAln1
-2=bwaSampe
-3=samtoolsView
-4=picardToolsSortSam
+1=bwaAln
+2= bwa sampe
+3= picardtoolssortsam
 
