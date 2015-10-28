@@ -345,6 +345,11 @@ my $intermediateDir = $workingDir."/intermediateResults";
 #Graphviz Graphic generator
 onTheFly::generateGraphviz($hashOrder,$outputDir);
 
+#Is the computer a SGE cluster?
+my $sgeExistence = `qsub -help 2>/dev/null | grep usage`;
+chomp $sgeExistence;
+
+
 if ($orderBefore1000)
 {
     onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner);
@@ -362,6 +367,9 @@ if ($orderBefore1000)
       $listSamples = \@tempList;
     }
     
+    #FOR SGE launching
+    my @jobList;
+    
     foreach my $currentDir(@{$listSamples})
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
@@ -370,6 +378,19 @@ if ($orderBefore1000)
         $launcherCommand.=" -g $gffFile" if (defined $gffFile);
         
         ##DEBUG print "\n",$launcherCommand,"\n";
+        
+        if ($sgeExistence ne "") #The system is SGE capable
+        {
+          $launcherCommand = "qsub -b Y".$launcherCommand;
+          my $currentJID = `$launcherCommand`;
+          chomp $currentJID;
+          my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
+          $currentJID = $infosList[2];
+          push @jobList,$currentJID;
+          toolbox::exportLog("DEBUG: $0 : "."@jobList"."\n",2);
+          toolbox::exportLog("INFOS: $0 : Correctly launched in qsub mode $scriptSingle\n",1);
+          next;
+        }
     
         if(toolbox::run($launcherCommand))       #Execute command
         {
