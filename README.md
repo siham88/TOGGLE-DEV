@@ -40,11 +40,12 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 * [Test::Deep](http://search.cpan.org/~rjbs/Test-Deep-0.119/lib/Test/Deep.pm)
 * [Capture::Tiny](http://search.cpan.org/~dagolden/Capture-Tiny-0.30/lib/Capture/Tiny.pm)
 * [List::Compare](http://search.cpan.org/~jkeenan/List-Compare-0.53/lib/List/Compare.pm)
-* Switch
+* [Switch] (https://metacpan.org/pod/Switch)
 
 
 #### Bioinformatics software (minimal version)
 
+* [Perl 5.16 or higher] (https://www.perl.org/)
 * [java 1.7](https://www.java.com/fr/)
 * [BWA 0.7.2](http://bio-bwa.sourceforge.net/)
 * [SAMtools 0.1.18](http://samtools.sourceforge.net/)
