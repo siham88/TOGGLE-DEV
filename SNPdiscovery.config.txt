@@ -14,22 +14,33 @@ $order
 1001=gatkVariantFiltration
 1002=gatkSelectVariant
 
+$cleaner
+3
+4
+9
 
+$cutadapt
+-O=10
+-m=35
+-q=20
+--overlap=7
+#If you have a specific adaptator file, please indicate here. Either the standard one from TOGGLE directory is used
+-adaptatorFile=$toggle/adaptator.txt
 
 $bwa aln
-
+-n=5
 
 $bwa sampe
 
-
-$fastqc
-
-
 $picardToolsSortSam
+SORT_ORDER=coordinates
+VALIDATION_STRINGENCY=SILENT
 CREATE_INDEX=TRUE
 
-$picardToolsMarkDuplicates
-CREATE_INDEX=TRUE
+$samToolsView
+-h
+-b
+-f=0x02
 
 $gatkRealignerTargetCreator
 -T=gatkRealignerTargetCreator
@@ -37,11 +48,19 @@ $gatkRealignerTargetCreator
 $gatkIndelRealigner
 -T=gatkIndelRealigner
 
+$picardToolsMarkDuplicates
+VALIDATION_STRINGENCY=SILENT
+CREATE_INDEX=TRUE
+REMOVE_DUPLICATES=TRUE
+
 $gatkHaplotypeCaller
 -T=gatkHaplotypeCaller
+-rf BadCigar
 
 $gatkVariantFiltration
 -T=gatkVariantFiltration
+--filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>600' --filterName 'LowQual' --filterExpression 'QUAL<30'
 
 $gatkSelectVariant
 -T=gatkSelectVariant
+-selectType=SNP
