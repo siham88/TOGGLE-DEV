@@ -395,7 +395,7 @@ if ($orderBefore1000)
           my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
           $currentJID = $infosList[2];
           $jobList.= $currentJID."|";
-          toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
+          #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
           toolbox::exportLog("INFOS: $0 : Correctly launched in qsub mode $scriptSingle through the command:\n\t$launcherCommand\n\n",1);
           next;
         }
@@ -498,7 +498,7 @@ if ($orderAfter1000)
       my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
       $currentJID = $infosList[2];
       $jobList.= $currentJID."|";
-      toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
+      #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
       toolbox::exportLog("INFOS: $0 : Correctly launched in qsub mode $scriptMultiple through the command:\n\t$launcherCommand\n\n",1);
     }
     else # The system if not SGE capable
