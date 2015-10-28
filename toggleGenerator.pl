@@ -411,7 +411,7 @@ if ($orderBefore1000)
         my $qstatCommand = "qstat | egrep -c \"$jobList\"";
         $nbRunningJobs = `$qstatCommand`;
         chomp $nbRunningJobs;
-        sleep 50;
+        sleep 5;
       }
     }
     
