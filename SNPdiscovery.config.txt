@@ -24,8 +24,8 @@ $cutadapt
 -m=35
 -q=20
 --overlap=7
-#If you have a specific adaptator file, please indicate here. Either the standard one from TOGGLE directory is used
--adaptatorFile=$toggle/adaptator.txt
+#If you have a specific adaptator file, please indicate here. 
+-adaptatorFile=/path/to/adaptator.txt
 
 $bwa aln
 -n=5
