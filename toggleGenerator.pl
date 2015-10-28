@@ -349,9 +349,14 @@ onTheFly::generateGraphviz($hashOrder,$outputDir);
 my $sgeExistence = `qsub -help 2>/dev/null | grep usage`;
 chomp $sgeExistence;
 
-my $sgeOptions=toolbox::extractHashSoft($configInfo,"sge");
-$sgeExistence = "" unless (exists $configInfo->{"sge"}); #The system can launch SGE but the user did not specify it
-
+my $sgeOptionsHash=toolbox::extractHashSoft($configInfo,"sge");
+my $sgeOptions=toolbox::extractOptions($sgeOptionsHash);
+if ($sgeExistence ne "") #The system if SGE capable
+{
+  my @listSoft = keys %{$configInfo};
+  my $i=grep /sge/i, @listSoft; # A SGE key has been defined in the software.config file
+  $sgeExistence = "" if ($i == 0); # No SGE parameters specified
+}
 
 if ($orderBefore1000)
 {
@@ -384,7 +389,7 @@ if ($orderBefore1000)
         
         if ($sgeExistence ne "") #The system is SGE capable
         {
-          $launcherCommand = "qsub -V -b Y -N $currentDir ".$launcherCommand;
+          $launcherCommand = "qsub -V -b Y -N $currentDir $sgeOptions ".$launcherCommand;
           my $currentJID = `$launcherCommand`;
           chomp $currentJID;
           my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
@@ -487,7 +492,7 @@ if ($orderAfter1000)
 
     if ($sgeExistence ne "") #The system is SGE capable
     {
-      $launcherCommand = "qsub -V -b Y -N toggleMultiple ".$launcherCommand;
+      $launcherCommand = "qsub -V -b Y -N toggleMultiple $sgeOptions ".$launcherCommand;
       my $currentJID = `$launcherCommand`;
       chomp $currentJID;
       my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
