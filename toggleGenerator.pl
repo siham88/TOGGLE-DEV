@@ -368,7 +368,7 @@ if ($orderBefore1000)
     }
     
     #FOR SGE launching
-    my $jobList;
+    my $jobList="";
     
     foreach my $currentDir(@{$listSamples})
     {
@@ -480,7 +480,7 @@ if ($orderAfter1000)
     my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile";
     $launcherCommand.=" -g $gffFile" if (defined $gffFile);
     
-    my $jobList;
+    my $jobList="";
 
     if ($sgeExistence ne "") #The system is SGE capable
     {
