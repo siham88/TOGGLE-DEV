@@ -123,6 +123,15 @@ if (not -d $outputDir) #The output folder is not existing yet
 
 chdir $outputDir;
 
+#Checking if $outputDir is empty
+
+my $lsOutputDir = `ls`;
+chomp $lsOutputDir;
+if ($lsOutputDir ne "") # The folder is not empty
+{
+  die ("\nThe output directory $outputDir is not empty, TOGGLE will not continue\nPlease provide an empty directory for outputting results.\n\nExiting...\n\n");
+}
+
 my $infosFile = "individuSoft.txt";
 
 my ($sec, $min, $h, $mois_jour, $mois, $an, $sem_jour, $cal_jour, $heure_ete) = localtime(time);
@@ -290,13 +299,9 @@ onTheFly::indexCreator($configInfo,$refFastaFile);
 
 #Generate script
 
-#####MERGE <<<<<<< HEAD
-#####MERGE my $scriptSingle = $outputDir."/toggleBzz.pl";
-#####MERGE my $scriptMultiple = $outputDir."/toggleMultiple.pl";
-#####MERGE =======
 my $scriptSingle = "$outputDir/toggleBzz.pl";
 my $scriptMultiple = "$outputDir/toggleMultiple.pl";
-#####MERGE >>>>>>> RelativePath
+
 my $hashOrder=toolbox::extractHashSoft($configInfo,"order"); #Picking up the options for the order of the pipeline
 my $hashCleaner=toolbox::extractHashSoft($configInfo,"cleaner"); #Picking up infos for steps to be cleaned / data to be removed all along the pipeline
 
