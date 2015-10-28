@@ -12,7 +12,7 @@ $order
 11=picardToolsMarkDuplicates
 1000=gatkHaplotypeCaller
 1001=gatkVariantFiltration
-1002=gatkSelectVariant
+1002=gatkSelectVariants
 
 $cleaner
 3
@@ -61,6 +61,6 @@ $gatkVariantFiltration
 -T=gatkVariantFiltration
 --filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>600' --filterName 'LowQual' --filterExpression 'QUAL<30'
 
-$gatkSelectVariant
--T=gatkSelectVariant
+$gatkSelectVariants
+-T=gatkSelectVariants
 -selectType=SNP
