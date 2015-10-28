@@ -33,7 +33,7 @@ $bwa aln
 $bwa sampe
 
 $picardToolsSortSam
-SORT_ORDER=coordinates
+SORT_ORDER=coordinate
 VALIDATION_STRINGENCY=SILENT
 CREATE_INDEX=TRUE
 
