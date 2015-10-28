@@ -406,7 +406,7 @@ if ($orderBefore1000)
       {  
         my $date = `date`;
         chomp $date;
-        toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1)
+        toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
         #Picking up the number of currently running jobs
         my $qstatCommand = "qstat | egrep -c \"$jobList\"";
         $nbRunningJobs = `$qstatCommand`;
