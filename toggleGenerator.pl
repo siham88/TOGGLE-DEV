@@ -387,7 +387,7 @@ if ($orderBefore1000)
           my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
           $currentJID = $infosList[2];
           $jobList.= $currentJID."|";
-          toolbox::exportLog("DEBUG: $0 : "."@jobList"."\n",2);
+          toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
           toolbox::exportLog("INFOS: $0 : Correctly launched in qsub mode $scriptSingle through the command:\n\t$launcherCommand\n\n",1);
           next;
         }
@@ -404,13 +404,13 @@ if ($orderBefore1000)
       my $nbRunningJobs = 1;
       while ($nbRunningJobs)
       {  
+        my $date = `date`;
+        chomp $date;
+        toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1)
         #Picking up the number of currently running jobs
         my $qstatCommand = "qstat | egrep -c \"$jobList\"";
         $nbRunningJobs = `$qstatCommand`;
         chomp $nbRunningJobs;
-        my $date = `date`;
-        chomp $date;
-        toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
         sleep 50;
       }
     }
