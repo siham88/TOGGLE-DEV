@@ -45,7 +45,7 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 
 #### Bioinformatics software (minimal version)
 
-* [Perl 5.16 or higher] (https://www.perl.org/)
+* [Perl 5.16] (https://www.perl.org/)
 * [java 1.7](https://www.java.com/fr/)
 * [BWA 0.7.2](http://bio-bwa.sourceforge.net/)
 * [SAMtools 0.1.18](http://samtools.sourceforge.net/)
