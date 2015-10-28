@@ -479,10 +479,44 @@ if ($orderAfter1000)
 
     my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile";
     $launcherCommand.=" -g $gffFile" if (defined $gffFile);
-        
-    if(toolbox::run($launcherCommand)==1)       #Execute command
+    
+    my $jobList;
+
+    if ($sgeExistence ne "") #The system is SGE capable
     {
+      $launcherCommand = "qsub -V -b Y ".$launcherCommand;
+      my $currentJID = `$launcherCommand`;
+      chomp $currentJID;
+      my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
+      $currentJID = $infosList[2];
+      $jobList.= $currentJID."|";
+      toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
+      toolbox::exportLog("INFOS: $0 : Correctly launched in qsub mode $scriptMultiple through the command:\n\t$launcherCommand\n\n",1);
+    }
+    else # The system if not SGE capable
+    {
+      if(toolbox::run($launcherCommand)==1)       #Execute command
+      {
         toolbox::exportLog("INFOS: $0 : Correctly launched $scriptMultiple\n",1);
+      }
+    }
+    
+    #If qsub mode, we have to wait the end of jobs before populating
+    chop $jobList if ($jobList =~ m/\|$/);
+    if ($jobList ne "")
+    {
+      my $nbRunningJobs = 1;
+      while ($nbRunningJobs)
+      {  
+        my $date = `date`;
+        chomp $date;
+        toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
+        #Picking up the number of currently running jobs
+        my $qstatCommand = "qstat | egrep -c \"$jobList\"";
+        $nbRunningJobs = `$qstatCommand`;
+        chomp $nbRunningJobs;
+        sleep 5;
+      }
     }
     
     #Creating final directory
