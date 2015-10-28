@@ -389,7 +389,7 @@ if ($orderBefore1000)
         
         if ($sgeExistence ne "") #The system is SGE capable
         {
-          $launcherCommand = "qsub -V -b Y -N $currentDir $sgeOptions ".$launcherCommand;
+          $launcherCommand = "qsub -V -b Y -N toggleBzz $sgeOptions ".$launcherCommand;
           my $currentJID = `$launcherCommand`;
           chomp $currentJID;
           my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
