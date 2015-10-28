@@ -349,6 +349,9 @@ onTheFly::generateGraphviz($hashOrder,$outputDir);
 my $sgeExistence = `qsub -help 2>/dev/null | grep usage`;
 chomp $sgeExistence;
 
+my $sgeOptions=toolbox::extractHashSoft($configInfo,"sge");
+$sgeExistence = "" unless (exists $configInfo->{"sge"}); #The system can launch SGE but the user did not specify it
+
 
 if ($orderBefore1000)
 {

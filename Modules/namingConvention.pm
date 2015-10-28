@@ -90,6 +90,9 @@ sub correctName
 	#FOR cleaner
 	case ($name =~ m/cleaner/i){$correctedName="cleaner";} #Correction for cleaner step
 	
+	#FOR SGE
+	case ($name =~ m/sge/i){$correctedName="sge";} #Correction for sge configuration
+	
         #FOR bwa.pm
         case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
         case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*sampe/i){$correctedName="bwaSampe"} # Correction for bwaSampe
