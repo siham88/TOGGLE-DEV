@@ -341,7 +341,7 @@ if ($orderBefore1000)
     
     #CORRECTING $listSamples if only one individual, ie readDir will provide only the list of files...
     
-    if (scalar @{$listSamples} == 2) #ex: Data/file_1.fastq, Data/file_2.fastq
+    if (scalar @{$listSamples} < 3) #ex: Data/file_1.fastq, Data/file_2.fastq, or a single SAM/BAM/VCF individual
     {
       my @listPath = split /\//, $$listSamples[0];
       pop @listPath;
