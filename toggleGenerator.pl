@@ -304,8 +304,36 @@ elsif ($firstOrder<1000) #Other types of data requesting a single treatment
 
 
 #Generation of Index required for the analysis to work (on the reference only)
-toolbox::exportLog("#########################################\nINFOS: Generating reference index requested \n#########################################\n",1);
+toolbox::exportLog("#########################################\nINFOS: Generating reference index if requested \n#########################################\n",1);
 toolbox::exportLog("----------------------------------------",1);
+
+#Linking of the reference file and of already existing index in the output folder to avoid writing rights limitations
+##DEBUG print $refFastaFile,"\n";
+my $referenceShortName = $refFastaFile;
+my $shortRefFileName = toolbox::extractName($refFastaFile); #We have only the reference name, not the full path
+$referenceShortName =~ s/\.\w+$//; #Ref can finish with .fa or .fasta, and we need also .dict file
+my $refLsCommand = " ls ".$referenceShortName.".*";
+my $refLsResults = `$refLsCommand` or die ("ERROR : $0 : Cannot obtain the list of reference associated files with the command $refLsCommand: $!\n");
+chomp $refLsResults;
+#Transforming in a list of files
+my @listOfRefFiles = split /\n/, $refLsResults;
+#Performin a ln command per file
+while (@listOfRefFiles)
+{
+  my $currentRefFile = shift @listOfRefFiles;
+  my $shortRefFileName = toolbox::extractName($currentRefFile);
+  my $refLsCommand = "ln -s $currentRefFile $outputDir/$shortRefFileName";
+  ##DEBUG print $refLsCommand,"\n";
+  if (toolbox::run($refLsCommand) == 1)
+  {
+    toolbox::exportLog("INFOS : $0 : Linking $currentRefFile to $outputDir/$shortRefFileName\n",1);
+  }
+}
+#Providing the good reference location (in fact the link)
+$refFastaFile = $outputDir."/".$shortRefFileName;
+##DEBUG print $refFastaFile,"\n";
+
+
 onTheFly::indexCreator($configInfo,$refFastaFile);
 
 #Generate script
