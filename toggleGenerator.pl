@@ -396,7 +396,7 @@ if ($orderBefore1000)
           my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
           $currentJID = $infosList[2];
           $jobList.= $currentJID."|";
-          my $baseNameDir=`basename $currentDir`;
+          my $baseNameDir=`basename $currentDir` or die("ERROR : $0 : Cannot pickup the basename for $currentDir: $!\n");
           chomp $baseNameDir;
           $jobHash{$baseNameDir}=$currentJID;
           #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
@@ -538,7 +538,7 @@ if ($orderAfter1000)
       my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
       $currentJID = $infosList[2];
       $jobList.= $currentJID."|";
-      my $baseNameDir=`basename $workingDir`;
+      my $baseNameDir=`basename $workingDir` or die("ERROR : $0 : Cannot pickup the basename for $workingDir: $!\n");
       chomp $baseNameDir;
       $jobHash{$baseNameDir}=$currentJID;
       #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
