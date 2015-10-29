@@ -1746,6 +1746,13 @@ toolbox::checkFormatFasta($fastaFile);
 This module check the sequences number of a given file using the wc -l command from bash
 It takes only one argument, the file you want to know the number of lines
 
+=head3 toolbox::relativeToAbsolutePath
+
+This module will transform a relative path to the corresponding absolute one using the readlink -m bash command.
+Take note that if the relative is wrong, the absolute will be wrong too.
+The module will inform for transformation and will not modify already absolute paths (starting by '/')
+It takes only one argument, the relative path you want to change
+
 =head1 AUTHORS
  
 Cecile Monat, Ayite Kougbeadjo, Julie Orjuela-Bouniol, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
