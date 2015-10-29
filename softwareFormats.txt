@@ -126,7 +126,7 @@ $picardToolsMarkDuplicates
 IN=bam
 OUT=bam
 
-#$picardToolsCreateSequenceDictionary
-#IN=fasta
-#OUT=NA
+$picardToolsCreateSequenceDictionary
+IN=fasta
+OUT=NA
 
