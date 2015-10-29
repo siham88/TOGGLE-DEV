@@ -424,7 +424,7 @@ if ($orderBefore1000)
         my $qstatCommand = "qstat | egrep -c \"$jobList\"";
         $nbRunningJobs = `$qstatCommand`;
         chomp $nbRunningJobs;
-        sleep 5;
+        sleep 50;
       }
       #Compiling infos about sge jobs: jobID, node number, exit status
       sleep 25;#Needed for qacct to register infos...
@@ -528,6 +528,7 @@ if ($orderAfter1000)
     $launcherCommand.=" -g $gffFile" if (defined $gffFile);
     
     my $jobList="";
+    my %jobHash;
 
     if ($sgeExistence ne "") #The system is SGE capable
     {
@@ -562,8 +563,42 @@ if ($orderAfter1000)
         my $qstatCommand = "qstat | egrep -c \"$jobList\"";
         $nbRunningJobs = `$qstatCommand`;
         chomp $nbRunningJobs;
-        sleep 5;
+        sleep 50;
       }
+      #Compiling infos about sge jobs: jobID, node number, exit status
+      sleep 25;#Needed for qacct to register infos...
+      toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tNode\tExitStatus\n-------------------------------",1);
+      foreach my $individual (sort {$a cmp $b} keys %jobHash)
+      {
+        my $qacctCommand = "qacct -j ".$jobHash{$individual};
+        my $qacctOutput = `$qacctCommand`;
+        chomp $qacctOutput;
+        my @linesQacct = split /\n/, $qacctOutput;
+        my $outputLine = $individual."\t".$jobHash{$individual}."\t";
+        while (@linesQacct) #Parsing the qacct output
+        {
+          my $currentLine = shift @linesQacct;
+          if ($currentLine =~ m/^hostname/) #Picking up hostname
+          {
+            $currentLine =~ s/hostname     //;
+            $outputLine .= $currentLine."\t";
+          }
+          elsif ($currentLine =~ m/^exit_status/) #Picking up exit status
+          {
+            $currentLine =~ s/exit_status  //;
+            $currentLine = "Normal" if $currentLine == 0;
+            $outputLine .= $currentLine;
+          }
+          else
+          {
+            next;
+          }
+          
+        }
+        toolbox::exportLog($outputLine,1);
+        
+      }
+      toolbox::exportLog("-------------------------------\n",1);#To have a better table presentation
       
     }
     
