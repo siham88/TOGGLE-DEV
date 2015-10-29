@@ -325,14 +325,14 @@ while (@listOfRefFiles)
 {
   my $currentRefFile = shift @listOfRefFiles;
   my $shortRefFileName = toolbox::extractName($currentRefFile);
-  my $refLsCommand = "ln -s $currentRefFile $refDir/$shortRefFileName";
+  my $refLsCommand = "cp $currentRefFile $refDir/$shortRefFileName";
   ##DEBUG print $refLsCommand,"\n";
   if (toolbox::run($refLsCommand) == 1)
   {
-    toolbox::exportLog("INFOS : $0 : Linking $currentRefFile to $refDir/$shortRefFileName\n",1);
+    toolbox::exportLog("INFOS : $0 : Copying $currentRefFile to $refDir/$shortRefFileName\n",1);
   }
 }
-#Providing the good reference location (in fact the link)
+#Providing the good reference location 
 $refFastaFile = $refDir."/".$shortRefFileName;
 ##DEBUG print $refFastaFile,"\n";
 
