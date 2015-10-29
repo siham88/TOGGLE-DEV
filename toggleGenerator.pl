@@ -448,7 +448,7 @@ if ($orderBefore1000)
           {
             $currentLine =~ s/exit_status  //;
             $currentLine = "Normal" if $currentLine == 0;
-            $outputLine .= $currentLine."\n\n";
+            $outputLine .= $currentLine."\n";
           }
           else
           {
