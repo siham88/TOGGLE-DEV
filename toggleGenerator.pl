@@ -538,7 +538,7 @@ if ($orderAfter1000)
       my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
       $currentJID = $infosList[2];
       $jobList.= $currentJID."|";
-      my $baseNameDir=`basename $currentDir`;
+      my $baseNameDir=`basename $workingDir`;
       chomp $baseNameDir;
       $jobHash{$baseNameDir}=$currentJID;
       #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
