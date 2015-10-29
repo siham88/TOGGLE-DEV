@@ -377,6 +377,7 @@ if ($orderBefore1000)
     
     #FOR SGE launching
     my $jobList="";
+    my %jobHash;
     
     foreach my $currentDir(@{$listSamples})
     {
@@ -395,8 +396,11 @@ if ($orderBefore1000)
           my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
           $currentJID = $infosList[2];
           $jobList.= $currentJID."|";
+          my $baseNameDir=`basename $currentDir`;
+          chomp $baseNameDir;
+          $jobHash{$baseNameDir}=$currentJID;
           #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
-          toolbox::exportLog("INFOS: $0 : Correctly launched in qsub mode $scriptSingle through the command:\n\t$launcherCommand\n\n",1);
+          toolbox::exportLog("INFOS: $0 : Correctly launched for $baseNameDir in qsub mode $scriptSingle through the command:\n\t$launcherCommand\n\n",1);
           next;
         }
     
@@ -410,6 +414,7 @@ if ($orderBefore1000)
     if ($jobList ne "")
     {
       my $nbRunningJobs = 1;
+      #Waiting for jobs to finish
       while ($nbRunningJobs)
       {  
         ##DEBUG my $date = `date`;
@@ -420,6 +425,38 @@ if ($orderBefore1000)
         $nbRunningJobs = `$qstatCommand`;
         chomp $nbRunningJobs;
         sleep 5;
+      }
+      #Compiling infos about sge jobs: jobID, node number, exit status
+      toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tNode\tExitStatus\n",1);
+      foreach my $individual (sort {$a cmp $b} keys %jobHash)
+      {
+        my $qacctCommand = "qacct -j ".$jobHash{$individual};
+        my $qacctOutput = `$qacctCommand`;
+        chomp $qacctOutput;
+        my @linesQacct = split /\n/, $qacctOutput;
+        my $outputLine = $individual."\t".$jobHash{$individual}."\t";
+        while (@linesQacct) #Parsing the qacct output
+        {
+          my $currentLine = shift @linesQacct;
+          if ($currentLine =~ m/^hostname/) #Picking up hostname
+          {
+            $currentLine =~ s/hostname     //;
+            $outputLine .= $currentLine."\t";
+          }
+          elsif ($currentLine =~ m/^exit_status/) #Picking up exit status
+          {
+            $currentLine =~ s/exit_status  //;
+            $currentLine = "Normal" if $currentLine == 0;
+            $outputLine .= $currentLine."\n";
+          }
+          else
+          {
+            next;
+          }
+          
+        }
+        toolbox::exportLog($outputLine,1);
+        
       }
     }
     
@@ -525,6 +562,7 @@ if ($orderAfter1000)
         chomp $nbRunningJobs;
         sleep 5;
       }
+      
     }
     
     #Creating final directory
