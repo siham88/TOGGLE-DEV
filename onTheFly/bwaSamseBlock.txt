@@ -30,5 +30,5 @@ if (scalar @listOfSai != 1) # One sai and only one is required for bwa samse
 print LOG "INFOS: $0 : Start $stepName\n";
 $samFileOut = "$newDir"."/"."$readGroup".".BWASAMSE.sam";                                     # name for the output file of bwa sampe
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                      # recovery of specific parameters of bwa sampe
-bwa::bwaSamse($samFileOut,$refFastaFile,$listOfSai[0],$fastq1,$fileWithoutExtention,$softParameters); # generate alignement in SAM format
+bwa::bwaSamse($samFileOut,$refFastaFile,$listOfSai[0],$fastq1,$readGroup,$softParameters); # generate alignement in SAM format
 
