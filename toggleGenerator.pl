@@ -315,6 +315,9 @@ $referenceShortName =~ s/\.\w+$//; #Ref can finish with .fa or .fasta, and we ne
 my $refLsCommand = " ls ".$referenceShortName.".*";
 my $refLsResults = `$refLsCommand` or die ("ERROR : $0 : Cannot obtain the list of reference associated files with the command $refLsCommand: $!\n");
 chomp $refLsResults;
+#Creating a reference Folder in the $outputDir
+my $refDir = $outputDir."/referenceFiles";
+toolbox::makeDir($refDir);
 #Transforming in a list of files
 my @listOfRefFiles = split /\n/, $refLsResults;
 #Performin a ln command per file
@@ -322,15 +325,15 @@ while (@listOfRefFiles)
 {
   my $currentRefFile = shift @listOfRefFiles;
   my $shortRefFileName = toolbox::extractName($currentRefFile);
-  my $refLsCommand = "ln -s $currentRefFile $outputDir/$shortRefFileName";
+  my $refLsCommand = "ln -s $currentRefFile $refDir/$shortRefFileName";
   ##DEBUG print $refLsCommand,"\n";
   if (toolbox::run($refLsCommand) == 1)
   {
-    toolbox::exportLog("INFOS : $0 : Linking $currentRefFile to $outputDir/$shortRefFileName\n",1);
+    toolbox::exportLog("INFOS : $0 : Linking $currentRefFile to $refDir/$shortRefFileName\n",1);
   }
 }
 #Providing the good reference location (in fact the link)
-$refFastaFile = $outputDir."/".$shortRefFileName;
+$refFastaFile = $refDir."/".$shortRefFileName;
 ##DEBUG print $refFastaFile,"\n";
 
 
