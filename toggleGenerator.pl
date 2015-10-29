@@ -427,6 +427,7 @@ if ($orderBefore1000)
         sleep 5;
       }
       #Compiling infos about sge jobs: jobID, node number, exit status
+      sleep 25;#Needed for qacct to register infos...
       toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tNode\tExitStatus\n",1);
       foreach my $individual (sort {$a cmp $b} keys %jobHash)
       {
@@ -447,7 +448,7 @@ if ($orderBefore1000)
           {
             $currentLine =~ s/exit_status  //;
             $currentLine = "Normal" if $currentLine == 0;
-            $outputLine .= $currentLine."\n";
+            $outputLine .= $currentLine."\n\n";
           }
           else
           {
