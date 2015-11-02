@@ -536,9 +536,13 @@ if ($orderBefore1000)
             my $fileList = toolbox::readDir($lastDir);
             foreach my $file (@{$fileList}) #Copying the final data in the final directory
             {
-                my ($basicName)=toolbox::extractPath($file);
+                next if (not defined $file or $file =~ /^\s*$/);	
+		my ($basicName)=toolbox::extractPath($file);
+		$basicName =~s/://g;
                 my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -f $file && ln -s $finalDir/$basicName $file";
                 ##DEBUG toolbox::exportLog($cpLnCommand,1);
+                ##DEBUG
+                toolbox::exportLog("--------->".$file."-".$basicName,2);
                 if(toolbox::run($cpLnCommand))       #Execute command
                 {
                     toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $finalDir\n",1);
