@@ -284,7 +284,7 @@ sub indexCreator
                 tophat::bowtieBuild($reference,$softParameters);  
             }
 	    
-	    if ($currentSoft eq "bowtie2-Build") # If the index is expressely asked
+	    if ($currentSoft eq "bowtie2-Build" or $currentSoft =~ m/tophat/i) # If the index is expressely asked
             {
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bwa index
                 tophat::bowtie2Build($reference,$softParameters);  
