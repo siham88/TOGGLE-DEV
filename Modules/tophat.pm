@@ -168,8 +168,9 @@ sub tophat2
 		my ($file,$path)=toolbox::extractPath($fileList[$i]);
 		##DEBUG
 		toolbox::exportLog("DEBUG: tophat : $fileList[$i] -$file-$readGroup-$fineName- \n",1);
-		my $command="mv $tophatDirOut/$file $tophatDirOut/$readGroup".".".$file;
+		my $command="mv $tophatDirOut/$file $tophatDirOut/$readGroup".".".$file;   # rename the file by adding read group 
 		toolbox::run($command);
+		last if ($file =~ m/log/);    	#rename the lof directory but not the file into log directory
 	    }
             toolbox::exportLog("INFOS: tophat : correctly done\n",1);
             return 1;
