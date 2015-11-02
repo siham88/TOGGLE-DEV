@@ -166,6 +166,7 @@ sub tophat2
 		next if ($fileList[$i] eq '');
 		
 		my ($file,$path)=toolbox::extractPath($fileList[$i]);
+		$file =~ s/://g;
 		##DEBUG
 		toolbox::exportLog("DEBUG: tophat : $fileList[$i] -$file-$readGroup-$fineName- \n",1);
 		my $command="mv $tophatDirOut/$file $tophatDirOut/$readGroup".".".$file;   # rename the file by adding read group 
