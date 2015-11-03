@@ -120,6 +120,34 @@ sub picardToolsSortSam
         return 0;
     }
 }
+
+######################################
+#PicardToolsValidateSamFile
+######################################
+# This module sorts the input SAM or BAM.
+sub picardToolsValidateSamFile
+{
+    my($bamOrSamFileIn,$bamOrSamFileOut,$optionsHachees)= @_;       # recovery of informations
+    if ((toolbox::checkSamOrBamFormat($bamOrSamFileIn)) && (toolbox::sizeFile($bamOrSamFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
+    {
+        my $options="";
+        if ($optionsHachees)
+        {
+            $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
+        }
+        my $command="$picard/picard.jar ValidateSamFile $options INPUT=$bamOrSamFileIn OUTPUT=$bamOrSamFileOut";       #creation of the command line
+        if(toolbox::run($command)==1)       #Execute command
+        {
+            toolbox::exportLog("INFOS: picardTools::picardToolsValidateSamFile : Correctly run\n",1);
+            return 1;
+        }
+    }
+    else        # if the file is not a ".bam" one or is empty don't run the module ...
+    {
+        toolbox::exportLog("ERROR: picardTools::picardToolsValidateSamFile : The file $bamOrSamFileIn is incorrect\n",0);       # ... and return an error message
+        return 0;
+    }
+}
 1;
 
 =head1 NAME
@@ -135,6 +163,9 @@ sub picardToolsSortSam
         picardTools::picardToolsCreateSequenceDictionary ($refFastaFile,$dictFileOut,$option_prog{'picardTools createSequenceDictionary'});
     
         picardTools::picardToolsSortSam ($bamOrSamFileIn,$bamOrSamFileOut,$option_prog{'picardTools sortsam single/pair'});
+	
+	picardTools::picardToolsValidateSamFile ($bamOrSamFileIn,$bamOrSamFileOut,$option_prog{'picardTools validateSamFile single/pair'});
+
 
 =head1 DESCRIPTION
 
@@ -164,6 +195,12 @@ The last argument is the options of picardTools createSequenceDictionnary, for m
 This module sorts the input SAM or BAM
 It takes at least two arguments: the file to sort, the name of the output file
 The last argument is the options of picardTools sortSam, for more informations see http://broadinstitute.github.io/picard/command-line-overview.html#SortSam
+
+=head3 picardTools::picardToolsValidateSamFile
+
+This module validate the structure of a SAM or BAM input file
+It takes at least two arguments: the file to validate, the name of the output file
+The last argument is the options of picardTools ValidateSamFile, for more informations see http://broadinstitute.github.io/picard/command-line-overview.html#ValidateSamFile
 
 
 =head1 AUTHORS
