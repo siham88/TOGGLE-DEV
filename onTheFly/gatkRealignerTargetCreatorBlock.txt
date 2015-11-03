@@ -6,6 +6,6 @@
 # GATK REALIGNER TARGET CREATOR
 #########################################
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                       # recovery of specific parameters of GATK Realigner Target Creator
-$fileWithoutExtention = toolbox::extractName($fileList[0]);                                             # extract name of file without extention
+$fileWithoutExtention = toolbox::extractName($$fileList[0]);                                             # extract name of file without extention
 $intervalsFile = "$newDir"."/"."$fileWithoutExtention".".GATKREALIGNERTARGETCREATOR.intervals";      # name for the output file of gatk realigner target creator
 gatk::gatkRealignerTargetCreator($refFastaFile, $bamFileOut, $intervalsFile, $softParameters);          # determine (small) suspicious intervals which are likely in need of realignment
