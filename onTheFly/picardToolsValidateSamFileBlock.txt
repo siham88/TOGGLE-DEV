@@ -9,8 +9,8 @@ foreach my $file (@{$fileList})
     next unless $file =~ m/bam$|sam$/;
     $bamFile = $file;
 }
-toolbox::exportLog("ERROR : $0 : No SAM/BAM file provided at step $stepName\n",0) unless $fileIn;
-$fileWithoutExtention = pairing::extractName($fileIn);                                                  # extract name of file without the extention
+toolbox::exportLog("ERROR : $0 : No SAM/BAM file provided at step $stepName\n",0) unless $bamFile;
+$fileWithoutExtention = pairing::extractName($bamFile);                                                  # extract name of file without the extention
 $bamFileOut = $newDir."/"."$fileWithoutExtention".".PICARDTOOLSVALIDATESAMFILE.sam";                              # name for the output file of picardtools validateSamFile
 $softParameters = toolbox::extractHashSoft($optionRef,"picardToolsValidateSamFile");                           # recovery of specific parameters of picard validateSamFile
 picardTools::picardToolsValidateSamFile($bamFile,$bamFileOut,$softParameters); 
