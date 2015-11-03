@@ -126,6 +126,10 @@ $picardToolsMarkDuplicates
 IN=bam
 OUT=bam
 
+$picardToolsValidateSamFile
+IN=sam,bam
+OUT=sam,bam
+
 $picardToolsCreateSequenceDictionary
 IN=fasta
 OUT=NA
