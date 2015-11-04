@@ -124,18 +124,18 @@ sub picardToolsSortSam
 ######################################
 #PicardToolsValidateSamFile
 ######################################
-# This module sorts the input SAM or BAM.
+# This module validate the input SAM or BAM.
 sub picardToolsValidateSamFile
 {
-    my($bamOrSamFileIn,$bamOrSamFileOut,$optionsHachees)= @_;       # recovery of informations
-    if ((toolbox::checkSamOrBamFormat($bamOrSamFileIn)) && (toolbox::sizeFile($bamOrSamFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
+    my($bamOrSamFileIn,$infoFileOut,$optionsHachees)= @_;       # recovery of informations
+    if ((toolbox::checkSamOrBamFormat($bamOrSamFileIn)) && (toolbox::sizeFile($bamOrSamFileIn)==1))        # check if the file to validate is a ".sam" one and is not empty
     {
         my $options="";
         if ($optionsHachees)
         {
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        my $command="$picard/picard.jar ValidateSamFile $options INPUT=$bamOrSamFileIn OUTPUT=$bamOrSamFileOut";       #creation of the command line
+        my $command="$picard/picard.jar ValidateSamFile $options INPUT=$bamOrSamFileIn OUTPUT=$infoFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
             toolbox::exportLog("INFOS: picardTools::picardToolsValidateSamFile : Correctly run\n",1);
@@ -145,6 +145,34 @@ sub picardToolsValidateSamFile
     else        # if the file is not a ".bam" one or is empty don't run the module ...
     {
         toolbox::exportLog("ERROR: picardTools::picardToolsValidateSamFile : The file $bamOrSamFileIn is incorrect\n",0);       # ... and return an error message
+        return 0;
+    }
+}
+
+######################################
+#PicardToolsCleanSam
+######################################
+# This module clean the input SAM.
+sub picardToolsCleanSam
+{
+    my($samFileIn,$samFileOut,$optionsHachees)= @_;       # recovery of informations
+    if ((toolbox::checkSamOrBamFormat($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
+    {
+        my $options="";
+        if ($optionsHachees)
+        {
+            $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
+        }
+        my $command="$picard/picard.jar CleanSam $options INPUT=$samFileIn OUTPUT=$samFileOut";       #creation of the command line
+        if(toolbox::run($command)==1)       #Execute command
+        {
+            toolbox::exportLog("INFOS: picardTools::picardToolsClean : Correctly run\n",1);
+            return 1;
+        }
+    }
+    else        # if the file is not a ".bam" one or is empty don't run the module ...
+    {
+        toolbox::exportLog("ERROR: picardTools::picardToolsValidateSamFile : The file $samFileIn is incorrect\n",0);       # ... and return an error message
         return 0;
     }
 }
@@ -198,10 +226,15 @@ The last argument is the options of picardTools sortSam, for more informations s
 
 =head3 picardTools::picardToolsValidateSamFile
 
-This module validate the structure of a SAM or BAM input file
+This module validates the structure of a SAM or BAM input file
 It takes at least two arguments: the file to validate, the name of the output file
 The last argument is the options of picardTools ValidateSamFile, for more informations see http://broadinstitute.github.io/picard/command-line-overview.html#ValidateSamFile
 
+=head3 picardTools::picardToolsClean
+
+This module cleans the provided SAM/BAM, soft-clipping beyond-end-of-reference alignments and setting MAPQ to 0 for unmapped reads
+It takes at least two arguments: the file to validate, the name of the output file
+The last argument is the options of picardTools CleanSam, for more informations see http://broadinstitute.github.io/picard/command-line-overview.html#CleanSam
 
 =head1 AUTHORS
 
