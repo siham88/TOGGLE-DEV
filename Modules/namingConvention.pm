@@ -117,6 +117,7 @@ sub correctName
         case ($name =~ m/picardtools[\s|\.|\-| \/|\\|\|]*create[\s|\.|\-| \/|\\|\|]*sequence[\s|\.|\-| \/|\\|\|]*dictionary/i){$correctedName="picardToolsCreateSequenceDictionary"} # Correction for picardToolsCreateSequenceDictionary
         case ($name =~ m/picardtools[\s|\.|\-| \/|\\|\|]*sort[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="picardToolsSortSam"} # Correction for picardToolsSortSam
 	case ($name =~ m/picardtools[\s|\.|\-| \/|\\|\|]*validate[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*file/i){$correctedName="picardToolsValidateSamFile"} # Correction for picardToolsvalidateSamFile
+	case ($name =~ m/picardtools[\s|\.|\-| \/|\\|\|]*clean[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="picardToolsCleanSam"} # Correction for picardToolsCleanSam
 
         
         #FOR gatk.pm
