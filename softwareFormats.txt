@@ -130,6 +130,10 @@ $picardToolsValidateSamFile
 IN=sam,bam
 OUT=sam,bam
 
+$picardToolsCleanSam
+IN=sam,bam
+OUT=sam,bam
+
 $picardToolsCreateSequenceDictionary
 IN=fasta
 OUT=NA
