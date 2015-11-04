@@ -432,6 +432,11 @@ if ($orderBefore1000)
           $currentJID = $infosList[2];
           $jobList.= $currentJID."|";
           $jobHash{$baseNameDir}=$currentJID;
+          my $runningNodeCommand="qstat | grep $currentJID | cut -f26 -d\" \"|cut -f2 -d\"\@\"";
+          my $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
+          chomp $runningNode;
+          toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
+          
           #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
           next;
         }
@@ -580,6 +585,10 @@ if ($orderAfter1000)
       $jobList.= $currentJID."|";
       
       $jobHash{$baseNameDir}=$currentJID;
+      my $runningNodeCommand="qstat | grep $currentJID | cut -f26 -d\" \"|cut -f2 -d\"\@\"";
+      my $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
+      chomp $runningNode;
+      toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
       #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
     }
     else # The system if not SGE capable
