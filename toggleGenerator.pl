@@ -424,13 +424,13 @@ if ($orderBefore1000)
           $launcherCommand = "qsub $sgeOptions ".$launcherCommand;
           my $currentJID = `$launcherCommand`;
           chomp $currentJID;
+          my $baseNameDir=`basename $currentDir` or die("ERROR : $0 : Cannot pickup the basename for $currentDir: $!\n");
+          chomp $baseNameDir;
           toolbox::exportLog("INFOS: $0 : Correctly launched for $baseNameDir in qsub mode $scriptSingle through the command:\n\t$launcherCommand\n\n",1);
           toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
           my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
           $currentJID = $infosList[2];
           $jobList.= $currentJID."|";
-          my $baseNameDir=`basename $currentDir` or die("ERROR : $0 : Cannot pickup the basename for $currentDir: $!\n");
-          chomp $baseNameDir;
           $jobHash{$baseNameDir}=$currentJID;
           #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
           next;
@@ -571,13 +571,14 @@ if ($orderAfter1000)
       $launcherCommand = "qsub $sgeOptions ".$launcherCommand;
       my $currentJID = `$launcherCommand`;
       chomp $currentJID;
+      my $baseNameDir=`basename $workingDir` or die("ERROR : $0 : Cannot pickup the basename for $workingDir: $!\n");
+      chomp $baseNameDir;
       toolbox::exportLog("INFOS: $0 : Correctly launched for $baseNameDir in qsub mode $scriptSingle through the command:\n\t$launcherCommand\n\n",1);
       toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
       my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
       $currentJID = $infosList[2];
       $jobList.= $currentJID."|";
-      my $baseNameDir=`basename $workingDir` or die("ERROR : $0 : Cannot pickup the basename for $workingDir: $!\n");
-      chomp $baseNameDir;
+      
       $jobHash{$baseNameDir}=$currentJID;
       #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
     }
