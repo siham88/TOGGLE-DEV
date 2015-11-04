@@ -1,0 +1,16 @@
+
+##########################################
+# picardToolsCleanSam
+##########################################
+
+foreach my $file (@{$fileList})
+{
+    ## DEBUG toolbox::exportLog($file,1);
+    next unless $file =~ m/bam$|sam$/;
+    $bamFile = $file;
+}
+toolbox::exportLog("ERROR : $0 : No SAM/BAM file provided at step $stepName\n",0) unless $bamFile;
+$fileWithoutExtention = pairing::extractName($bamFile);                                                  # extract name of file without the extention
+$bamFileOut = $newDir."/"."$fileWithoutExtention".".PICARDTOOLSCLEANSAM.sam";                              # name for the output file of picardtools CleanSam
+$softParameters = toolbox::extractHashSoft($optionRef,"picardToolsCleanSam");                           # recovery of specific parameters of picard CleanSam
+picardTools::picardToolsCleanSam($bamFile,$bamFileOut,$softParameters); 
