@@ -152,7 +152,7 @@ sub picardToolsValidateSamFile
 ######################################
 #PicardToolsCleanSam
 ######################################
-# This module clean the input SAM.
+# This module cleans the input SAM.
 sub picardToolsCleanSam
 {
     my($samFileIn,$samFileOut,$optionsHachees)= @_;       # recovery of informations
@@ -166,13 +166,41 @@ sub picardToolsCleanSam
         my $command="$picard/picard.jar CleanSam $options INPUT=$samFileIn OUTPUT=$samFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
-            toolbox::exportLog("INFOS: picardTools::picardToolsClean : Correctly run\n",1);
+            toolbox::exportLog("INFOS: picardTools::picardToolsCleanSam : Correctly run\n",1);
             return 1;
         }
     }
     else        # if the file is not a ".bam" one or is empty don't run the module ...
     {
-        toolbox::exportLog("ERROR: picardTools::picardToolsValidateSamFile : The file $samFileIn is incorrect\n",0);       # ... and return an error message
+        toolbox::exportLog("ERROR: picardTools::picardToolsCleanSam : The file $samFileIn is incorrect\n",0);       # ... and return an error message
+        return 0;
+    }
+}
+
+######################################
+#PicardToolsSamFormatConverter
+######################################
+# This module transforms a SAM file in BAM.
+sub picardToolsCleanSam
+{
+    my($samFileIn,$bamFileOut,$optionsHachees)= @_;       # recovery of informations
+    if ((toolbox::checkSamOrBamFormat($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
+    {
+        my $options="";
+        if ($optionsHachees)
+        {
+            $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
+        }
+        my $command="$picard/picard.jar SamFormatConverter $options INPUT=$samFileIn OUTPUT=$bamFileOut";       #creation of the command line
+        if(toolbox::run($command)==1)       #Execute command
+        {
+            toolbox::exportLog("INFOS: picardTools::picardToolsSamFormatConverter : Correctly run\n",1);
+            return 1;
+        }
+    }
+    else        # if the file is not a ".bam" one or is empty don't run the module ...
+    {
+        toolbox::exportLog("ERROR: picardTools::picardToolsSamFormatConverter : The file $samFileIn is incorrect\n",0);       # ... and return an error message
         return 0;
     }
 }
@@ -235,6 +263,12 @@ The last argument is the options of picardTools ValidateSamFile, for more inform
 This module cleans the provided SAM/BAM, soft-clipping beyond-end-of-reference alignments and setting MAPQ to 0 for unmapped reads
 It takes at least two arguments: the file to validate, the name of the output file
 The last argument is the options of picardTools CleanSam, for more informations see http://broadinstitute.github.io/picard/command-line-overview.html#CleanSam
+
+=head3 picardTools::picardToolsSamFormatConverter
+
+This module transforms the provided SAM/BAM in a BAM/SAM, respectively.
+It takes at least two arguments: the file to transform, the name of the output file
+The last argument is the options of picardTools SamFormatConverter, for more informations see http://broadinstitute.github.io/picard/command-line-overview.html#SamFormatConverter
 
 =head1 AUTHORS
 

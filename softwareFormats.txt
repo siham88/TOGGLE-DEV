@@ -134,6 +134,10 @@ $picardToolsCleanSam
 IN=sam,bam
 OUT=sam,bam
 
+$picardToolsSamFormatConverter
+IN=sam,bam
+OUT=sam,bam
+
 $picardToolsCreateSequenceDictionary
 IN=fasta
 OUT=NA
