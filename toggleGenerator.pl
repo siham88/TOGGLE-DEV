@@ -441,25 +441,21 @@ if ($orderBefore1000)
             chomp $runningNode;
             $runningNode =~ s/ +/_/g;
             my @runningFields = split /_/,$runningNode; #To obtain the correct field
-            while (@runningFields)
-            {
-              my $currentField = shift @runningFields;
-              next unless $currentField =~ m/@/; # form such as bioinfo.q@node2
-              $currentField =~ s/.+@//; # remove everything before the @, included
-              $runningNode = $currentField;
-              last;
-            }
-            
+            next if $runningFields[4] ne "r"; # not running
+            $runningNode = $runningFields[7];
+            $runningNode =~ s/.+@//;#removing queue name
           }
           toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
           
           #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
           next;
         }
-    
-        if(toolbox::run($launcherCommand))       #Execute command
+        else #Not SGE capable system
         {
-            toolbox::exportLog("INFOS: $0 : Correctly launched $scriptSingle\n",1);
+          if(toolbox::run($launcherCommand))       #Execute command
+          {
+              toolbox::exportLog("INFOS: $0 : Correctly launched $scriptSingle\n",1);
+          }
         }
     }
     
@@ -611,14 +607,9 @@ if ($orderAfter1000)
         chomp $runningNode;
         $runningNode =~ s/ +/_/g;
         my @runningFields = split /_/,$runningNode; #To obtain the correct field
-        while (@runningFields)
-        {
-          my $currentField = shift @runningFields;
-          next unless $currentField =~ m/@/; # form such as bioinfo.q@node2
-          $currentField =~ s/.+@//; # remove everything before the @, included
-          $runningNode = $currentField;
-          last;
-        }
+        next if $runningFields[4] ne "r"; # not running
+        $runningNode = $runningFields[7];
+        $runningNode =~ s/.+@//;#removing queue name
       }
       
       toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
