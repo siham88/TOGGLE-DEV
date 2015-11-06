@@ -435,9 +435,9 @@ if ($orderBefore1000)
           my $runningNodeCommand="qstat | grep $currentJID | cut -f26 -d\" \"|cut -f2 -d\"\@\"";
           my $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
           chomp $runningNode;
-          while ($runningNode eq "") #If the job is not yet launched, there is no node affected
+          while ($runningNode eq "") #If the job is not yet launched, there is no node affected, $runningMode is empty
           {
-            sleep 5;
+            sleep 5;#Waiting for the job to be launched
             $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
             chomp $runningNode;
           }
