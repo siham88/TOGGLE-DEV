@@ -443,7 +443,7 @@ if ($orderBefore1000)
             while (@runningFields)
             {
               my $currentField = shift @runningFields;
-              next unless $currentField =~ m/@/ # form such as bioinfo.q@node2
+              next unless $currentField =~ m/@/; # form such as bioinfo.q@node2
               $currentField =~ s/.+@//; # remove everything before the @, included
               $runningNode = $currentField;
               last;
@@ -611,7 +611,7 @@ if ($orderAfter1000)
         while (@runningFields)
         {
           my $currentField = shift @runningFields;
-          next unless $currentField =~ m/@/ # form such as bioinfo.q@node2
+          next unless $currentField =~ m/@/; # form such as bioinfo.q@node2
           $currentField =~ s/.+@//; # remove everything before the @, included
           $runningNode = $currentField;
           last;
