@@ -461,6 +461,7 @@ if ($orderBefore1000)
             toolbox::exportLog("INFOS: $0 : Correctly launched $scriptSingle\n",1);
         }
     }
+    
     #If qsub mode, we have to wait the end of jobs before populating
     chop $jobList if ($jobList =~ m/\|$/);
     if ($jobList ne "")
@@ -616,6 +617,7 @@ if ($orderAfter1000)
           $runningNode = $currentField;
           last;
         }
+      }
       
       toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
       #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
