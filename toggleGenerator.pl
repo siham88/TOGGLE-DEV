@@ -439,7 +439,8 @@ if ($orderBefore1000)
             sleep 5;#Waiting for the job to be launched
             $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
             chomp $runningNode;
-            my @runningFields = split /\s/,$runningNode; #To obtain the correct field
+            $runningNode =~ s/ +/_/g;
+            my @runningFields = split /_/,$runningNode; #To obtain the correct field
             while (@runningFields)
             {
               my $currentField = shift @runningFields;
@@ -608,7 +609,8 @@ if ($orderAfter1000)
         sleep 5;#Waiting for the job to be launched
         $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
         chomp $runningNode;
-        my @runningFields = split /\s/,$runningNode; #To obtain the correct field
+        $runningNode =~ s/ +/_/g;
+        my @runningFields = split /_/,$runningNode; #To obtain the correct field
         while (@runningFields)
         {
           my $currentField = shift @runningFields;
