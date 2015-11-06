@@ -432,14 +432,23 @@ if ($orderBefore1000)
           $currentJID = $infosList[2];
           $jobList.= $currentJID."|";
           $jobHash{$baseNameDir}=$currentJID;
-          my $runningNodeCommand="qstat | grep $currentJID | cut -f26 -d\" \"|cut -f2 -d\"\@\"";
-          my $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
-          chomp $runningNode;
+          my $runningNodeCommand="qstat | grep $currentJID";
+          my $runningNode="";
           while ($runningNode eq "") #If the job is not yet launched, there is no node affected, $runningMode is empty
           {
             sleep 5;#Waiting for the job to be launched
             $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
             chomp $runningNode;
+            my @runningFields = split /\s/,$runningNode; #To obtain the correct field
+            while (@runningFields)
+            {
+              my $currentField = shift @runningFields;
+              next unless $currentField =~ m/@/ # form such as bioinfo.q@node2
+              $currentField =~ s/.+@//; # remove everything before the @, included
+              $runningNode = $currentField;
+              last;
+            }
+            
           }
           toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
           
@@ -591,15 +600,22 @@ if ($orderAfter1000)
       $jobList.= $currentJID."|";
       
       $jobHash{$baseNameDir}=$currentJID;
-      my $runningNodeCommand="qstat | grep $currentJID | cut -f26 -d\" \"|cut -f2 -d\"\@\"";
-      my $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
-      chomp $runningNode;
-      while ($runningNode eq "") #If the job is not yet launched, there is no node affected
+      my $runningNodeCommand="qstat | grep $currentJID";
+      my $runningNode="";
+      while ($runningNode eq "") #If the job is not yet launched, there is no node affected, $runningMode is empty
       {
-        sleep 5;
+        sleep 5;#Waiting for the job to be launched
         $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
         chomp $runningNode;
-      }
+        my @runningFields = split /\s/,$runningNode; #To obtain the correct field
+        while (@runningFields)
+        {
+          my $currentField = shift @runningFields;
+          next unless $currentField =~ m/@/ # form such as bioinfo.q@node2
+          $currentField =~ s/.+@//; # remove everything before the @, included
+          $runningNode = $currentField;
+          last;
+        }
       
       toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
       #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
