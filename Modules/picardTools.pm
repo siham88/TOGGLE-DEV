@@ -181,7 +181,7 @@ sub picardToolsCleanSam
 #PicardToolsSamFormatConverter
 ######################################
 # This module transforms a SAM file in BAM.
-sub picardToolsValidateSamFile
+sub picardToolsSamFormatConverter
 {
     my($samFileIn,$bamFileOut,$optionsHachees)= @_;       # recovery of informations
     if ((toolbox::checkSamOrBamFormat($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
