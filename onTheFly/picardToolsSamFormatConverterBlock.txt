@@ -11,6 +11,6 @@ foreach my $file (@{$fileList})
 }
 toolbox::exportLog("ERROR : $0 : No SAM/BAM file provided at step $stepName\n",0) unless $bamFile;
 $fileWithoutExtention = pairing::extractName($bamFile);                                                  # extract name of file without the extention
-$bamFileOut = $newDir."/"."$fileWithoutExtention".".PICARDTOOLSSAMFORMATCONVERTER.sam";                              # name for the output file of picardtools SamFormatConverter
+$bamFileOut = $newDir."/"."$fileWithoutExtention".".PICARDTOOLSSAMFORMATCONVERTER.bam";                              # name for the output file of picardtools SamFormatConverter
 $softParameters = toolbox::extractHashSoft($optionRef,"picardToolsSamFormatConverter");                           # recovery of specific parameters of picard SamFormatConverter
 picardTools::picardToolsSamFormatConverter($bamFile,$bamFileOut,$softParameters); 
