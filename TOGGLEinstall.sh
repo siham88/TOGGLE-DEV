@@ -292,36 +292,3 @@ echo "\nHOORAY !! Configuration finished!\n\nPlease use first the test data as r
 
 exit 0;
 
-#######################################################
-#######################################################
-
-
-
-# x=1
-# while [ $x -le 5 ]
-# do
-# 	echo "Welcome $x times"
-# 	x=$(( $x + 1 ))
-# done
-
-
-# while true; do
-#     read -p "\nDo you wish to install this program?" yn
-#     case $yn in
-#         [Yy]* ) echo "You said YES"; break;;
-#         [Nn]* ) echo "You said NO";
-#         * ) echo "Please answer yes or no.";;
-#     esac
-# done
-
-
-
-##########################################################################################
-
-
-###### Autres commandes pour tester si un soft est installé.
-
-# command -v foo >/dev/null 2>&1 || { echo >&2 "I require foo but it's not installed.  Aborting."; exit 1; }
-# type foo >/dev/null 2>&1 || { echo >&2 "I require foo but it's not installed.  Aborting."; exit 1; }
-# hash foo 2>/dev/null || { echo >&2 "I require foo but it's not installed.  Aborting."; exit 1; }
-
