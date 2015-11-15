@@ -227,11 +227,11 @@ cd $INSTALLPATH
 
 echo "\nDownloading the compiled version for CutAdapt, bwa, SAMtools, Picard-Tools, FastQC, GATK, TopHat, Bowtie2 and FASTX-Trimmer"
 
-wget http://bioinfo-web.mpl.ird.fr/toggle/bin.zip
+wget http://bioinfo-web.mpl.ird.fr/toggle/bin.tar.gz
 
 echo "\nDownloading the various Perl modules"
 
-wget http://bioinfo-web.mpl.ird.fr/toggle/perlModules.zip
+wget http://bioinfo-web.mpl.ird.fr/toggle/perlModules.tar.gz
 
 echo "\nDownloading the localConfig.pm"
 
@@ -250,15 +250,15 @@ BINARIES=$INSTALLPATH"/bin"
 
 sleep 1
 
-echo "\nUnzipping compiled versions and Perl modules"
+echo "\Decompressing compiled versions and Perl modules"
 
-unzip bin.zip
+tar xzvf bin.tar.gz
 
-rm -Rf bin.zip
+rm -Rf bin.tar.gz
 
-unzip perlModules.zip
+tar xvzf perlModules.tar.gz
 
-rm -Rf perlModules.zip
+rm -Rf perlModules.tar.gz
 
 cp -R perlModules/* $MODULES/.
 
