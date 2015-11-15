@@ -285,7 +285,7 @@ sed -i "s|fastx_trimmerbinary|$BINARIES/fastx_toolkit/fastx_trimmer|g" $MODULES/
 #Adding toggle in the user PERL5LIB path
 sleep 1
 
-echo"\n$PERL5LIB=$PERL5LIB:$MODULES\n | cat - > ~/.bashrc"
+echo"\n$PERL5LIB=$PERL5LIB:$MODULES\n" | cat - > ~/.bashrc
 
 
 echo "\nHOORAY !! Configuration finished!\n\nPlease use first the test data as recommanded on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n"
