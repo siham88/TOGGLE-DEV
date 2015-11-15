@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2015 IRD-CIRAD-ADNid
+# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,12 +23,12 @@
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
-# Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Souhila Amanzougarene, Mawusse Agbessi,
-# Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Marilyne Summo, and Francois Sabot
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+# Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
-
 
 ###################################################################################################################################
 #
@@ -95,7 +95,7 @@ elif [ $x -eq $total ]
 then
 	echo -e "\nRequired UNIX programs have been found  !!\nYou are one step closer to installing TOGGLE"
 else
-	echo -e "\nThis is a bug message from TOGGLE devs.\nThis is not supposed to happen, you might want to check the raw code or contact us through https://github.com/SouthGreenPlatform/TOGGLE/issues"
+	echo -e "\nThis is a bug message from TOGGLE devs.\nThis was not supposed to happen, you might want to check the raw code or contact us through https://github.com/SouthGreenPlatform/TOGGLE/issues"
 	exit 1;
 fi
 
@@ -109,44 +109,16 @@ echo -e "############################################\n"
 echo -e "\nTOGGLE requires a functional version of Java 7"
 echo -e "Please input the adress to the executable file\n"
 
-
-# INPUT JAVA 6 PATH
-
-#echo -e "Type the absolute path for Java 6:"
-#read JAVASIX
-
-# echo -e "\n"
-# $JAVASIX -version
-# echo -e "\n"
-
-#while true; do
-#
-#	echo -e "\n";
-#	$JAVASIX -version;
-#	echo -e "\n";
-#
-#    read -p "IS THIS THE RIGHT JAVA 6 VERSION ?? [Y|N]: " yn
-#    case $yn in
-#		[Yy]* ) echo "Java 6 path has been establised to: '$JAVASIX' "; break;;
-#		[Nn]* ) echo "Please, Try again:"; read JAVASIX ;;
-#        * ) echo "Please answer yes or no.";;
-#    esac
-#done
-
-
-
 # INPUT JAVA 7 PATH
 
 echo -e "\nType the absolute path for Java 7:"
 read JAVASEVEN
 
-
 while true; do
 
-	#
-	#echo -e "\n";
-	#$JAVASEVEN -version;
-	#echo -e "\n";
+    echo -e "\n";
+    $JAVASEVEN -version;
+    echo -e "\n";
 
     read -p "IS THIS THE RIGHT JAVA 7 VERSION ?? [Y|N]: " yn
     case $yn in
@@ -204,7 +176,7 @@ FASTX-Trimmer
 
 TOGGLE
 \tLicense: https://github.com/SouthGreenPlatform/TOGGLE/blob/master/LICENSE
-\tTo cite: *to come*
+\tTo cite: Monat et al, TOGGLE: toolbox for generic NGS analyses, BMC Bioinformatics, 2015, 16:374
 "
 
 
@@ -217,6 +189,9 @@ echo -e "\nINSTALLING TOGGLE\n";
 echo -e "\nPlease provide the installation path:"
 read INSTALLPATH
 
+#Transforming in an absolute PATH. Using -f option, all composants must exist but the last
+
+$INSTALLPATH = readlink -f $INSTALLPATH
 
 while true; do
     
@@ -234,11 +209,15 @@ done
 
 mkdir $INSTALLPATH
 
+#Cloning current version of TOGGLE
+
 echo -e "\nCloning the current Git Master Version";
 
 git clone https://github.com/SouthGreenPlatform/TOGGLE.git $INSTALLPATH
 
 cd $INSTALLPATH
+
+#Adding binaries, libraries and a basic localConfig.pm to change
 
 echo -e "\nDownloading the compiled version for CutAdapt, bwa, SAMtools, Picard-Tools, FastQC, GATK, TopHat, Bowtie2 and FASTX-Trimmer"
 
@@ -254,7 +233,7 @@ wget http://bioinfo-web.mpl.ird.fr/toggle/BAK_localConfig.pm
 
 
 #######################################################
-## Once Toggle has been cloned, this part wil be executed:
+## Once Toggle has been cloned, this part will be executed:
 #######################################################
 
 # DECLARE VARIABLES WITH PATHS 
@@ -282,19 +261,19 @@ echo -e "\nCONFIGURING YOUR PERSONAL localConfig.pm"
 cp BAK_localConfig.pm $MODULES/localConfig.pm
 sed -i "s|togglepath|$TOGGLEPATH|g" $MODULES/localConfig.pm
 sed -i "s|java7|$JAVASEVEN|g" $MODULES/localConfig.pm
-sed -i "s|bwabinary|$BINARIES/bwa\.kit/bwa|g" $MODULES/localConfig.pm
+sed -i "s|bwabinary|$BINARIES/bwa/bwa|g" $MODULES/localConfig.pm
 sed -i "s|cutadaptbinary|$BINARIES/cutadapt/bin/cutadapt|g" $MODULES/localConfig.pm
 sed -i "s|samtoolsbinary|$BINARIES/samtools/samtools|g" $MODULES/localConfig.pm
-sed -i "s|picardbinary|$BINARIES/picard/dist/picard.jar|g" $MODULES/localConfig.pm
+sed -i "s|picardbinary|$BINARIES/picard-tools/picard.jar|g" $MODULES/localConfig.pm
 sed -i "s|fastqcbinary|$BINARIES/FastQC/fastqc|g" $MODULES/localConfig.pm
-sed -i "s|GATKbinary|$BINARIES/GATK/GenomeAnalysisTK.jar|g" $MODULES/localConfig.pm
+sed -i "s|GATKbinary|$BINARIES/GenomeAnalysisTK/GenomeAnalysisTK.jar|g" $MODULES/localConfig.pm
 sed -i "s|tophat2binary|$BINARIES/tophat/tophat2|g" $MODULES/localConfig.pm
 sed -i "s|bowtie2-buildbinary|$BINARIES/bowtie2/bowtie2-build|g" $MODULES/localConfig.pm
 sed -i "s|bowtie-buildbinary|$BINARIES/bowtie/bowtie-build|g" $MODULES/localConfig.pm
-sed -i "s|fastx_trimmerbinary|$BINARIES/fastx_toolkit/bin/fastx_trimmer|g" $MODULES/localConfig.pm
+sed -i "s|fastx_trimmerbinary|$BINARIES/fastx_toolkit/fastx_trimmer|g" $MODULES/localConfig.pm
 
 
-echo -e "\nHOORAY !! Configuration finished!\n\nPlease launch the TEST/all_tests.sh script to be sure the whole installation works properly; for that type directly here in the terminal:\n\ncd /path/to/TOGGLE/TEST && sh all_tests.sh.\n\n You can also use the test data as recommanded on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n"
+echo -e "\nHOORAY !! Configuration finished!\n\nPlease use first the test data as recommanded on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n"
 
 exit 0;
 
