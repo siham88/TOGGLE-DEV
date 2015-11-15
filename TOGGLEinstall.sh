@@ -217,6 +217,7 @@ mkdir $INSTALLPATH
 #Cloning current version of TOGGLE
 
 echo "\nCloning the current Git Master Version";
+sleep 1
 
 git clone https://github.com/SouthGreenPlatform/TOGGLE.git $INSTALLPATH
 
@@ -247,6 +248,8 @@ TOGGLEPATH=$INSTALLPATH
 MODULES=$INSTALLPATH"/Modules"
 BINARIES=$INSTALLPATH"/bin"
 
+sleep 1
+
 echo "\nUnzipping compiled versions and Perl modules"
 
 unzip bin.zip
@@ -260,6 +263,8 @@ rm -Rf perlModules.zip
 cp -R perlModules/* $MODULES/.
 
 rm -Rf perlModules
+
+sleep 1
 
 echo "\nCONFIGURING YOUR PERSONAL localConfig.pm"
 
@@ -278,6 +283,7 @@ sed -i "s|bowtie-buildbinary|$BINARIES/bowtie/bowtie-build|g" $MODULES/localConf
 sed -i "s|fastx_trimmerbinary|$BINARIES/fastx_toolkit/fastx_trimmer|g" $MODULES/localConfig.pm
 
 #Adding toggle in the user PERL5LIB path
+sleep 1
 
 echo"\n$PERL5LIB=$PERL5LIB:$MODULES\n | cat - > ~/.bashrc"
 
