@@ -19,15 +19,21 @@ in different environments (single machine to HPC clusters).
 
 ##  Citation
 **TOGGLE: Toolbox for generic NGS analyses**. Cécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique
-Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot. In press, *BMC Bioinformatics*.
+Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
+
+[*BMC Bioinformatics* 2015, 16:374  doi:10.1186/s12859-015-0795-6][paperLink]
 
 ##  INSTALLATION
 
-see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/INSTALL.md
+[Follow the INSTALLATION instructions][installLink]
 
 ## MANUAL
 
-see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
+[You can find a detailed MANUAL here][manualLink]
+
+## Release Notes
+
+[Current Release Notes][releaseLink]
 
 ## REQUIREMENTS
 
@@ -40,12 +46,13 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 * [Test::Deep](http://search.cpan.org/~rjbs/Test-Deep-0.119/lib/Test/Deep.pm)
 * [Capture::Tiny](http://search.cpan.org/~dagolden/Capture-Tiny-0.30/lib/Capture/Tiny.pm)
 * [List::Compare](http://search.cpan.org/~jkeenan/List-Compare-0.53/lib/List/Compare.pm)
-* [Switch] (https://metacpan.org/pod/Switch)
+*
+[Switch](https://metacpan.org/pod/Switch)
 
 
 #### Bioinformatics software (minimal version)
 
-* [Perl 5.16] (https://www.perl.org/)
+* [Perl 5.16](https://www.perl.org/)
 * [java 1.7](https://www.java.com/fr/)
 * [BWA 0.7.2](http://bio-bwa.sourceforge.net/)
 * [SAMtools 0.1.18](http://samtools.sourceforge.net/)
@@ -66,7 +73,7 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 - bwaSamse
 - bwaIndex
 - bwaMem
-      
+
 #####SamTools (http://samtools.sourceforge.net/)
 
 - samToolsFaidx
@@ -78,13 +85,13 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 - samToolsIdxstats
 - samToolsDepth
 - samToolsFlagstat
-       
+
 #####PicardTools (http://broadinstitute.github.io/picard/)
 
 - picardToolsMarkDuplicates
 - picardToolsCreateSequenceDictionary
 - picardToolsSortSam
-        
+
 #####Gatk (https://www.broadinstitute.org/gatk/)
 
 - gatkBaseRecalibrator
@@ -94,7 +101,7 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 - gatkSelectVariants
 - gatkVariantFiltration
 - gatkReadBackedPhasing
-    
+
 #####Fastqc (http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
 - fastqc
@@ -112,17 +119,17 @@ see https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
 #####Snpeff (http://snpeff.sourceforge.net/)
 
 - snpeffAnnotation
-    
+
 #####Cutadapt (https://pypi.python.org/pypi/cutadapt)
 
 - cutadapt
 
 #### OPTIONAL
-* Graphviz v2.xx (www.graphviz.org/)
+- Graphviz v2.xx (http://www.graphviz.org/)
 
 
-##  Versions Notes - onTheFlyv2 branch
 
-Release 0.3, xxxxxxx
-
-Third beta version release
+[paperLink]:http://www.biomedcentral.com/1471-2105/16/374
+[installLink]:https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/INSTALL.md
+[manualLink]:https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/MANUAL.md
+[releaseLink]:https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/onTheFlyv2/ReleaseNotes.md
