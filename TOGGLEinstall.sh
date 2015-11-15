@@ -103,15 +103,15 @@ fi
 # INPUT VARIABLES FOR JAVA
 
 echo "\n\n############################################"
-echo "##\t Path to Java 7"
+echo "##\t Path to Java "
 echo "############################################\n"
 
-echo "\nTOGGLE requires a functional version of Java 7"
+echo "\nTOGGLE requires a functional version of Java "
 echo "Please input the adress to the executable file\n"
 
 # INPUT JAVA 7 PATH
 
-echo "\nType the absolute path for Java 7:"
+echo "\nType the absolute path for Java :"
 read JAVASEVEN
 
 while true; do
@@ -120,9 +120,9 @@ while true; do
     $JAVASEVEN -version;
     echo "\n";
 
-    read -p "IS THIS THE RIGHT JAVA 7 VERSION ?? [Y|N]: " yn
+    read -p "IS THIS THE RIGHT JAVA VERSION ?? [Y|N]: " yn
     case $yn in
-        [Yy]* ) echo "Java 7 path has been established to: '$JAVASEVEN' "; break;;
+        [Yy]* ) echo "Java path has been established to: '$JAVASEVEN' "; break;;
         [Nn]* ) echo "Please, Try again:"; read JAVASEVEN ;;
         * ) echo "Please answer 'Y' or 'N':";;
     esac
