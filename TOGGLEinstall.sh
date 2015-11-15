@@ -32,33 +32,33 @@
 
 ###################################################################################################################################
 #
-# This script will allow a user-space automatic installation of TOGGLE https://github.com/SouthGreenPlatform/TOGGLE
+# This script will allow a user-space automatic installation of TOGGLE from the current Master version https://github.com/SouthGreenPlatform/TOGGLE
 #
 ###################################################################################################################################
 
 
 # USE AN INTEGER TO SIGNAL THE NUMBER OF PROGRAMS YOU NEED TO CHECK
 # DEBUG -- FOR DEV: total=5
-# DEBUG -- FOR PROD: 
+# DEBUG -- FOR PROD:
 total=4
 
 # TEST IF MACHINE IS 64BITS
 
-echo -e "\n\n############################################"
-echo -e "##\t Checking if your system is a 64 bits"
-echo -e "############################################\n"
+echo "\n\n############################################"
+echo "##\t Checking if your system is a 64 bits"
+echo "############################################\n"
 
 
 MACHINE_TYPE=`uname -m`;
 if [ ${MACHINE_TYPE} = "x86_64" ];
 then
-#	echo -e "$MACHINE_TYPE";
-	echo -e "Your system is a 64 bits:\t$MACHINE_TYPE";
+#	echo "$MACHINE_TYPE";
+	echo "Your system is a 64 bits:\t$MACHINE_TYPE";
 else
-#	echo -e $MACHINE_TYPE;
-	echo -e "** It seems that your system is not 64bits.**";
-	echo -e "**Please verify that your system is 64 bits**";
-	echo -e "** $MACHINE_TYPE **";
+#	echo $MACHINE_TYPE;
+	echo "** It seems that your system is not 64bits.**";
+	echo "**Please verify that your system is 64 bits**";
+	echo "** $MACHINE_TYPE **";
         exit 1;
 fi
 
@@ -67,9 +67,9 @@ fi
 
 # TEST IF SOFTWARES ARE INSTALLED, AND PRINT THEIR PATH
 
-echo -e "\n\n############################################"
-echo -e "##\t Searching for some required software being installed"
-echo -e "############################################\n"
+echo "\n\n############################################"
+echo "##\t Searching for some required software being installed"
+echo "############################################\n"
 
 
 x=0
@@ -77,48 +77,48 @@ for i in perl wget git tar
 
 do
 #echo "Searching for perl";
-	command -v $i > /dev/null 2>&1 && echo -e "$i is installed in :\t"`command -v $i` && x=$(( $x + 1 )) || { echo >&2 "** TOGGLE requires $i but it is not installed.  Please install it or contact your administrator for installation..."; };
+	command -v $i > /dev/null 2>&1 && echo "$i is installed in :\t"`command -v $i` && x=$(( $x + 1 )) || { echo >&2 "** TOGGLE requires $i but it is not installed.  Please install it or contact your administrator for installation..."; };
 #	x=$(( $x + 1 ));
 done
 
 
 
-echo -e "\n\tYou have all required sotfwares already installed"
+echo "\n\tYou have all required sotfwares already installed"
 
 
 
 if [ $x -lt $total ] ;
 then
-	echo -e "\nYour system is missing some programs, please install them and try again.";
+	echo "\nYour system is missing some programs, please install them and try again.";
 	exit 1;
 elif [ $x -eq $total ]
 then
-	echo -e "\nRequired UNIX programs have been found  !!\nYou are one step closer to installing TOGGLE"
+	echo "\nRequired UNIX programs have been found  !!\nYou are one step closer to installing TOGGLE"
 else
-	echo -e "\nThis is a bug message from TOGGLE devs.\nThis was not supposed to happen, you might want to check the raw code or contact us through https://github.com/SouthGreenPlatform/TOGGLE/issues"
+	echo "\nThis is a bug message from TOGGLE devs.\nThis was not supposed to happen, you might want to check the raw code or contact us through https://github.com/SouthGreenPlatform/TOGGLE/issues"
 	exit 1;
 fi
 
 
 # INPUT VARIABLES FOR JAVA
 
-echo -e "\n\n############################################"
-echo -e "##\t Path to Java 7"
-echo -e "############################################\n"
+echo "\n\n############################################"
+echo "##\t Path to Java 7"
+echo "############################################\n"
 
-echo -e "\nTOGGLE requires a functional version of Java 7"
-echo -e "Please input the adress to the executable file\n"
+echo "\nTOGGLE requires a functional version of Java 7"
+echo "Please input the adress to the executable file\n"
 
 # INPUT JAVA 7 PATH
 
-echo -e "\nType the absolute path for Java 7:"
+echo "\nType the absolute path for Java 7:"
 read JAVASEVEN
 
 while true; do
 
-    echo -e "\n";
+    echo "\n";
     $JAVASEVEN -version;
-    echo -e "\n";
+    echo "\n";
 
     read -p "IS THIS THE RIGHT JAVA 7 VERSION ?? [Y|N]: " yn
     case $yn in
@@ -131,11 +131,17 @@ done
 #######################################################
 ## License infos for all softwares
 #######################################################
+sleep 2
 
-echo "By installing this software you agree to the Licenses, Copyrights or Copylefts of all the softwares used by TOGGLE, as well as the License of TOGGLE.
+echo "By installing this software you agree to the Licenses, Copyrights or Copylefts of all the softwares used by TOGGLE, as well as the License of TOGGLE.\n"
 
-Please Visit the individual sites for the details of the corresponding Licenses and the citations details:
+sleep 2
 
+echo "Please Visit the individual sites for the details of the corresponding Licenses and the citations details:\n"
+
+sleep 2
+
+echo "
 CutAdapt
 \tLicense: https://github.com/marcelm/cutadapt/blob/master/LICENSE
 \tTo cite: http://journal.embnet.org/index.php/embnetjournal/article/view/200
@@ -179,25 +185,24 @@ TOGGLE
 \tTo cite: Monat et al, TOGGLE: toolbox for generic NGS analyses, BMC Bioinformatics, 2015, 16:374
 "
 
+sleep 5
 
 #######################################################
 ## TOGGLE installation per se
 #######################################################
 
-echo -e "\nINSTALLING TOGGLE\n";
+echo "\nINSTALLING TOGGLE\n";
 
-echo -e "\nPlease provide the installation path:"
+echo "\nPlease provide the installation path:"
 read INSTALLPATH
 
 #Transforming in an absolute PATH. Using -f option, all composants must exist but the last
 
-$INSTALLPATH = readlink -f $INSTALLPATH
+#$INSTALLPATH = readlink -f $INSTALLPATH
 
 while true; do
     
-    echo -e "\n";
-	$INSTALLPATH;
-    echo -e "\n";
+    echo "\n\t$INSTALLPATH\n";
     
     read -p "IS THIS THE RIGHT INSTALL PATH ?? [Y|N]: " yn
     case $yn in
@@ -211,7 +216,7 @@ mkdir $INSTALLPATH
 
 #Cloning current version of TOGGLE
 
-echo -e "\nCloning the current Git Master Version";
+echo "\nCloning the current Git Master Version";
 
 git clone https://github.com/SouthGreenPlatform/TOGGLE.git $INSTALLPATH
 
@@ -219,15 +224,15 @@ cd $INSTALLPATH
 
 #Adding binaries, libraries and a basic localConfig.pm to change
 
-echo -e "\nDownloading the compiled version for CutAdapt, bwa, SAMtools, Picard-Tools, FastQC, GATK, TopHat, Bowtie2 and FASTX-Trimmer"
+echo "\nDownloading the compiled version for CutAdapt, bwa, SAMtools, Picard-Tools, FastQC, GATK, TopHat, Bowtie2 and FASTX-Trimmer"
 
 wget http://bioinfo-web.mpl.ird.fr/toggle/bin.zip
 
-echo -e "\nDownloading the various Perl modules"
+echo "\nDownloading the various Perl modules"
 
 wget http://bioinfo-web.mpl.ird.fr/toggle/perlModules.zip
 
-echo -e "\nDownloading the localConfig.pm"
+echo "\nDownloading the localConfig.pm"
 
 wget http://bioinfo-web.mpl.ird.fr/toggle/BAK_localConfig.pm
 
@@ -242,7 +247,7 @@ TOGGLEPATH=$INSTALLPATH
 MODULES=$INSTALLPATH"/Modules"
 BINARIES=$INSTALLPATH"/bin"
 
-echo -e "\nUnzipping compiled versions and Perl modules"
+echo "\nUnzipping compiled versions and Perl modules"
 
 unzip bin.zip
 
@@ -256,7 +261,7 @@ cp -R perlModules/* $MODULES/.
 
 rm -Rf perlModules
 
-echo -e "\nCONFIGURING YOUR PERSONAL localConfig.pm"
+echo "\nCONFIGURING YOUR PERSONAL localConfig.pm"
 
 cp BAK_localConfig.pm $MODULES/localConfig.pm
 sed -i "s|togglepath|$TOGGLEPATH|g" $MODULES/localConfig.pm
@@ -272,8 +277,12 @@ sed -i "s|bowtie2-buildbinary|$BINARIES/bowtie2/bowtie2-build|g" $MODULES/localC
 sed -i "s|bowtie-buildbinary|$BINARIES/bowtie/bowtie-build|g" $MODULES/localConfig.pm
 sed -i "s|fastx_trimmerbinary|$BINARIES/fastx_toolkit/fastx_trimmer|g" $MODULES/localConfig.pm
 
+#Adding toggle in the user PERL5LIB path
 
-echo -e "\nHOORAY !! Configuration finished!\n\nPlease use first the test data as recommanded on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n"
+echo"\n$PERL5LIB=$PERL5LIB:$MODULES\n | cat - > ~/.bashrc"
+
+
+echo "\nHOORAY !! Configuration finished!\n\nPlease use first the test data as recommanded on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n"
 
 exit 0;
 
@@ -293,8 +302,8 @@ exit 0;
 # while true; do
 #     read -p "\nDo you wish to install this program?" yn
 #     case $yn in
-#         [Yy]* ) echo -e "You said YES"; break;;
-#         [Nn]* ) echo -e "You said NO";
+#         [Yy]* ) echo "You said YES"; break;;
+#         [Nn]* ) echo "You said NO";
 #         * ) echo "Please answer yes or no.";;
 #     esac
 # done
