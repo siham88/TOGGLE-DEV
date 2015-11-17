@@ -204,6 +204,35 @@ sub picardToolsSamFormatConverter
         return 0;
     }
 }
+
+######################################
+#PicardToolsAddOrReplaceGroup
+######################################
+# This module changes the ReadGroup
+sub picardToolsAddOrReplaceGroup
+{
+    my($samFileIn,$bamFileOut,$optionsHachees)= @_;       # recovery of informations
+    if ((toolbox::checkSamOrBamFormat($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
+    {
+        my $options="";
+        if ($optionsHachees)
+        {
+            $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
+        }
+        my $command="$picard/picard.jar AddOrReplaceReadGroups $options INPUT=$samFileIn OUTPUT=$bamFileOut";       #creation of the command line
+        if(toolbox::run($command)==1)       #Execute command
+        {
+            toolbox::exportLog("INFOS: picardTools::picardToolsAddOrReplaceGroup : Correctly run\n",1);
+            return 1;
+        }
+    }
+    else        # if the file is not a ".bam" one or is empty don't run the module ...
+    {
+        toolbox::exportLog("ERROR: picardTools::picardToolsAddOrReplaceGroup : The file $samFileIn is incorrect\n",0);       # ... and return an error message
+        return 0;
+    }
+}
+
 1;
 
 =head1 NAME
@@ -269,6 +298,10 @@ The last argument is the options of picardTools CleanSam, for more informations 
 This module transforms the provided SAM/BAM in a BAM/SAM, respectively.
 It takes at least two arguments: the file to transform, the name of the output file
 The last argument is the options of picardTools SamFormatConverter, for more informations see http://broadinstitute.github.io/picard/command-line-overview.html#SamFormatConverter
+
+=head3 picardTools::picardToolsSamFormatConverter
+
+This module changes the ReadGroup or add one
 
 =head1 AUTHORS
 
