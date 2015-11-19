@@ -86,9 +86,9 @@ $gatkVariantFiltration
 IN=vcf
 OUT=vcf
 
-#$gatkUnifiedGenotyper
-#IN=bam,vcf
-#OUT=vcf
+$gatkUnifiedGenotyper
+IN=bam,vcf
+OUT=vcf
 
 #$gatkReadBackedPhasing
 #IN=vcf,bam
