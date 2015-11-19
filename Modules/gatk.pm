@@ -255,32 +255,39 @@ sub gatkVariantFiltration
 # GATK Unified Genotyper: A variant caller which unifies the approaches of several disparate callers -- Works for single-sample and multi-sample data.
 sub gatkUnifiedGenotyper
 {
-    my ($refFastaFileIn, $bamFileIn, $vcfFileOut, $optionsHachees) = @_;        # recovery of information  
+    my ($refFastaFileIn, $listOfBam, $vcfFileOut, $optionsHachees) = @_;        # recovery of information  
     #TODO adding VCF type control
-    if ((toolbox::checkSamOrBamFormat($bamFileIn)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamFileIn)==1))     # check if ref file exist and isn't empty and stop else
+    my $bamFilesNames="";
+    foreach my $file (@{$listOfBam})       # for each BAM file(s)
     {
-        my $options=toolbox::extractOptions($optionsHachees);
-        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        if (toolbox::checkSamOrBamFormat($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty and is a BAM
         {
-            $options .= " -T UnifiedGenotyper";
+            $bamFilesNames.="-I ".$file." ";       # recovery of informations fo command line used later
         }
-        my $comGatkUnifiedGenotyper = "$GATK"."$options"." -R $refFastaFileIn -I $bamFileIn -o $vcfFileOut";        # command line
-        if(toolbox::run($comGatkUnifiedGenotyper)==1)       # command line execution
+        else        # if current file is empty or not a BAM
         {
-            toolbox::exportLog("INFOS: gatk::gatkUnifiedGenotyper : Correctly done\n",1);
-            return 1;
-        }
-        else        # if one or some previous files doesn't exist or is/are empty or if gatkVariantFiltration failed
-        {
-            toolbox::exportLog("ERROR: gatk::gatkUnifiedGenotyper : Uncorrectly done\n", 0);        # returns the error message
+            toolbox::exportLog("ERROR: gatk::gatkUnifiedGenotyper : The file $file is not a BAM and cannot be used\n", 0);      # returns the error message
             return 0;
         }
     }
+    
+    my $options=toolbox::extractOptions($optionsHachees);
+    if ($options !~ m/-T/) # The type of walker is not informed in the options
+    {
+        $options .= " -T UnifiedGenotyper";
+    }
+    my $comGatkUnifiedGenotyper = "$GATK"."$options"." -R $refFastaFileIn $bamFilesNames -o $vcfFileOut";        # command line
+    if(toolbox::run($comGatkUnifiedGenotyper)==1)       # command line execution
+    {
+        toolbox::exportLog("INFOS: gatk::gatkUnifiedGenotyper : Correctly done\n",1);
+        return 1;
+    }
     else        # if one or some previous files doesn't exist or is/are empty or if gatkVariantFiltration failed
     {
-        toolbox::exportLog("ERROR: gatk::gatkUnifiedGenotyper : The files $refFastaFileIn or/and $bamFileIn are incorrects\n", 0);      # returns the error message
+        toolbox::exportLog("ERROR: gatk::gatkUnifiedGenotyper : Uncorrectly done\n", 0);        # returns the error message
         return 0;
     }
+    
 }
 # GATK Read backedPhasing: Walks along all variant ROD loci, caching a user-defined window of VariantContext sites, and then finishes phasing them when they go out of range (using upstream and downstream reads).
 sub gatkReadBackedPhasing
@@ -394,7 +401,7 @@ The last argument is the options of gatk variantFiltration, for more information
 =head3 gatk::gatkUnifiedGenotyper
 
 This module is a variant caller which unifies the approaches of several disparate callers -- Works for single-sample and multi-sample data
-It takes at least three arguments: the database indexed, the ".bam" file in, the name of the output file in ".vcf" format
+It takes at least three arguments: the database indexed, the ".bam" files list, the name of the output file in ".vcf" format
 The last argument is the options of gatk unifiedGenotyper, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_genotyper_UnifiedGenotyper.php
 
 
