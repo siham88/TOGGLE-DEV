@@ -48,8 +48,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 * [Test::Deep](http://search.cpan.org/~rjbs/Test-Deep-0.119/lib/Test/Deep.pm)
 * [Capture::Tiny](http://search.cpan.org/~dagolden/Capture-Tiny-0.30/lib/Capture/Tiny.pm)
 * [List::Compare](http://search.cpan.org/~jkeenan/List-Compare-0.53/lib/List/Compare.pm)
-*
-[Switch](https://metacpan.org/pod/Switch)
+* [Switch](https://metacpan.org/pod/Switch)
 
 
 #### Bioinformatics software (minimal version)
