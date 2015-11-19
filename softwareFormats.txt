@@ -22,9 +22,9 @@ $bwaIndex
 IN=fasta
 OUT=NA
 
-#$samToolsSort
-#IN=bam
-#OUT=bam
+$samToolsSort
+IN=bam
+OUT=bam
 
 $samToolsView
 IN=sam,bam
