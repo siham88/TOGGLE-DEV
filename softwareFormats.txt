@@ -146,3 +146,6 @@ $picardToolsCreateSequenceDictionary
 IN=fasta
 OUT=NA
 
+$htseqCount
+IN=bam
+OUT=NA
