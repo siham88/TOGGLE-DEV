@@ -16,3 +16,6 @@ else
 
 print LOG "INFOS tophats argument: $newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile";
 tophat::tophat2($newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile,$softParameters);
+
+my $moveCmd = "mv ".$newDir."/".$individu.".logs ".$initialDir."/tophat.".$individu.".logs";
+toolbox::run($moveCmd);
