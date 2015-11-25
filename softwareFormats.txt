@@ -116,7 +116,7 @@ OUT=fastq
 
 $tophat2
 IN=fastq
-OUT=sam
+OUT=bam
 
 $picardToolsSortSam
 IN=sam,bam
