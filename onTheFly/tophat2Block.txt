@@ -5,17 +5,19 @@
 
 $fastqForward=$$fileList[0];
 
-if (scalar(@{$fileList})==2)                                                                        # paired mode
+if (scalar(@{$fileList})==2)        # paired mode
 {
     $fastqReverse=$$fileList[1];
 }
 else
 {
-    $fastqReverse=undef;
+    $fastqReverse=undef;            # single mode
 }
 
 print LOG "INFOS tophats argument: $newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile";
 tophat::tophat2($newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile,$softParameters);
 
-my $moveCmd = "mv ".$newDir."/".$individu.".logs ".$initialDir."/tophat.".$individu.".logs";
+# Move the tophat log subdirectory into the upper directory
+# The log subdirectory will not be transfered into the final directory
+my $moveCmd = "mv ".$newDir."/".$individu.".logs ".$initialDir."/TOPHAT_".$individu."_LOGS;
 toolbox::run($moveCmd);
