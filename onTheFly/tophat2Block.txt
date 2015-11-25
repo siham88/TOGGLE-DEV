@@ -19,5 +19,5 @@ tophat::tophat2($newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile,$soft
 
 # Move the tophat log subdirectory into the upper directory
 # The log subdirectory will not be transfered into the final directory
-my $moveCmd = "mv ".$newDir."/".$individu.".logs ".$initialDir."/TOPHAT_".$individu."_LOGS;
+my $moveCmd = "mv ".$newDir."/".$individu.".logs ".$initialDir."/TOPHAT_".$individu."_LOGS";
 toolbox::run($moveCmd);
