@@ -145,11 +145,13 @@ sub correctName
         #FOR tophat.pm
         case ($name =~ m/bowtie[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtieBuild"; } #Correction for bowtiebuild
 	case ($name =~ m/bowtie2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtie2Build"; } #Correction for bowtie2build
-	case ($name =~ m/tophat2/i){$correctedName="tophat2"; } #Correction for tophat2
+	case ($name =~ m/tophat[\s|\.|\-| \/|\\|\|]*2/i){$correctedName="tophat2"; } #Correction for tophat2
+	
         #FOR cufflinks.pm
         
         #FOR HTSeq.pm
-        
+        case ($name =~ m/htseq[\s|\.|\-| \/|\\|\|]*count/i){$correctedName="htseqCount"; } #Correction for htseq-count
+	
         #FOR snpeff.pm
         case ($name =~ m/snpeff[\s|\.|\-| \/|\\|\|]*annotation/i){$correctedName="snpeffAnnotation"} # Correction for snpeffAnnotation
 
