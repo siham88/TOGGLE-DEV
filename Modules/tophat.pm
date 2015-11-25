@@ -131,7 +131,7 @@ sub tophat2
         $options=toolbox::extractOptions($optionsHachees);		##Get given options
     }
 
-    if ((toolbox::sizeFile($forwardFastqFileIn)==1) and not (defined $reverseFastqFileIn) and (toolbox::sizeFile($gffFile)==1))		##Check if entry files exist and are not empty
+    if ((toolbox::sizeFile($forwardFastqFileIn)==1) and not (defined $reverseFastqFileIn) and (toolbox::sizeFile($gffFile)==1))		##Check if entry files exist and are not empty / single mode
     {   
         my $command=$tophat2.$options." -p 8"." -G ".$gffFile." -o ".$tophatDirOut." ".$prefixRef." ".$forwardFastqFileIn;		# command line
         toolbox::exportLog("INFOS: tophat::topHat2 : $command\n",1);
@@ -139,25 +139,8 @@ sub tophat2
         # Command is executed with the run function (package toolbox)
         if (toolbox::run($command)==1)
         {
-            toolbox::exportLog("INFOS: tophat : correctly done\n",1);
-            return 1;
-        }
-        else
-        {
-            toolbox::exportLog("ERROR: tophat : ABBORTED\n",0);
-            return 0;
-        }
-        
-    }
-    elsif ((toolbox::sizeFile($forwardFastqFileIn)==1) and (toolbox::sizeFile($reverseFastqFileIn)==1) and (toolbox::sizeFile($gffFile)==1))		##Check if entry files exist and are not empty
-    {
-        my $command=$tophat2.$options." -G ".$gffFile." -o ".$tophatDirOut." ".$prefixRef." ".$forwardFastqFileIn." ".$reverseFastqFileIn;		# command line
-        toolbox::exportLog("INFOS: tophat::topHat2 : $command\n",1);
-
-        # Command is executed with the run function (package toolbox)
-        if (toolbox::run($command)==1)
-        {
-	    my ($fineName,$readGroup) = pairing::extractName($forwardFastqFileIn); 
+	    # Parse the tophat directory and rename all the files by adding the readgroup and the log subdirectory 
+	    my ($fileName,$readGroup) = pairing::extractName($forwardFastqFileIn); 
 	    my $fileList=toolbox::readDir($tophatDirOut);
 	    my @fileList=@$fileList;
 	    toolbox::exportLog("DEBUG: tophat : @fileList\n",1);
@@ -173,6 +156,43 @@ sub tophat2
 		toolbox::run($command);
 		last if ($file =~ m/log/);    	#rename the lof directory but not the file into log directory
 	    }
+	    
+            toolbox::exportLog("INFOS: tophat : correctly done\n",1);
+            return 1;
+        }
+        else
+        {
+            toolbox::exportLog("ERROR: tophat : ABBORTED\n",0);
+            return 0;
+        }
+        
+    }
+    elsif ((toolbox::sizeFile($forwardFastqFileIn)==1) and (toolbox::sizeFile($reverseFastqFileIn)==1) and (toolbox::sizeFile($gffFile)==1))		##Check if entry files exist and are not empty / paired mode
+    {
+        my $command=$tophat2.$options." -G ".$gffFile." -o ".$tophatDirOut." ".$prefixRef." ".$forwardFastqFileIn." ".$reverseFastqFileIn;		# command line
+        toolbox::exportLog("INFOS: tophat::topHat2 : $command\n",1);
+
+        # Command is executed with the run function (package toolbox)
+        if (toolbox::run($command)==1)
+        {
+	    # Parse the tophat directory and rename all the files by adding the readgroup and the log subdirectory 
+	    my ($fileName,$readGroup) = pairing::extractName($forwardFastqFileIn); 
+	    my $fileList=toolbox::readDir($tophatDirOut);
+	    my @fileList=@$fileList;
+	    toolbox::exportLog("DEBUG: tophat : @fileList\n",1);
+	    for (my $i=0; $i<=$#fileList;$i ++)
+	    {
+		next if ($fileList[$i] eq '');
+		
+		my ($file,$path)=toolbox::extractPath($fileList[$i]);
+		$file =~ s/://g;
+		##DEBUG
+		toolbox::exportLog("DEBUG: tophat : $fileList[$i] -$file-$readGroup-$fineName- \n",1);
+		my $command="mv $tophatDirOut/$file $tophatDirOut/$readGroup".".".$file;   # rename the file by adding read group 
+		toolbox::run($command);
+		last if ($file =~ m/log/);    	#rename the lof directory but not the file into log directory
+	    }
+	    
             toolbox::exportLog("INFOS: tophat : correctly done\n",1);
             return 1;
         }
