@@ -1,0 +1,10 @@
+
+##########################################
+# Block for HTSeq::htseqCount
+##########################################
+
+$softParameters = toolbox::extractHashSoft($optionref,"htseqcount");
+
+my $htseqcountBam=$tophatdirOut."/accepted_hits.SAMTOOLSSORT.bam";
+my $htseqcountOut=$tophatdirOut."/accepted_hits.HTSEQCOUNT.txt";
+HTSeq::htseqCount($htseqcountBam,$htseqcountOut,$gffFile,$softParameters);
