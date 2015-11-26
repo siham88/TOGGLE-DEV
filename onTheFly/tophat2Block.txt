@@ -24,8 +24,8 @@ toolbox::run($moveCmd);
 
 # Create a tempory directory
 # and move the tophat bam file unmapped in a tempory directory 
-my $mkdirCmd = "mkdir ".$newDir."/tophatTempory";
+my $mkdirCmd = "mkdir ".$initialDir."/tophatTempory";
 toolbox::run($mkdirCmd);
 
-$moveCmd = "mv $initialDir/*unmapped.bam "."/tophatTempory";
+$moveCmd = "mv $newDir/*unmapped.bam ".$initialDir."/tophatTempory";
 toolbox::run($moveCmd);
