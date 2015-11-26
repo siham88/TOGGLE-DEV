@@ -522,7 +522,7 @@ if ($orderBefore1000)
       {
         if ($file =~ "tophatTempory")
         {
-          my mvCommand = "mv ".$file."/* ".$currentDir."/*_tophat*/ && rm -rf $file";
+          my $mvCommand = "mv ".$file."/* ".$currentDir."/*_tophat*/ && rm -rf $file";
           toolbox::run($mvCommand);
         }
       }
