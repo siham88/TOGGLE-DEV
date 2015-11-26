@@ -14,6 +14,8 @@ else
     $fastqReverse=undef;            # single mode
 }
 
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools view pair
+
 print LOG "INFOS tophats argument: $newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile";
 tophat::tophat2($newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile,$softParameters);
 
