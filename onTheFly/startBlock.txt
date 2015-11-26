@@ -57,9 +57,9 @@ use samTools;
 use toolbox;
 use onTheFly;
 use tophat;
+use HTSeq;
 
-#TO BE COMPLETED ex topHat...
-
+#TO BE COMPLETED 
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
