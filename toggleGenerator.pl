@@ -283,7 +283,6 @@ if ($previousExtension eq "fastq")               # the data are all in FASTQ for
 }
 
 #Other Data are not always treated singlely, but can work together => check if order hash steps higher than 1000 using the $lastStep value
-
 elsif ($firstOrder<1000) #Other types of data requesting a single treatment
 {
     #Create a directory per file
@@ -520,8 +519,10 @@ if ($orderBefore1000)
       my $fileList = toolbox::readDir($currentDir);
       foreach my $file (@{$fileList}) #Copying intermediate data in the intermediate directory
       {
+         
         if ($file =~ "tophatTempory")
         {
+          $file =~ /://g;
           my $mvCommand = "mv ".$file."/* ".$currentDir."/*_tophat*/ && rm -rf $file";
           toolbox::run($mvCommand);
         }
