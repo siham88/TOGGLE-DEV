@@ -1,0 +1,48 @@
+$order
+1=fastqc
+2=cutadapt
+3=tophat2
+5=picardToolsSortSam
+6=htseqcount
+
+$cleaner
+5
+
+#PUT YOUR OWN SGE CONFIGURATION HERE
+#$sge
+#-q YOURQUEUE.q
+#-b Y
+#-V
+
+$cutadapt
+-O=10
+-m=35
+-q=20
+--overlap=7
+-u=8
+#If you have a specific adaptator file, please indicate here. 
+-adaptatorFile=/path/to/adaptator.txt
+
+$tophat2
+-i=30
+-I=20000
+-a=8
+-m=1
+--no-coverage-search
+-g=10
+--bowtie-n
+--library-type=fr-unstranded
+--microexon-search
+
+$htseqcount
+-r=name
+-s=no
+-t=mRNA
+-m=union
+-i=ID
+-f=bam
+
+$picardToolsSortSam
+SORT_ORDER=coordinate
+VALIDATION_STRINGENCY=SILENT
+CREATE_INDEX=TRUE
