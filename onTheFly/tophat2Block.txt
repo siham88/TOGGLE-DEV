@@ -21,3 +21,11 @@ tophat::tophat2($newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile,$soft
 # The log subdirectory will not be transfered into the final directory
 my $moveCmd = "mv ".$newDir."/".$individu.".logs ".$initialDir."/TOPHAT_".$individu."_LOGS";
 toolbox::run($moveCmd);
+
+# Create a tempory directory
+# and move the tophat bam file unmapped in a tempory directory 
+my $mkdirCmd = "mkdir ".$newDir."/tophatTempory";
+toolbox::run($mkdirCmd);
+
+$moveCmd = "mv $initialDir/*unmapped.bam "."/tophatTempory";
+toolbox::run($moveCmd);
