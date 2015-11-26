@@ -517,7 +517,7 @@ if ($orderBefore1000)
     foreach my $currentDir (@{$listSamples})
     {
       next unless $currentDir =~ m/\//; # Will work only on folders
-      my $fileList = toolbox::readDir($lastDir);
+      my $fileList = toolbox::readDir($currentDir);
       foreach my $file (@{$fileList}) #Copying intermediate data in the intermediate directory
       {
         if ($file =~ "tophatTempory")
