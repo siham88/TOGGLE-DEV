@@ -34,7 +34,7 @@
 
 use strict;
 use warnings;
-use Test::More 'no_plan'; #tests => 19; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
+use Test::More 'no_plan'; 
 use Data::Dumper;
 use Test::Deep;
 use lib qw(../Modules/);
@@ -64,7 +64,8 @@ while (<LOCALCONFIG>)
 	{
 		chop $_;
 		my @line = split ("our ", $_);
-		@line = split(" = ", $line[1]);
+		$line[1] =~ s/\s=\s/=/g;
+		@line = split("=", $line[1]);
 		$line[1]=~s/"//g;
 		$dictLocation{$line[0]} = $line[1];
 	}
