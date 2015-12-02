@@ -74,7 +74,7 @@ $picardTools sortsam single
 $picardTools MarkDuplicates
 VALIDATION_STRINGENCY=SILENT
 
-$tophat tophatRun
+$tophat2
 -i=30
 -I=20000
 -a=8
@@ -82,10 +82,8 @@ $tophat tophatRun
 --no-coverage-search
 -g=10
 --bowtie-n
---library-type
-fr-unstranded
+--library-type fr-unstranded
 --microexon-search
 
 $picardTools createSequenceDictionary
 no_option
-
