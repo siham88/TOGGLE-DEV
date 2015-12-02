@@ -307,7 +307,7 @@ is (toolbox::checkFormatFasta($wrongFasta),'0','Test for checkFormatFasta... For
 ########################################
 
 #Reading of config file infos
-toolbox::readFileConf($configFile);
+my $configInfos = toolbox::readFileConf($configFile);
 
 #checking if $configInfos exists
 is (ref($configInfos),'HASH','Test for readFileConf... the reference returned is a HASH');
