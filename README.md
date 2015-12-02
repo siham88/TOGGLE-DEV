@@ -92,6 +92,11 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 - picardToolsMarkDuplicates
 - picardToolsCreateSequenceDictionary
 - picardToolsSortSam
+- picardToolsAddOrReplaceReadGroup
+- picardToolsValidateSamFile
+- picardToolsCleanSam
+- picardToolsSamFormatConverter
+
 
 #####Gatk (https://www.broadinstitute.org/gatk/)
 
@@ -102,6 +107,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 - gatkSelectVariants
 - gatkVariantFiltration
 - gatkReadBackedPhasing
+- gatkUnifiedGenotyper
 
 #####Fastqc (http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
