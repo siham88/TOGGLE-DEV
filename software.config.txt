@@ -1,107 +1,73 @@
-#Config file
-# True comments with "#"
-#Program name code by $NAME
-#under the program name (empty lines do not count), the option are symbolized by key=value (ex -n=5) or key alone (ex m)
+$order
+1=fastqc
+2=cutadapt
+3=bwaAln
+4=bwaSampe
+5=picardToolsSortSam
+6=samToolsView
+7=samToolsIndex
+8=gatkRealignerTargetCreator
+9=gatkIndelRealigner
+10=samToolsIndex
+11=picardToolsMarkDuplicates
+1000=gatkHaplotypeCaller
+1001=gatkVariantFiltration
+1002=gatkSelectVariants
 
-#first program config
+$cleaner
+3
+4
+9
+
+#PUT YOUR OWN SGE CONFIGURATION HERE
+$sge
+-q bioinfo.q
+-b Y
+-V
+
 $cutadapt
--e=0.1
 -O=10
 -m=35
 -q=20
 --overlap=7
+#If you have a specific adaptator file, please indicate here. 
+-adaptatorFile=/homedir/orjuela/ADNid_projets/TOGGLEv3/adaptator.txt
 
-#2nd program config
-$samtools view single
--h
--b
--F=0x04
+$bwa aln
+-n=5
 
-$samtools view pair
+$bwa sampe
+
+$picardToolsSortSam
+SORT_ORDER=coordinate
+VALIDATION_STRINGENCY=SILENT
+CREATE_INDEX=TRUE
+
+$samToolsView
 -h
 -b
 -f=0x02
 
-#3nd program config
-$BWA aln
--n=5
--o=1
-
-$BWA index
--a=is
-
-$BWA sampe
-
-#4th program
-$GATK UnifiedGenotyper
--T=UnifiedGenotyper
--glm=BOTH
--stand_call_conf=50
--stand_emit_conf=10
--dcov=200
---output_mode=EMIT_ALL_CONFIDENT_SITES
-
-$GATK gatkVariantFiltration
--T=VariantFiltration
-
-$GATK gatkSelectVariants
--T=SelectVariants
-#-selectType=SNP
-
-$GATK gatkReadBackedPhasing
--T=ReadBackedPhasing
- 
-$GATK gatkBaseRecalibrator
--T=BaseRecalibrator
-
-$GATK gatkRealignerTargetCreator
+$gatkRealignerTargetCreator
 -T=RealignerTargetCreator
 
-$GATK gatkIndelRealigner
+$gatkIndelRealigner
 -T=IndelRealigner
 
-$GATK gatkHaplotypeCaller
--T=HaplotypeCaller
-
-$picardTools sortsam pair
-SORT_ORDER=coordinate
+$picardToolsMarkDuplicates
 VALIDATION_STRINGENCY=SILENT
-
-$picardTools sortsam single
-SORT_ORDER=coordinate
-VALIDATION_STRINGENCY=SILENT
-
-$picardTools markDuplicates
-VALIDATION_STRINGENCY=SILENT
+CREATE_INDEX=TRUE
 REMOVE_DUPLICATES=TRUE
 
-#RNASEQ analysis
-$fastx_trimmer
--f 8
+$gatkHaplotypeCaller
+-T=HaplotypeCaller
+-rf BadCigar
 
-$bowtie2-build
+$gatkVariantFiltration
+-T=VariantFiltration
+--filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>600' --filterName 'LowQual' --filterExpression 'QUAL<30'
 
-$bowtieBuild
-
-$tophat2
--i=30
--I=20000
--a=8
--m=1
---no-coverage-search
--g=10
---bowtie-n
---library-type=fr-unstranded
---microexon-search
-
-$samtools sort
--n
- 
-$htseqcount
--r=name
--s=no
--t=mRNA
--m=union
--i=ID
--f=bam
+$gatkSelectVariants
+-T=SelectVariants
+-selectType=SNP
 
