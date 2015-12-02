@@ -272,7 +272,7 @@ my @testList=toolbox::extractPath('/home/username/toto');
 is_deeply (\@expectedList,\@testList,'Test for extractPath');
 
 # Extract name from path test
-is (toolbox::extractName($samFile),'RC3.BWASAMPE','Test for extractName');
+is (toolbox::extractName($samFile),'RC3.BWASAMPE.sam','Test for extractName');
 
 
 #########################################
