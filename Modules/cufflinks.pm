@@ -32,7 +32,6 @@ package cufflinks;
 
 use strict;
 use warnings;
-
 use localConfig;
 use toolbox;
 use Data::Dumper;
@@ -51,7 +50,7 @@ sub execution
         my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.configRnaSeq
         ## DEBUGG toolbox::exportLog("DEBUG: cufflinks::execution : execution option equals to $options",1);
 
-        my $command=$cufflinks.$options." "." -o ".$cuffliksDirOut." -g ".$annotGffFile." ".$bamFileIn;				# command line to execute cutadapt
+        my $command=$cufflinks.$options." "." -o ".$cuffliksDirOut." -g ".$annotGffFile." ".$bamFileIn;	# command line to execute cutadapt
  
         ##DEBUG
         toolbox::exportLog("INFOS: cufflinks::execution : $command\n",1);
@@ -72,6 +71,97 @@ sub execution
     else
     {
         toolbox::exportLog("ERROR: cufflinks::execution : Problem with the files\n",0);
+        return 0;
+    }
+    
+    
+}
+
+sub cuffmerge
+{
+ 
+    my ($cuffmergeDirOut, $RefFastaFileIn,$gffFile,$assemblyGTFlist,$optionsHachees)=@_;
+
+    if ((toolbox::sizeFile($RefFastaFileIn)==1) and (toolbox::sizeFile($gffFile)==1) and (toolbox::sizeFile($assemblyGTFlist)==1))             ##Check if the bamfile and annotGffFile exist and are not empty
+    {   
+
+
+        my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.configRnaSeq
+        ## DEBUGG toolbox::exportLog("DEBUG: cufflinks::cuffmerge : cuffmerge option equals to $options",1);
+
+        my $command=$cuffmerge.$options." -o ".$cuffmergeDirOut." -p 8 "." -s ".$RefFastaFileIn." -g ".$gffFile." ".$assemblyGTFlist;				# command line to execute cutadapt
+ 
+        ##DEBUG
+        toolbox::exportLog("INFOS: cufflinks::cuffmerge : $command\n",1);
+
+        # Command is executed with the run function (package toolbox)
+        if (toolbox::run($command)==1)
+        {
+            toolbox::exportLog("INFOS: cuffmerge : correctly done\n",1);
+            return 1;
+        }
+        else
+        {
+            toolbox::exportLog("ERROR: cuffmerge : ABBORTED\n",0);
+            return 0;
+        }
+        
+    }
+    else
+    {
+        toolbox::exportLog("ERROR: cufflinks::cuffmerge : Problem with the files\n",0);
+        return 0;
+    }
+    
+    
+}
+
+
+sub cuffdiff
+
+{
+ 
+    my ($cuffdiffDirOut,$assemblyGTF,$optionsHachees,@bamFileIn)=@_;
+    
+    
+    foreach my $bam (@bamFileIn) {
+        if (toolbox::checkSamOrBamFormat($bam)==0)
+        
+        {
+            toolbox::exportLog("ERROR : cuffdiff : $bam is neither sam nor bam\n",1);
+            return 0;
+        }
+        
+    }
+
+    if ((toolbox::sizeFile($assemblyGTF)==1))             ##Check if the annotGffFile exist and are not empty
+    {   
+
+
+        my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.configRnaSeq
+        ## DEBUGG toolbox::exportLog("DEBUG: cufflinks::cuffmerge : cuffmerge option equals to $options",1);
+
+        my $command=$cuffdiff.$options." -o ".$cuffdiffDirOut." -p 8 ".$assemblyGTF." ".@bamFileIn;				# command line to execute cutadapt
+ 
+        ##DEBUG
+        toolbox::exportLog("INFOS: cufflinks::cuffdiff : $command\n",1);
+
+        # Command is executed with the run function (package toolbox)
+        if (toolbox::run($command)==1)
+        {
+            toolbox::exportLog("INFOS: cuffdiff : correctly done\n",1);
+            return 1;
+        }
+        else
+        {
+            toolbox::exportLog("ERROR: cuffdiff : ABBORTED\n",0);
+            return 0;
+        }
+        
+    }
+    else
+    {
+        toolbox::exportLog("ERROR: cufflinks::cuffdiff : Problem with the files\n",0);
         return 0;
     }
     
