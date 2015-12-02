@@ -336,23 +336,26 @@ sub generateGraphviz
     chomp $date;
     print OUT "digraph G {
     \tgraph [fontsize=18,fontname=\"Arial\"]
-    \tlabel=\"TOGGLE pipeline generated on the \n$date\"
+    \tlabel=\"TOGGLE pipeline generated on the $date\"
     \tnode [shape=box,style=\"rounded,filled\",color=lightblue,width=3,fontname=\"Arial\",fontsize=12]\n";
     
     my ($previousSoft,$input,$output);
     foreach my $step (sort {$a <=> $b} keys %{$hashOrder})
     {
 	my $soft=$$hashOrder{$step};
+	##DEBUG print $soft,"-->";
 	##DEBUG toolbox::exportLog("DEBUG : $0 : onTheFly::generateGraphviz, step = $step, soft = $soft.\n",2);
 
 	$input=$$hashInOut{$soft}{"IN"};
+	##DEBUG print $input,"\n";
 	$output=$$hashInOut{$soft}{"OUT"};
-	$soft.="_$step";
+	$soft=$soft."_".$step;
 	unless ($previousSoft) #first line, initiation
 	{
 	    $previousSoft=$soft;
-	    print OUT "\t$input [shape=record,style=\"rounded\",color=gray,width=2];\n";
-	    my $outline = "\t".$input."->".$soft." [color=gray];\n";
+	    my $inputLine = "\t\"".$input."\" [shape=record,style=\"rounded\",color=gray,width=2];\n";
+	    print OUT $inputLine;
+	    my $outline = "\t\"".$input."\"->".$soft." [color=gray];\n";
 	    print OUT $outline;
 	    next;
 	}
@@ -360,23 +363,23 @@ sub generateGraphviz
 	{
 	    #The soft is a 'dead-end'
 	    print OUT "\tnode [shape=ellipse,style=\"rounded,filled\",color=\".7 .3 1.0\",width=2,fontsize=8];\n";
-	    my $outline = "\t".$previousSoft."->".$soft." [style=dotted,weight=1];\n";
-	    $outline .= "\t".$soft."->".$previousSoft." [style=dotted,weight=1];\n";
+	    my $outline = "\t\"".$previousSoft."\"->".$soft." [style=dotted,weight=1];\n";
+	    $outline .= "\t\"".$soft."\"->".$previousSoft." [style=dotted,weight=1];\n";
 	    $outline .= "\tnode [shape=box,style=\"rounded,filled\",color=lightblue,width=3,fontsize=12];\n";
 	    print OUT $outline;
 	    next;
 	}
 	
 	 
-	my $outline = "\t".$previousSoft."->".$soft." [weight=500];\n";
+	my $outline = "\t\"".$previousSoft."\"->\"".$soft."\" [weight=500];\n";
 	print OUT $outline;
 	$previousSoft = $soft;
     }
 	
     my $trueName=$previousSoft;
     $trueName =~ s/_\d{1,}$//;
-    print OUT "\t".$$hashInOut{$trueName}{"OUT"}." [shape=record,style=\"rounded\",color=gray,width=2];\n";
-    my $lastLine="\t".$previousSoft."->".$$hashInOut{$trueName}{"OUT"}."[color=gray];\n\t}\n";
+    print OUT "\t\"".$$hashInOut{$trueName}{"OUT"}."\" [shape=record,style=\"rounded\",color=gray,width=2];\n";
+    my $lastLine="\t\"".$previousSoft."\"->\"".$$hashInOut{$trueName}{"OUT"}."\"[color=gray];\n\t}\n";
     print OUT $lastLine;
     close OUT;
     
