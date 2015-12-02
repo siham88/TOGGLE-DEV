@@ -1,17 +1,37 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 ###################################################################################################################################
 #
-# Licencied under CeCill-C (http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html) and GPLv3
+# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform 
-# Written by Cecile Monat, Ayite Kougbeadjo, Mawusse Agbessi, Christine Tranchant, Marilyne Summo, Cedric Farcy, Francois Sabot
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/> or
+# write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#
+# You should have received a copy of the CeCILL-C license with this program.
+#If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
+#
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+# Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
 
 #Will test if samTools module work correctly works correctly
 use strict;
-use warnings;
 use warnings;
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
@@ -91,7 +111,7 @@ is($observedMD5sum,$expectedMD5sum,'Ok for the content of the samtools faidx out
 is(samTools::samToolsIndex($bamFile),1,'Ok for samToolsIndex running');
 
 ###Checking the correct structure for the output file using md5sum
-$expectedMD5sum = "8e1c53324486a6455790a26dfdc5a464";
+$expectedMD5sum = "29bed7c8c70c24cd84a439d3fc473474";
 $observedMD5sum=`md5sum $bamFile.bai`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -109,7 +129,7 @@ is(samTools::samToolsView($bamFile, $bamFileOut, $optionRef),1,'Ok for samToolsV
 
 
 ###Checking the correct structure for the output file using md5sum
-$expectedMD5sum = "af10b544a1fa63c5544115f56445a59c";
+$expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
 $observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -204,7 +224,7 @@ is(samTools::samToolsFlagstat($bamFile,"$testingDir/RC3.SAMTOOLSFLAGSTAT.txt"),1
 my $expectedOutputFlag="$testingDir/RC3.SAMTOOLSFLAGSTAT.txt";
 
 ####Checking the correct structure for the output file using md5sum
-$expectedMD5sum = "de3b20969a5e852c9b3627890e3f86f8";
+$expectedMD5sum = "c08ff58a41733e3e1ab782ca22653397";
 $observedMD5sum=`md5sum ../DATA-TEST/samtoolsTestDir/RC3.SAMTOOLSFLAGSTAT.txt`;	# structure of the test file
 @withoutName = split (" ", $observedMD5sum);    				# to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];     						# just to have the md5sum result

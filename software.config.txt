@@ -26,7 +26,6 @@ $samtools view pair
 $BWA aln
 -n=5
 -o=1
--e=-1
 
 $BWA index
 -a=is
@@ -57,7 +56,6 @@ $GATK gatkBaseRecalibrator
 
 $GATK gatkRealignerTargetCreator
 -T=RealignerTargetCreator
--nt=4
 
 $GATK gatkIndelRealigner
 -T=IndelRealigner
@@ -75,11 +73,7 @@ VALIDATION_STRINGENCY=SILENT
 
 $picardTools markDuplicates
 VALIDATION_STRINGENCY=SILENT
-
-$SGE
--q -q bioinfo.q@node13.alineos.net
--N -V
--b Y
+REMOVE_DUPLICATES=TRUE
 
 #RNASEQ analysis
 $fastx_trimmer

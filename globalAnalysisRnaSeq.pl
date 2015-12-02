@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014 IRD-CIRAD
+# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,14 +23,12 @@
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
-# Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+# Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
-
-
-
-
 
 use strict;
 use warnings;
@@ -72,6 +70,19 @@ Mesg
 }
 
 
+##########################################
+# transforming relative path in absolute
+##########################################
+my @logPathInfos;
+foreach my $inputParameters (keys %param)
+{
+  ##DEBUG print $param{$inputParameters},"**";
+  
+  my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
+  $param{$inputParameters}=$newPath;
+  push @logPathInfos,$log;
+}
+
 my $initialDir = $param{'-d'};                                                                                  # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};                                                                                    # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};                                                                                # recovery of the reference file
@@ -105,6 +116,14 @@ toolbox::existsDir($initialDir);                                                
 toolbox::checkFile($refFastaFile);                                                                          # check if the reference file exists
 toolbox::checkFile($gffFile);
 
+##########################################
+# Printing the absolutePath changing logs
+#########################################
+foreach my $logInfo (@logPathInfos)
+  {
+  toolbox::exportLog($logInfo,1);
+  }
+  
 my $loop = 0;                                                                                               # for the second loop
 
 
@@ -164,13 +183,13 @@ for (my $i=0; $i<=$#listOfFiles; $i++)                                          
         if ($#listOfFastq == 0)                                                                             # if 1 file --> single analysis to do
         {
             toolbox::exportLog("INFOS: $0 : Run singleAnalysisRnaSeq.pl on $firstDir\n",1);
-            my $singleCom = "singleAnalysisRnaSeq.pl $firstDir $fileConf $refFastaFile $gffFile";
+            my $singleCom = "singleAnalysisRnaSeq.pl -d $firstDir -c $fileConf -r $refFastaFile -g $gffFile";
             toolbox::run($singleCom);
         }
         elsif ($#listOfFastq == 1)                                                                          # if 2 files --> pair analysis to do
         {
             toolbox::exportLog("INFOS: $0 : Run pairAnalysisRnaSeq.pl on $firstDir\n",1);
-            my $pairCom = "pairAnalysisRnaSeq.pl $firstDir $fileConf $refFastaFile $gffFile";
+            my $pairCom = "pairAnalysisRnaSeq.pl -d $firstDir -c $fileConf -r $refFastaFile -g $gffFile";
             toolbox::run($pairCom);
         }
         else                                                                                                # if more than 2 files, there is a problem
@@ -265,7 +284,7 @@ globalAnalysisRnaSeq.pl
 
 =head1 Usage
 
-globalAnalysis.pl -d DIR-c FILE -r FILE [-a FILE]
+globalAnalysis.pl -d DIR-c FILE -r FILE -g FILE [-a FILE]
 
 =head1 Required arguments
 

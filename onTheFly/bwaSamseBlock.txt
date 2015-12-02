@@ -1,0 +1,34 @@
+
+##########################################
+# Block for bwa::bwaSampe
+##########################################
+
+
+if ($$fileList[0] !~ m/\.sai$/) # There are no .sai, the bwaAln was not performed before
+{
+    for (my $i=0; $i<scalar @{$fileList}; $i++)
+    {
+        ##########################################
+        # bwa::bwaAln
+        ##########################################
+        print LOG "INFOS: $0 : Start BWA Aln\n";
+        $softParameters = toolbox::extractHashSoft($optionRef,"bwaAln");                                      # recovery of specific parameters of bwa aln
+        ($fileWithoutExtention,$readGroup) = pairing::extractName($$fileList[$i]);                          # extract name of file without the extention
+        my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                 # name for the output file of bwa aln
+        bwa::bwaAln($refFastaFile,$$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
+    }
+    $fileList = toolbox::readDir($newDir);
+}
+
+my @listOfSai = @$fileList; #Recovery of list of sai
+
+if (scalar @listOfSai != 1) # One sai and only one is required for bwa samse
+{
+    toolbox::exportLog("ERROR : $0 : BWA samse requires one and only one sai files.\n",0);
+}
+
+print LOG "INFOS: $0 : Start $stepName\n";
+$samFileOut = "$newDir"."/"."$readGroup".".BWASAMSE.sam";                                     # name for the output file of bwa sampe
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                      # recovery of specific parameters of bwa sampe
+bwa::bwaSamse($samFileOut,$refFastaFile,$listOfSai[0],$fastq1,$readGroup,$softParameters); # generate alignement in SAM format
+

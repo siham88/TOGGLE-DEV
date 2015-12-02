@@ -1,9 +1,8 @@
 #!/usr/bin/env perl
 
-
 ###################################################################################################################################
 #
-# Copyright 2014 IRD-CIRAD
+# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,12 +23,12 @@
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
-# Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+# Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
-
-
 
 use strict;
 use warnings;
@@ -39,10 +38,58 @@ use Data::Dumper;
 use pairing;
 use toolbox;
 
-my $initialDir = $ARGV[0];                                                                                  # recovery of the name of the directory to analyse
-my $fileConf = $ARGV[1];                                                                                    # recovery of the name of the software.configuration.txt file
-my $refFastaFile = $ARGV[2];                                                                                # recovery of the reference file
+##########################################
+# recovery of parameters/arguments given when the program is executed
+##########################################
 my $cmd_line=$0." @ARGV";
+my ($nomprog)=$0=~/([^\/]+)$/;
+unless ($#ARGV>=0)                                                                                          # if no argument given
+{
+
+  print <<"Mesg";
+
+  perldoc $nomprog display the help
+
+Mesg
+
+  exit;
+}
+
+my %param = @ARGV;                                                                                          # get the parameters 
+if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}))
+{
+  print <<"Mesg";
+
+  ERROR: Parameters -d or -c or -r are required.
+  perldoc $nomprog display the help
+
+Mesg
+  exit;
+}
+
+
+##########################################
+# recovery of initial informations/files
+##########################################
+
+##########################################
+# transforming relative path in absolute
+##########################################
+my @logPathInfos;
+foreach my $inputParameters (keys %param)
+{
+  ##DEBUG print $param{$inputParameters},"**";
+  
+  my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
+  $param{$inputParameters}=$newPath;
+  push @logPathInfos,$log;
+}
+
+my $initialDir = $param{'-d'};                                                # recovery of the name of the directory to analyse
+my $fileConf = $param{'-c'};                                                                                # recovery of the name of the software.configuration.txt file
+my $refFastaFile = $param{'-r'};                                                                            # recovery of the reference file
+
+my $fileAdaptator = defined($param{'-a'})? $param{'-a'} : "$toggle/adaptator.txt";                          # recovery of the adaptator file
 
 my $optionref = toolbox::readFileConf($fileConf);
 my $softParameters = toolbox::extractHashSoft($optionref, "SGE");   
@@ -77,6 +124,15 @@ toolbox::exportLog("----------------------------------------",1);
 toolbox::checkFile($fileConf);                                                                              # check if this file exists
 toolbox::existsDir($initialDir);                                                                            # check if this directory exists
 toolbox::checkFile($refFastaFile);                                                                          # check if the reference file exists
+
+##########################################
+# Printing the absolutePath changing logs
+#########################################
+foreach my $logInfo (@logPathInfos)
+  {
+  toolbox::exportLog($logInfo,1);
+  }
+  
 my $loop = 0;                                                                                               # for the second loop
 
 
@@ -139,7 +195,7 @@ for (my $i=0; $i<=$#listOfFiles; $i++)                                          
         if ($#listOfFastq == 0)                                                                             # if 1 file --> single analysis to do
         {
             toolbox::exportLog("INFOS: $0 : Run singleAnalysis.pl on $firstDir\n",1);
-            my $singleCom = 'qsub -N singleAnalysis '.$options.' "singleAnalysis.pl '.$firstDir.' '.$fileConf.' '.$refFastaFile.'"';
+            my $singleCom = 'qsub -N singleAnalysis '.$options.' "singleAnalysis.pl -d '.$firstDir.' -c '.$fileConf.' -r '.$refFastaFile.'"';
             ##DEBUG
             toolbox::exportLog("DEBUG: $0 : qsub singleAnalysis command : $singleCom\n",1);
             my $job_id = `$singleCom`;
@@ -157,7 +213,7 @@ for (my $i=0; $i<=$#listOfFiles; $i++)                                          
         elsif ($#listOfFastq == 1)                                                                          # if 2 files --> pair analysis to do
         {
             toolbox::exportLog("INFOS: $0 : Run pairAnalysis.pl on $firstDir\n",1);
-            my $pairCom = 'qsub -N pairAnalysis '.$options.' "pairAnalysis.pl '.$firstDir.' '.$fileConf.' '.$refFastaFile.'"';
+            my $pairCom = 'qsub -N pairAnalysis '.$options.' "pairAnalysis.pl -d '.$firstDir.' -c '.$fileConf.' -r '.$refFastaFile.'"';
             ##DEBUG
             toolbox::exportLog("DEBUG: $0 : qsub pairAnalysis command : $pairCom\n",1);
             my $job_id = `$pairCom`;

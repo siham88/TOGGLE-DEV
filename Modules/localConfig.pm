@@ -40,35 +40,35 @@ our @ISA=qw(Exporter);
 our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount);
 
 #toggle path
-our $toggle="/path/to/toggle";
+our $toggle="/home/tranchant/TOGGLE-ONTHEFLY";
 
 #PATH for Mapping on cluster
-our $java = "/path/to/java -Xmx12g -jar";
+our $java = "/usr/local/java/latest/bin/java -Xmx12g -jar";
 
-our $bwa = "/path/to/bwa";
-our $picard = "$java /path/to/picard-tools";
+our $bwa = "/usr/local/bin/bwa";
+our $picard = "$java /usr/local/picard-tools-1.130";
 
-our $samtools = "/path/to/samtools_O.1.17";
-our $GATK = "/path/to/java -Xmx12g -jar /path/to/GenomeAnalysisTK-3.3/GenomeAnalysisTK.jar";
-our $fastqc = "/path/to/FastQC/fastqc";
+our $samtools = "/usr/local/samtools-1.2/bin/samtools";
+our $GATK = "/usr/java/jre1.7.0_51/bin/java -Xmx12g -jar /usr/local/GenomeAnalysisTK-3.3/GenomeAnalysisTK.jar";
+our $fastqc = "/usr/local/FastQC/fastqc";
 
 #Path for CutAdapt
-our $cutadapt = "/path/to/cutadapt-1.2.1/bin/cutadapt";
+our $cutadapt = "/usr/local/cutadapt-1.8/bin/cutadapt";
 
 ##### FOR RNASEQ analysis
 #Path for fastq_trimmer
-our $fastxTrimmer="/path/to/bin/fastx_trimmer";
+our $fastxTrimmer="/usr/local/bin/fastx_trimmer";
 
 #Path for tophat2
-our $tophat2="/path/to/tophat2";
+our $tophat2="/usr/local/tophat-2.0.14/bin/tophat2";
 
 #path for bowtie2-build
-our $bowtie2Build="/path/to/bowtie2-build";
+our $bowtie2Build="//usr/local/bowtie2-2.2.5/bowtie2-build";
 
 #path for bowtie-build
-our $bowtieBuild="/path/to/bowtie-build";
+our $bowtieBuild="/usr/local/bowtie-0.12.9/bowtie-build";
 
 #path for htseqcount
-our $htseqcount = "/path/to/htseq-count";
+our $htseqcount = "/usr/local/bin/htseq-count";
 
 1;

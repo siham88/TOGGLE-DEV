@@ -1,0 +1,28 @@
+
+##########################################
+# Block for HTSeq::htseqCount
+##########################################
+
+$samFile=0;
+foreach my $file (@{$fileList}) #Checking the type of files that must be SAM or BAM
+{
+    ###### DOJO
+    if ($file =~ m/bam$/) # the file type is normally bam
+    {
+        if ($samFile != 0) # Already a bam recognized, but more than one in the previous folder
+        {
+            toolbox::exportLog("ERROR : $0 : there are more than one single BAM file at $stepName step.\n",0);
+        }
+        $samFile = $file;
+    }
+}
+
+if ($samFile eq '0') #No BAM file found in the previous folder
+{
+    toolbox::exportLog("ERROR : $0 : No BAM file found in $previousDir at step $stepName.\n",0);
+}
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools view pair
+
+my $htseqcountOut=$newDir."/".$individu.".accepted_hits.HTSEQCOUNT.txt";
+HTSeq::htseqCount($samFile,$htseqcountOut,$gffFile,$softParameters);

@@ -1,0 +1,31 @@
+
+##########################################
+# Block for gatk::gatkIndelRealigner
+##########################################
+
+#VERIFYING IF INTERVAL FILE IS DEFINED
+
+unless ($intervalsFile)
+{
+    toolbox::exportLog("ERROR : $0 : gatkIndelRealigner: the intervals file is not defined, will generate it automatically.\n",2);
+    #########################################
+    # GATK REALIGNER TARGET CREATOR
+    #########################################
+    $softParameters = toolbox::extractHashSoft($optionRef,"gatkRealignerTargetCreator");                    # recovery of specific parameters of GATK Realigner Target Creator
+    $fileWithoutExtention = toolbox::extractName($$fileList[0]);                                             # extract name of file without extention
+    $intervalsFile = "$newDir"."/"."$fileWithoutExtention".".GATKREALIGNERTARGETCREATOR.intervals";         # name for the output file of gatk realigner target creator
+    gatk::gatkRealignerTargetCreator($refFastaFile, $bamFileOut, $intervalsFile, $softParameters);          # determine (small) suspicious intervals which are likely in need of realignment
+    
+}
+
+#########################################
+# GATK IndelRealigner
+#########################################
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                       # recovery of specific parameters of GATK Indel Realigner
+my $bamRealigned = "$newDir"."/"."$fileWithoutExtention".".GATKINDELREALIGNER.bam";                    # name for the output file of gatk indel realigner
+gatk::gatkIndelRealigner($refFastaFile, $bamFileOut, $intervalsFile, $bamRealigned, $softParameters);   # run the realigner over the intervals producted by gatk::gatkRealignerTargetCreator (see above)
+
+#Cleaning and removing the intervals file that may cause a problem in the next steps
+my $intervalsFileRemoverCommand= " rm -f ".$intervalsFile;
+toolbox::run($intervalsFileRemoverCommand);

@@ -12,23 +12,22 @@ $cutadapt
 --overlap=7
 
 #2nd program config
-$samtools view single
--h
--b
--F=0x04
 
-$samtools view pair
+
+$samtoolsView
 -h
+-f=0x02
+-S
 -b
--F=0x02
+
+
 
 #3nd program config
-$BWA aln
+$bwaAln
 -n=5
 -o=1
--e=-1
 
-$BWA index
+$bwaIndex
 -a=is
 
 #4th program
@@ -55,18 +54,25 @@ $GATK gatkBaseRecalibrator
 
 $GATK gatkRealignerTargetCreator
 -T=RealignerTargetCreator
--nt=4
 
 $GATK gatkIndelRealigner
 -T=IndelRealigner
 
-$GATK gatkHaplotypeCaller
+$gatkHaplotypeCaller
 -T=HaplotypeCaller
 
 
-$picardTools sortsam pair
+$picardToolsSortSam
 SORT_ORDER=coordinate
 VALIDATION_STRINGENCY=SILENT
+CREATE_INDEX=TRUE
 
-$picardTools sortsam single
-SORT_ORDER=coordinate
+$cleaner
+1
+2
+
+$order
+1=bwaAln
+2= bwa sampe
+3= picardtoolssortsam
+

@@ -1,10 +1,8 @@
 package gatk;
 
-
-
 ###################################################################################################################################
 #
-# Copyright 2014 IRD-CIRAD
+# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,12 +23,12 @@ package gatk;
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
-# Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+# Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
-
-
 
 use strict;
 use warnings;
@@ -45,6 +43,10 @@ sub gatkBaseRecalibrator
     if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($vcfSnpKnownFile)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T BaseRecalibrator";
+        }
         my $comGatkBaseRecalibrator = "$GATK"."$options"." -I $bamToRecalibrate -R $refFastaFileIn -knownSites $vcfSnpKnownFile -o $tableReport";       # command line
         toolbox::run($comGatkBaseRecalibrator);
         if(toolbox::run($comGatkBaseRecalibrator)==1)
@@ -71,6 +73,10 @@ sub gatkRealignerTargetCreator
     if ((toolbox::checkSamOrBamFormat($bamToRealigne)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRealigne)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T RealignerTargetCreator";
+        }
         my $comGatkRealignerTargetCreator = "$GATK"."$options"." -R $refFastaFileIn -I $bamToRealigne -o $intervalsFile ";#--fix_misencoded_quality_scores -fixMisencodedQuals";        # command line
         if(toolbox::run($comGatkRealignerTargetCreator)==1)     # command line execution
         {
@@ -91,6 +97,10 @@ sub gatkIndelRealigner
     if ((toolbox::checkSamOrBamFormat($bamToRealigne)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRealigne)==1) and (toolbox::readFile($intervalsFile)==1))      # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T IndelRealigner";
+        }
         my $comGatkIndelRealigner = "$GATK"."$options"." -R $refFastaFileIn -I $bamToRealigne -targetIntervals $intervalsFile -o $bamRealigned";# --fix_misencoded_quality_scores -fixMisencodedQuals";     # command line
         if(toolbox::run($comGatkIndelRealigner)==1)
         {                                                                                                                                                                               # command line execution
@@ -155,6 +165,10 @@ sub gatkHaplotypeCaller
         {
             $options=toolbox::extractOptions($optionsHachees);      ##Get given options
         }
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T HaplotypeCaller";
+        }
         my $comGatkHaplotypeCaller = "$GATK"."$options"." -R $refFastaFileIn $bamFiles_names $dbsnp $intervals -o $vcfCalled";      # command line
         if(toolbox::run($comGatkHaplotypeCaller)==1)        # command line execution
         {
@@ -181,6 +195,10 @@ sub gatkSelectVariants
     if ((toolbox::sizeFile($refFastaFileIn)==1)  and  (toolbox::sizeFile($vcfSnpKnownFile)==1))     # check if ref file exist and isn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T SelectVariants";
+        }
         my $comGatkSelectVariants = "$GATK"."$options"." -R $refFastaFileIn --variant $vcfSnpKnownFile -o $vcfVariantsSelected";        # command line
         if(toolbox::run($comGatkSelectVariants)==1)     # command line execution
         {
@@ -211,7 +229,11 @@ sub gatkVariantFiltration
         {
             $options=toolbox::extractOptions($optionsHachees);      ##Get given options
         }
-        print Dumper($options);     # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T VariantFiltration";
+        }
+        ##DEBUG print Dumper($options);     # extraction of options parameters
         my $comGatkVariantFiltration = "$GATK"."$options"." -R $refFastaFileIn -o $vcfFiltered --variant $vcfToFilter";     # command line
         if(toolbox::run($comGatkVariantFiltration)==1)      # command line execution
         {
@@ -233,28 +255,39 @@ sub gatkVariantFiltration
 # GATK Unified Genotyper: A variant caller which unifies the approaches of several disparate callers -- Works for single-sample and multi-sample data.
 sub gatkUnifiedGenotyper
 {
-    my ($refFastaFileIn, $bamFileIn, $vcfFileOut, $optionsHachees) = @_;        # recovery of information  
+    my ($refFastaFileIn, $listOfBam, $vcfFileOut, $optionsHachees) = @_;        # recovery of information  
     #TODO adding VCF type control
-    if ((toolbox::checkSamOrBamFormat($bamFileIn)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamFileIn)==1))     # check if ref file exist and isn't empty and stop else
+    my $bamFilesNames="";
+    foreach my $file (@{$listOfBam})       # for each BAM file(s)
     {
-        my $options=toolbox::extractOptions($optionsHachees);
-        my $comGatkUnifiedGenotyper = "$GATK"."$options"." -R $refFastaFileIn -I $bamFileIn -o $vcfFileOut";        # command line
-        if(toolbox::run($comGatkUnifiedGenotyper)==1)       # command line execution
+        if (toolbox::checkSamOrBamFormat($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty and is a BAM
         {
-            toolbox::exportLog("INFOS: gatk::gatkUnifiedGenotyper : Correctly done\n",1);
-            return 1;
+            $bamFilesNames.="-I ".$file." ";       # recovery of informations fo command line used later
         }
-        else        # if one or some previous files doesn't exist or is/are empty or if gatkVariantFiltration failed
+        else        # if current file is empty or not a BAM
         {
-            toolbox::exportLog("ERROR: gatk::gatkUnifiedGenotyper : Uncorrectly done\n", 0);        # returns the error message
+            toolbox::exportLog("ERROR: gatk::gatkUnifiedGenotyper : The file $file is not a BAM and cannot be used\n", 0);      # returns the error message
             return 0;
         }
     }
+    
+    my $options=toolbox::extractOptions($optionsHachees);
+    if ($options !~ m/-T/) # The type of walker is not informed in the options
+    {
+        $options .= " -T UnifiedGenotyper";
+    }
+    my $comGatkUnifiedGenotyper = "$GATK"."$options"." -R $refFastaFileIn $bamFilesNames -o $vcfFileOut";        # command line
+    if(toolbox::run($comGatkUnifiedGenotyper)==1)       # command line execution
+    {
+        toolbox::exportLog("INFOS: gatk::gatkUnifiedGenotyper : Correctly done\n",1);
+        return 1;
+    }
     else        # if one or some previous files doesn't exist or is/are empty or if gatkVariantFiltration failed
     {
-        toolbox::exportLog("ERROR: gatk::gatkUnifiedGenotyper : The files $refFastaFileIn or/and $bamFileIn are incorrects\n", 0);      # returns the error message
+        toolbox::exportLog("ERROR: gatk::gatkUnifiedGenotyper : Uncorrectly done\n", 0);        # returns the error message
         return 0;
     }
+    
 }
 # GATK Read backedPhasing: Walks along all variant ROD loci, caching a user-defined window of VariantContext sites, and then finishes phasing them when they go out of range (using upstream and downstream reads).
 sub gatkReadBackedPhasing
@@ -264,6 +297,10 @@ sub gatkReadBackedPhasing
     if ((toolbox::checkSamOrBamFormat($bamFileIn)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamFileIn)==1) and (toolbox::sizeFile($vcfVariant)==1))     # check if ref file exist and isn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T ReadBackedPhasing";
+        }
         my $comGatkReadBackedPhasing = "$GATK"."$options"." -R $refFastaFileIn -I $bamFileIn --variant $vcfVariant -o $vcfFileOut";     # command line
         if(toolbox::run($comGatkReadBackedPhasing)==1)      # command line execution
         {
@@ -364,7 +401,7 @@ The last argument is the options of gatk variantFiltration, for more information
 =head3 gatk::gatkUnifiedGenotyper
 
 This module is a variant caller which unifies the approaches of several disparate callers -- Works for single-sample and multi-sample data
-It takes at least three arguments: the database indexed, the ".bam" file in, the name of the output file in ".vcf" format
+It takes at least three arguments: the database indexed, the ".bam" files list, the name of the output file in ".vcf" format
 The last argument is the options of gatk unifiedGenotyper, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_genotyper_UnifiedGenotyper.php
 
 

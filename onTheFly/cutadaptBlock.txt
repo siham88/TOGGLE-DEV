@@ -1,0 +1,36 @@
+
+##########################################
+# Block for cutadapt::createConfFile and cutadapt::execution
+##########################################
+
+##########################################
+# cutadapt::createConfFile
+##########################################
+my $cutadaptFileConf = "$newDir"."/cutadapt.conf";                                                  # name for the cutadapt specific configuration file
+$softParameters = toolbox::extractHashSoft($optionRef, $stepName);                                  # recovery of specific informations for cutadapt
+cutadapt::createConfFile($cutadaptFileConf, $softParameters);                                       # create the configuration file specific to cutadapt software
+
+$fastqForward=$$fileList[0];
+($fileWithoutExtention,$readGroup) = pairing::extractName($fastqForward);                           # extract name of file without the extention
+my $fastqForwardOut = "$newDir"."/"."$fileWithoutExtention".".CUTADAPT.fastq";                      # name for the forward output file of cutadapt execution
+
+if (scalar(@{$fileList})==2)                                                                        # paired mode
+{
+    $fastqReverse=$$fileList[1];
+    ($fileWithoutExtention,$readGroup) = pairing::extractName($fastqReverse);                           # extract name of file without the extention
+    my $fastqReverseOut = "$newDir"."/"."$fileWithoutExtention".".CUTADAPT.fastq";                  # name for the reverse output file of cutadapt execution
+    
+    ##########################################
+    # cutadapt::execution
+    ##########################################
+    print LOG "INFOS: $0 : Start cutadapt execution on file $fastqForward and $fastqReverse\n";
+    ##DEBUG print LOG "CHANGE DIRECTORY TO $newDir\n";
+    cutadapt::execution($cutadaptFileConf,$fastqForward,,$fastqForwardOut,$fastqReverse,$fastqReverseOut);                     # run cutadapt program on current file
+}
+else                                                                                                 # single mode
+{
+    cutadapt::execution($cutadaptFileConf,$fastqForward,,$fastqForwardOut);                          # run cutadapt program on current file
+}
+
+my $removeCmd = "rm $cutadaptFileConf";
+toolbox::run($removeCmd);

@@ -1,10 +1,8 @@
 package cutadapt;
 
-
-
 ###################################################################################################################################
 #
-# Copyright 2014 IRD-CIRAD
+# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,12 +23,12 @@ package cutadapt;
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
-# Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+# Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
-
-
 
 use strict;
 use warnings;
@@ -58,9 +56,19 @@ use toolbox;
 sub createConfFile
 {
     
-    my ($fileAdaptator, $fileConf, $optionref)=@_;							# recovery of arguments
+    my ($fileConf, $optionref)=@_;							# recovery of arguments
+    my %optionsRef = %$optionref;      
     
+    my $fileAdaptator="$toggle/adaptator.txt";
+    if (exists $optionsRef{"-adaptatorFile"})
+    {
+	    $fileAdaptator=$optionsRef{'-adaptatorFile'};
+	    delete($optionsRef{'-adaptatorFile'});
+    }
+ 
+ 
     open(CONF, ">", $fileConf) or toolbox::exportLog("ERROR: cutadapt::createConfFile : Can't open the configuration file $fileConf $!\n",0); 	# opening the configuration file to fill
+ 
     open(ADAPTATOR, "<", $fileAdaptator) or toolbox::exportLog("ERROR: cutadapt::createConfFile : Cannot open the adaptator file $fileAdaptator $!\n",0);	# opening the adaptators file
     while (my $seq=<ADAPTATOR>)
     {
@@ -72,14 +80,13 @@ sub createConfFile
         $seq =~ tr/AaCcGgTt/TtGgCcAa/;									# do the complement adaptators sequence
         print CONF "-b $seq\n";										# print in the configuration file the "-b" parameter and the reverse adaptators sequence cooresponding
     }
-    
-    ##DEBUG : print Data::Dumper::Dumper(\%$optionref);
-    my %optionsRef = %$optionref;
+ 
     foreach my $parameter (keys %optionsRef)
     {
+
 	print CONF "$parameter $optionsRef{$parameter}\n";							# print in the configuration file the parameter and the options cooresponding to
     }
-
+       
     close CONF;
     close ADAPTATOR;
     
@@ -114,10 +121,13 @@ sub createConfFile
 sub execution
 {
 
-    toolbox::exportLog("ERROR: cutadapt::execution : should get exactly three arguments\n",0) if (@_ !=3 );	# Check if the number of arguments is good
+    toolbox::exportLog("ERROR: cutadapt::execution : should get at least three arguments\n",0) if (@_ <3 );	# Check if the number of arguments is good
 
-    my ($fileIn,$fileConf,$fileOut)=@_;	 # recovery of arguments
-
+    my ($fileConf,$fileIn1,$fileOut1,$fileIn2, $fileOut2)=@_;	 # recovery of arguments
+    my $cmd;
+    my $singleMode=0;
+    $singleMode=1 if (not defined $fileIn2 or not defined $fileOut2);
+    
     ## Lancement de cutadapt        
     open(ADAPT, "<", $fileConf) or toolbox::exportLog("ERROR: cutadapt::execution : Cannot open the file $fileConf $!\n",0);
     my $adaptors=" ";
@@ -128,9 +138,16 @@ sub execution
     }
     close ADAPT;
     
-    my $cmd_line=$cutadapt." ".$adaptors." ".$fileIn." -o ".$fileOut;				# command line to execute cutadapt
-
-    toolbox::run($cmd_line);									# tool to execute the command line
+    if ($singleMode)
+    {
+	$cmd="$cutadapt $adaptors -o $fileOut1 $fileIn1";			# command line to execute cutadapt
+    }
+    else
+    {
+	$cmd="$cutadapt $adaptors -o $fileOut1 -p $fileOut2 $fileIn1 $fileIn2";			# command line to execute cutadapt
+    }
+    
+    toolbox::run($cmd);									# tool to execute the command line
 }
 ################################################################################################
 # END sub cutadapt::exectution => to run cutdapt

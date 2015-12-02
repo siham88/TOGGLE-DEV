@@ -1,0 +1,22 @@
+############################
+#
+# Block for FASTQC
+#
+############################
+
+##########################################
+# fastqc::execution
+##########################################
+
+foreach my $file (@{$fileList})
+{
+    fastqc::execution($file,$newDir);                                                            # run fastQC program on current file
+    ##########################################
+    # fastqc::parse
+    ##########################################
+    #my $fastqcStats = fastqc::parse($newDir);                                                               # parse fastQC file to get statistics of fastqc
+    #print LOG "INFOS statistics of fastqc: \n";
+    #print LOG Dumper($fastqcStats);
+    #print LOG "----------------------------------------\n";
+}
+
