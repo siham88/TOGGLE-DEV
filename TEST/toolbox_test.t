@@ -34,15 +34,15 @@
 #Modified version by Marilyne version3
 #test du 13/08/14
 
-use strict;
+use strict;                                                                                                 #
 use warnings;
-use Test::More 'no_plan'; #tests => 19; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
+use Test::More 'no_plan'; 
 use Data::Dumper;
 use Test::Deep;
 use lib qw(../Modules/);
 
 use localConfig;
-my $configFile='software.config.txt';
+
 
 
 ########################################
@@ -79,33 +79,36 @@ can_ok('toolbox','transferDirectoryFromNodeToMaster'); # TEST A IMPLEMENTER
 use toolbox;
 
 
+
+#########################################
+#Remove files and directory created by previous test
+#########################################
+my $testingDir="../DATA-TEST/toolboxTestDir";
+my $cleaningCommand="rm -Rf ../DATA-TEST/$testingDir"; 
+system ("rm -Rf $testingDir") and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCommand \n$!\n");
+
+my $expectedData="../../DATA/expectedData/";
+my $configFile="../../TEST/software.config.txt";
+
+########################################
+#Test directory creation
+########################################
+my $makeDirCom = "mkdir $testingDir";
+system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
+chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+
 #######################################
 #Creating the IndividuSoft.txt file
 #######################################
 my $creatingCommand="echo \"toolbox\nTEST\" > individuSoft.txt";
 system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
 
+
 #######################################
-#Cleaning the logs for the test
+#Cleaning previous tests logs
 #######################################
-my $cleaningCommand="rm -Rf toolbox_TEST_log.*";
+$cleaningCommand="rm -Rf toolbox_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
-
-
-
-#########################################
-#Remove the files and directory created by the previous test
-#########################################
-my $testingDir="../DATA-TEST/toolboxTestDir";
-$cleaningCommand="rm -Rf ../DATA-TEST/$testingDir"; 
-system ("rm -Rf $testingDir") and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCommand \n$!\n");
-
-
-########################################
-#Creation of test directory
-########################################
-my $makeDirCom = "mkdir $testingDir";
-system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
 
 
 #######################################
@@ -113,48 +116,49 @@ system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with 
 #######################################
 
 #Fastq file
-my $originalFastqFile="../DATA/expectedData/RC3_1.fastq";
-my $fastqFile="$testingDir/RC3_1.fastq";
-my $copyCommand="cp $originalFastqFile $fastqFile";
-system($copyCommand) and die ("ERROR: $0 : Cannot copy the fastq file with the command $copyCommand\n$!\n"); 
+my $fastqFile="RC3_1.fastq";
+my $originalFastqFile=$expectedData."RC3_1.fastq";
+my $lnCommand="ln -s $originalFastqFile .";
+system($lnCommand) and die ("ERROR: $0 : Cannot link the fastq file with the command $lnCommand\n$!\n"); 
 
 #Sam file
-my $originalSamFile="../DATA/expectedData/RC3.BWASAMPE.sam";
-my $samFile="$testingDir/RC3.BWASAMPE.sam";
-$copyCommand="cp $originalSamFile $samFile";
-system($copyCommand) and die ("ERROR: $0 : Cannot copy the sam file with the command $copyCommand\n$!\n"); 
+my $samFile="RC3.BWASAMPE.sam";
+my $originalSamFile=$expectedData.$samFile;
+$lnCommand="ln -s $originalSamFile .";
+system($lnCommand) and die ("ERROR: $0 : Cannot link the sam file with the command $lnCommand\n$!\n"); 
 
 #Bam file
-my $originalBamFile="../DATA/expectedData/RC3.PICARDTOOLSSORT.bam";
-my $bamFile="$testingDir/RC3.PICARDTOOLSSORT.bam";
-$copyCommand="cp $originalBamFile $bamFile";
-system($copyCommand) and die ("ERROR: $0 : Cannot copy the bam file with the command $copyCommand\n$!\n"); 
+my $bamFile="RC3.PICARDTOOLSSORT.bam";
+my $originalBamFile=$expectedData.$bamFile;
+$lnCommand="ln -s $originalBamFile .";
+system($lnCommand) and die ("ERROR: $0 : Cannot link the bam file with the command $lnCommand\n$!\n"); 
 
 #VCF file
-my $OriginalVcfFile="../DATA/expectedData/GATKHAPLOTYPECALLER.vcf";
-my $vcfFile="$testingDir/GATKHAPLOTYPECALLER.vcf";
-$copyCommand="cp $OriginalVcfFile $vcfFile";
-system($copyCommand) and die ("ERROR: $0 : Cannot copy the vcf file with the command $copyCommand\n$!\n"); 
+my $vcfFile="GATKHAPLOTYPECALLER.vcf";
+my $OriginalVcfFile=$expectedData.$vcfFile;
+$lnCommand="ln -s $OriginalVcfFile .";
+system($lnCommand) and die ("ERROR: $0 : Cannot link the vcf file with the command $lnCommand\n$!\n"); 
 
 #VCF file non readable
-my $chmodVcfFile="$testingDir/test-nonreadrigth.vcf";
-$copyCommand="cp $OriginalVcfFile $chmodVcfFile";
+my $chmodVcfFile="test-nonreadrigth.vcf";
+my $copyCommand="cp $OriginalVcfFile test-nonreadrigth.vcf";
 system($copyCommand) and die ("ERROR: $0 : Cannot copy the vcf file with the command $copyCommand\n$!\n"); 
 
 #File empty
-my $emptyFile="$testingDir/empty-file.vcf";
+my $emptyFile="empty-file.vcf";
 my $createFileCommand="touch $emptyFile";
 system($createFileCommand) and die ("ERROR: $0 : Cannot create the empty file with the command $createFileCommand\n$!\n"); +
 
 #Fasta files
-my $originalReference = "../DATA/expectedData/correctReference.fasta";
-my $reference = "$testingDir/correctReference.fasta";
-$copyCommand=" cp $originalReference $reference";
-system($copyCommand) and die ("ERROR: $0 : Cannot copy the fasta file with the command $copyCommand\n$!\n");
-my $originalWrongFasta = "../DATA/expectedData/wrongReference.fasta";
-my $wrongFasta = "$testingDir/wrongReference.fasta";
-$copyCommand=" cp $originalWrongFasta $wrongFasta";
-system($copyCommand) and die ("ERROR: $0 : Cannot copy the fasta file with the command $copyCommand\n$!\n");
+my $reference = "correctReference.fasta";
+my $originalReference = $expectedData.$reference;
+$lnCommand=" ln -s $originalReference .";
+system($lnCommand) and die ("ERROR: $0 : Cannot copy the fasta file with the command $lnCommand\n$!\n");
+
+my $wrongFasta = "wrongReference.fasta";
+my $originalWrongFasta = $expectedData.$wrongFasta;
+$lnCommand=" cp $originalWrongFasta $wrongFasta";
+system($lnCommand) and die ("ERROR: $0 : Cannot copy the fasta file with the command $lnCommand\n$!\n");
 
 
 ########################################
@@ -226,7 +230,7 @@ ok (toolbox::sizeFile($emptyFile) == 0,'Test for sizeFile... return 0');
 ########################################
 
 #existsDir
-is (toolbox::existsDir($testingDir),'1','Test for existsDir... return 1');
+is (toolbox::existsDir('.'),'1','Test for existsDir... return 1');
 is (toolbox::existsDir('beurk',0),'0','Test for existsDir... return 0');
 
 #makeDir
