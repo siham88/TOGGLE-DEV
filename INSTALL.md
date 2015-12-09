@@ -61,9 +61,15 @@ TO BE CHANGED FOR THE FINAL VCF USING IRIGIN
 
 ````
 $cd /pathToToggle
-rm -rf toggleout2 && toggleGenerator.pl -c RNASeq.config.txt -d DATA/testData/rnaseq/pairedOneIndividu/ -r DATA/Bank/referenceRnaseq.fa -g DATA/Bank/referenceRnaseq.gff3 -o toggleout2/
+toggleGenerator.pl -c RNASeq.config.txt -d DATA/testData/rnaseq/pairedOneIndividu/ -r DATA/Bank/referenceRnaseq.fa -g DATA/Bank/referenceRnaseq.gff3 -o toggleout/
 ````
 
+* Check the good running
+> > * No error message
+> > * the directory toggleout has been created
+> > * the directory toggleout/output contain all the results
+> > * the file toggleout/finalResults/RNASeq.accepted_hits.HTSEQCOUNT.txt has been created
+> > * the data generated are good
 
 
 # INSTALL FROM THE DOCKER IMAGE
