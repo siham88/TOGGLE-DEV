@@ -31,11 +31,8 @@ $chmod 755 *pl
 ```
 
 * Modify the file /pathToToggle/Modules/localConfig.pm
-* Modify the shebang of perl in the begining of the script /pathToToggle/globalAnalysis.pl
-* Modify the shebang of perl in the begining of the script /pathToToggle/singleAnalysis.pl
-* Modify the shebang of perl in the begining of the script /pathToToggle/pairAnalysis.pl
-* Modify the shebang of perl in the begining of the script /pathToToggle/mergeAnalysis.pl
-* Modify the shebang of perl in the begining of the script for RNASeq analysis
+* Modify the shebang of perl in the begining of the script /pathToToggle/toggleGenerator.pl and onTheFly/startBlock.txt 
+
 
 
 * Test the pipeline with the test data
