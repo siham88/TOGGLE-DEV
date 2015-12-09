@@ -60,7 +60,8 @@ TO BE CHANGED FOR THE FINAL VCF USING IRIGIN
 * Test the RNASeq pipeline with the test data
 
 ````
-$TO BE MODIFIED !!
+$cd /pathToToggle
+rm -rf toggleout2 && toggleGenerator.pl -c RNASeq.config.txt -d DATA/testData/rnaseq/pairedOneIndividu/ -r DATA/Bank/referenceRnaseq.fa -g DATA/Bank/referenceRnaseq.gff3 -o toggleout2/
 ````
 
 
