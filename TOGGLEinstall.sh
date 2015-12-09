@@ -288,7 +288,7 @@ sleep 1
 echo "\nPERL5LIB=$PERL5LIB:$MODULES\n" | cat - > ~/.bashrc
 echo "\nPATH=$PATH:$TOGGLEPATH\n" | cat - > ~/.bashrc
 
-
+source ~/.bashrc
 
 echo "\nHOORAY !! Configuration finished!\n\nPlease use first the test data as recommanded on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n"
 
