@@ -40,9 +40,22 @@ $chmod 755 *pl
 
 * Test the pipeline with the test data
 
+Modify the path of adaptator file in the file SNPdiscoveryPaired.config.txt
+
 ````
-$cd /pathToToggle
-$./toggleGenerator.pl -d DATA/onTheFlyTest/twoIndividualFastqPaired -c software.config.txt.test -r DATA/referenceIrigin.fasta -o /tmp/toggleOUTPUT
+$cutadapt
+-O=10
+-m=35
+-q=20
+--overlap=7
+-u=8
+#If you have a specific adaptator file, please indicate here. 
+-adaptatorFile=/path/to/adaptator.txt
+````
+
+````
+$cd /pathToToggle by adding the adaptator file
+$toggleGenerator.pl -c SNPdiscoveryPaired.config.txt -d DATA/testData/fastq/pairedTwoIndividusIrigin/ -r DATA/Bank/referenceIrigin.fasta -o toggleout2/
 ````
 
 * Check the good running
