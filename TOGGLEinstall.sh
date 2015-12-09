@@ -274,7 +274,7 @@ sed -i "s|java7|$JAVASEVEN|g" $MODULES/localConfig.pm
 sed -i "s|bwabinary|$BINARIES/bwa/bwa|g" $MODULES/localConfig.pm
 sed -i "s|cutadaptbinary|$BINARIES/cutadapt/bin/cutadapt|g" $MODULES/localConfig.pm
 sed -i "s|samtoolsbinary|$BINARIES/samtools/samtools|g" $MODULES/localConfig.pm
-sed -i "s|picardbinary|$BINARIES/picard-tools/picard.jar|g" $MODULES/localConfig.pm
+sed -i "s|picardbinary|$BINARIES/picard-tools|g" $MODULES/localConfig.pm
 sed -i "s|fastqcbinary|$BINARIES/FastQC/fastqc|g" $MODULES/localConfig.pm
 sed -i "s|GATKbinary|$BINARIES/GenomeAnalysisTK/GenomeAnalysisTK.jar|g" $MODULES/localConfig.pm
 sed -i "s|tophat2binary|$BINARIES/tophat/tophat2|g" $MODULES/localConfig.pm
@@ -285,7 +285,9 @@ sed -i "s|fastx_trimmerbinary|$BINARIES/fastx_toolkit/fastx_trimmer|g" $MODULES/
 #Adding toggle in the user PERL5LIB path
 sleep 1
 
-echo"\n$PERL5LIB=$PERL5LIB:$MODULES\n" | cat - > ~/.bashrc
+echo "\nPERL5LIB=$PERL5LIB:$MODULES\n" | cat - > ~/.bashrc
+echo "\nPATH=$PATH:$TOGGLEPATH\n" | cat - > ~/.bashrc
+
 
 
 echo "\nHOORAY !! Configuration finished!\n\nPlease use first the test data as recommanded on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n"
