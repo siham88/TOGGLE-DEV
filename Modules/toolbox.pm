@@ -1189,9 +1189,8 @@ sub checkVcfFormat
     exportLog("ERROR: toolbox::checkVcfFormat : There is no header of the file $file\n",0) unless (defined $versionLine); #Thrown an error if the $version cannot be obtained (misformatted line)	
 
     my @version=split /VCFv/,$versionLine;
-    exportLog("ERROR: toolbox::checkVcfFormat : Cannot evaluate the VCF version of the file $file file\n",0) if (not defined @version); #Thrown an error if the $version cannot be obtained (misformatted line)
-    ##DEBUG
-    print "DEBUG: $0: vcf version $versionLine : ".scalar(@version)." : $version[1] \n"; 
+    exportLog("ERROR: toolbox::checkVcfFormat : Cannot evaluate the VCF version of the file $file file\n",0) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
+    ##DEBUG print "DEBUG: $0: vcf version $versionLine : ".scalar(@version)." : $version[1] \n"; 
     eval ($version[1] == $version[1]) or exportLog("ERROR: toolbox::checkVcfFormat : Cannot obtain the VCF version of $file\n",0); #Verifying if the value obtained is numerical.
     
     # Check the first line format as recommanded
