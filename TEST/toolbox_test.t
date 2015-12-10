@@ -234,36 +234,36 @@ is (toolbox::existsDir('.'),'1','Test for existsDir... return 1');
 is (toolbox::existsDir('beurk',0),'0','Test for existsDir... return 0');
 
 #makeDir
-is (toolbox::makeDir($testingDir.'/test_dir'),'1','Test for makedir');
-is (toolbox::existsDir($testingDir.'/test_dir'),'1','Test for existsDir... return 1');
-system ("rm -Rf ".$testingDir."/test_dir") and die ("\nCannot remove the test_dir for test:$!\nAborting\n");;
+is (toolbox::makeDir('test_dir'),'1','Test for makedir');
+is (toolbox::existsDir('test_dir'),'1','Test for existsDir... return 1');
+system ("rm -Rf test_dir") and die ("\nCannot remove the test_dir for test:$!\nAborting\n");;
 
 #readDir test with a directory name as argument
-my $listCom = `ls ../DATA/expectedData/*`;
+my $listCom = `ls ../../DATA/expectedData/*`;
 chomp $listCom;
 my @listExpected = split /\n/, $listCom;
-my @listObserved = toolbox::readDir('../DATA/expectedData');
+my @listObserved = toolbox::readDir('../../DATA/expectedData');
 is_deeply(\@listExpected,@listObserved,'Test for readDir... just directory');
 
 #readDir test with a directory name and a format as arguments
-$listCom = `ls ../DATA/expectedData/*fastq`;
+$listCom = `ls ../../DATA/expectedData/*fastq`;
 chomp $listCom;
 @listExpected = split /\n/, $listCom;
-@listObserved = toolbox::readDir('../DATA/expectedData','fastq');
+@listObserved = toolbox::readDir('../../DATA/expectedData','fastq');
 is_deeply(\@listExpected,@listObserved,'Test for readDir... just fastq files');
 
 #readDir2 test with a directory name
-$listCom = `ls ../DATA/expectedData/*`;
+$listCom = `ls ../../DATA/expectedData/*`;
 chomp $listCom;
 @listExpected = split /\n/, $listCom;
-@listObserved = toolbox::readDir2('../DATA/expectedData');
+@listObserved = toolbox::readDir2('../../DATA/expectedData');
 is_deeply(\@listExpected,@listObserved,'Test for readDir2... just a directory');
 
 #readDir2 test with a directory name and a part of filename as arguments
-$listCom = `ls ../DATA/expectedData/RC*`;
+$listCom = `ls ../../DATA/expectedData/RC*`;
 chomp $listCom;
 @listExpected = split /\n/, $listCom;
-@listObserved = toolbox::readDir2('../DATA/expectedData','RC');
+@listObserved = toolbox::readDir2('../../DATA/expectedData','RC');
 is_deeply(\@listExpected,@listObserved,'Test for readDir2... just on filename');
 
 ########################################
