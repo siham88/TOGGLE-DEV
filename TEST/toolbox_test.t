@@ -376,12 +376,13 @@ $hashConfig =   {
 
 $testHashConfig = toolbox::readFileConf($configFile);
 $softInfos = toolbox::extractHashSoft($testHashConfig, "picardToolsCreateSequenceDictionary");
-cmp_deeply($hashConfig, $softInfos, 'toolbox::extractHashSoftPicard');
+cmp_deeply($hashConfig, $softInfos, 'toolbox::extractHashSoftPicard... with a correct software name');
     
 # Get option for a tool that doen't exist
 $testHashConfig = toolbox::readFileConf($configFile);
 $softInfos = toolbox::extractHashSoft($testHashConfig, "picarTools sortsam pair");
-cmp_deeply(undef, $softInfos, 'toolbox::extractHashSoft... picarTools sortsam pair');
+cmp_deeply(undef, $softInfos, 'toolbox::extractHashSoft... picarTools sortsam pair with a uncorrect software name');
+
 
 ########################################
 #Run command test
