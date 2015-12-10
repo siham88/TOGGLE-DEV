@@ -168,7 +168,7 @@ system($lnCommand) and die ("ERROR: $0 : Cannot copy the fasta file with the com
 my $file="individuSoft.txt";
 my $got=(-e $file)?1:0;
 my $expectedBool=1;
-is($got,$expectedBool,"Test for exportLog... exist $file?");
+is($got,$expectedBool,"toolbox::exportLog... exist $file?");
 
 # Test if the log is written in toolbox_TEST_log.o
 # Test if toolbox_TEST_log.o has been created
@@ -177,10 +177,10 @@ toolbox::exportLog($expected,1);
 
 my $file_log="toolbox_TEST_log.o";
 $got=(-e $file_log)?1:0;
-is($got,$expectedBool,"Test for exportLog... exist $file_log?");
+is($got,$expectedBool,"toolbox::exportLog... exist $file_log?");
 
 $got=`head -n1 $file_log`;
-is($got,$expected,"Test for exportLog... Log in $file_log");
+is($got,$expected,"toolbox::exportLog... Log in $file_log");
 
 
 # Test if the log is written in toolbox_TEST_log.e
@@ -189,10 +189,10 @@ $expected="WARNING:  toolbox_test.t\n";
 toolbox::exportLog($expected,2);
 my $file_error="toolbox_TEST_log.e";
 $got=(-e $file_error)?1:0;
-is($got,$expectedBool,"Test for exportLog... exist $file_error?");
+is($got,$expectedBool,"toolbox::exportLog... exist $file_error?");
 
 $got=`head -n1 $file_error`;
-is($got,$expected,"Test for exportLog... Log in $file_error");
+is($got,$expected,"toolbox::exportLog... Log in $file_error");
 
 
 ########################################
@@ -200,42 +200,42 @@ is($got,$expected,"Test for exportLog... Log in $file_error");
 ########################################
 
 #checkFile
-is (toolbox::checkFile($configFile),'1','Test for checkFile');
-#is (toolbox::checkFile('beurk.txt'),'0','Test for checkFile'); Gestion des erreurs
+is (toolbox::checkFile($configFile),'1','toolbox::checkFile');
+#is (toolbox::checkFile('beurk.txt'),'0','toolbox::checkFile'); Gestion des erreurs
 
 #existsFile
-is (toolbox::existsFile($configFile),'1','Test for existsFile... return 1');
-is (toolbox::existsFile('beurk.txt',0),'0','Test for existsFile... return 0');
+is (toolbox::existsFile($configFile),'1','toolbox::existsFile... return 1');
+is (toolbox::existsFile('beurk.txt',0),'0','toolbox::existsFile... return 0');
 
 #readFile test
-is (toolbox::readFile($configFile),'1','Test for readFile... return 1');
+is (toolbox::readFile($configFile),'1','toolbox::readFile... return 1');
 
 my $chmodCommand="chmod -r $chmodVcfFile";
 system($chmodCommand) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
-is (toolbox::readFile($chmodVcfFile),'0','Test for readFile... return 0');
+is (toolbox::readFile($chmodVcfFile),'0','toolbox::readFile... return 0');
 
 #writeFile test TODO to verify
-is (toolbox::writeFile($configFile),'1','Test for writeFile... return 1');
+is (toolbox::writeFile($configFile),'1','toolbox::writeFile... return 1');
 
 $chmodCommand="chmod -w $chmodVcfFile";
 system($chmodCommand) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
-is (toolbox::writeFile($chmodVcfFile),'0','Test for writeFile... return 0');
+is (toolbox::writeFile($chmodVcfFile),'0','toolbox::writeFile... return 0');
 
 #sizeFile test
-ok (toolbox::sizeFile($configFile) == 1,'Test for sizeFile... return 1');
-ok (toolbox::sizeFile($emptyFile) == 0,'Test for sizeFile... return 0');
+ok (toolbox::sizeFile($configFile) == 1,'toolbox::sizeFile... return 1');
+ok (toolbox::sizeFile($emptyFile) == 0,'toolbox::sizeFile... return 0');
 
 ########################################
 #Directory test
 ########################################
 
 #existsDir
-is (toolbox::existsDir('.'),'1','Test for existsDir... return 1');
-is (toolbox::existsDir('beurk',0),'0','Test for existsDir... return 0');
+is (toolbox::existsDir('.'),'1','toolbox::existsDir... return 1');
+is (toolbox::existsDir('beurk',0),'0','toolbox::existsDir... return 0');
 
 #makeDir
-is (toolbox::makeDir('test_dir'),'1','Test for makedir');
-is (toolbox::existsDir('test_dir'),'1','Test for existsDir... return 1');
+is (toolbox::makeDir('test_dir'),'1','toolbox::makedir');
+is (toolbox::existsDir('test_dir'),'1','toolbox::existsDir... return 1');
 system ("rm -Rf test_dir") and die ("\nCannot remove the test_dir for test:$!\nAborting\n");;
 
 #readDir test with a directory name as argument
@@ -243,28 +243,28 @@ my $listCom = `ls ../../DATA/expectedData/*`;
 chomp $listCom;
 my @listExpected = split /\n/, $listCom;
 my @listObserved = toolbox::readDir('../../DATA/expectedData');
-is_deeply(\@listExpected,@listObserved,'Test for readDir... just directory');
+is_deeply(\@listExpected,@listObserved,'toolbox::readDir... just directory');
 
 #readDir test with a directory name and a format as arguments
 $listCom = `ls ../../DATA/expectedData/*fastq`;
 chomp $listCom;
 @listExpected = split /\n/, $listCom;
 @listObserved = toolbox::readDir('../../DATA/expectedData','fastq');
-is_deeply(\@listExpected,@listObserved,'Test for readDir... just fastq files');
+is_deeply(\@listExpected,@listObserved,'toolbox::readDir... just fastq files');
 
 #readDir2 test with a directory name
 $listCom = `ls ../../DATA/expectedData/*`;
 chomp $listCom;
 @listExpected = split /\n/, $listCom;
 @listObserved = toolbox::readDir2('../../DATA/expectedData');
-is_deeply(\@listExpected,@listObserved,'Test for readDir2... just a directory');
+is_deeply(\@listExpected,@listObserved,'toolbox::readDir2... just a directory');
 
 #readDir2 test with a directory name and a part of filename as arguments
 $listCom = `ls ../../DATA/expectedData/RC*`;
 chomp $listCom;
 @listExpected = split /\n/, $listCom;
 @listObserved = toolbox::readDir2('../../DATA/expectedData','RC');
-is_deeply(\@listExpected,@listObserved,'Test for readDir2... just on filename');
+is_deeply(\@listExpected,@listObserved,'toolbox::readDir2... just on filename');
 
 ########################################
 #Path test
@@ -273,7 +273,7 @@ is_deeply(\@listExpected,@listObserved,'Test for readDir2... just on filename');
 #extractPath test
 my @expectedList=("toto","/home/username/");
 my @testList=toolbox::extractPath('/home/username/toto');
-is_deeply (\@expectedList,\@testList,'Test for extractPath');
+is_deeply (\@expectedList,\@testList,'toolbox::extractPath');
 
 # Extract name from path test
 is (toolbox::extractName($samFile),'RC3.BWASAMPE.sam','Test for extractName');
@@ -284,10 +284,7 @@ is (toolbox::extractName($samFile),'RC3.BWASAMPE.sam','Test for extractName');
 ##########################################
 ##checkNumberLines test with a fastq file
 my $count = (toolbox::checkNumberLines($fastqFile))/4;
-is($count,'1000',"Test for checkNumberLines... $fastqFile");
-
-#$count = toolbox::checkNumberLines($fastqFile2);
-#is($count,'1000',"Test for checkNumberLines... $fastqFile2");
+is($count,'1000',"toolbox::for checkNumberLines... $fastqFile");
 
 
 
@@ -296,15 +293,15 @@ is($count,'1000',"Test for checkNumberLines... $fastqFile");
 ########################################
 
 #checkFormatFastq
-is(toolbox::checkFormatFastq($fastqFile),'1', 'Test for checkFormatFastq');
+is(toolbox::checkFormatFastq($fastqFile),'1', 'toolbox::checkFormatFastq');
 
 #checkSamOrBamFormat
-is (toolbox::checkSamOrBamFormat($samFile),'1', 'Test for checkSamOrBamFormat... sam format');
-is (toolbox::checkSamOrBamFormat($bamFile),'2', 'Test for checkSamOrBamFormat... bam format');
+is (toolbox::checkSamOrBamFormat($samFile),'1', 'toolbox::checkSamOrBamFormat... sam format');
+is (toolbox::checkSamOrBamFormat($bamFile),'2', 'toolbox::checkSamOrBamFormat... bam format');
 
 #dnaFastaFormatValidator
-is (toolbox::checkFormatFasta($reference),'1','Test for checkFormatFasta... Format Ok');
-is (toolbox::checkFormatFasta($wrongFasta),'0','Test for checkFormatFasta... Format not Ok, warnings send');
+is (toolbox::checkFormatFasta($reference),'1','toolbox::checkFormatFasta... Format Ok');
+is (toolbox::checkFormatFasta($wrongFasta),'0','toolbox::checkFormatFasta... Format not Ok, warnings send');
 
 ########################################
 #Config file test
@@ -314,34 +311,29 @@ is (toolbox::checkFormatFasta($wrongFasta),'0','Test for checkFormatFasta... For
 my $configInfos = toolbox::readFileConf($configFile);
 
 #checking if $configInfos exists
-is (ref($configInfos),'HASH','Test for readFileConf... the reference returned is a HASH');
+is (ref($configInfos),'HASH','toolbox::readFileConf... the reference returned is a HASH');
 
 #checking how many software configs
 my @listOfSoftwares=keys (%$configInfos);#Soft are BWA and samtoolsView
-##DEBUG
-foreach my $key(@listOfSoftwares){print "$key\n";}
+##DEBUG foreach my $key(@listOfSoftwares){print "$key\n";}
 my $numberOfSoft= scalar (@listOfSoftwares); #expecting 17
 my $command='grep "^\\\$" '.$configFile.' -c';
-##DEBUG
-print "DEBUG: $0: Number of softwares returned by grep command: $command\n";
+##DEBUG print "DEBUG: $0: Number of softwares returned by grep command: $command\n";
 my $numberOfSoftExpected=`$command`;
 chomp $numberOfSoftExpected;
-ok ($numberOfSoft == $numberOfSoftExpected, 'Test for readFileConf... the number of software to configure');
+ok ($numberOfSoft == $numberOfSoftExpected, 'toolbox::readFileConf... the number of software to configure');
 
 #checking for info retrieval, directly, ie data structure
-is ($configInfos->{"samtools view pair"}{-F},'0x02','Test for readFileConf... samtools view infos retrieval');
-isnt ($configInfos->{"samToo view pair"}{-F},'0x02','Test for readFileConf... samToo view infos retrieval');
+##DEBUG print "DEBUG: $0: ".$configInfos->{"samToolsView"}{"-F"}." \n";
+is ($configInfos->{"samToolsView"}{-F},'0x02','toolbox::readFileConf... samtools view infos retrieval');
+isnt ($configInfos->{"samTooView"}{-F},'0x02','toolbox::readFileConf... samToo view infos retrieval');
 
 #checking for info extract
-my $optionLine=toolbox::extractOptions($configInfos->{"BWA aln"}," ");
-is ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','Test for extractOptions... is'); #Test as an Test form because of randomness of hash sorting, to be sure of controlling the data
+my $optionLine=toolbox::extractOptions($configInfos->{"bwaAln"}," ");
+is ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','toolbox::extractOptions... is'); #Test as an Test form because of randomness of hash sorting, to be sure of controlling the data
 
-$optionLine=toolbox::extractOptions($configInfos->{"BWA ln"}," ");
-isnt ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','Test for extractOptions... option test'); 
-
-$optionLine=toolbox::extractOptions($configInfos->{"BwA aln"}," ");
-isnt ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','Test for extractOptions... case test');
-
+$optionLine=toolbox::extractOptions($configInfos->{"bwaln"}," ");
+isnt ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','toolbox::extractOptions... option test'); 
 
 ########################################
 #addInfoHeader test
@@ -360,22 +352,22 @@ isnt ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','Test for extractOpt
 ########################################
 my $directory = "./TEST/";
 my $newDirectory = toolbox::changeDirectoryArbo($directory,'0');
-is_deeply($newDirectory, "./TEST/0_PAIRING_FILES", "Test for changeDirectoryArbo");
+is_deeply($newDirectory, "./TEST/0_PAIRING_FILES", "toolbox::changeDirectoryArbo");
 
-is(toolbox::changeDirectoryArbo($directory,'8'),undef,"Test for changeDirectoryArbo");
+is(toolbox::changeDirectoryArbo($directory,'8'),undef,"toolbox::changeDirectoryArbo");
+
 
 ########################################
 #extractHashSoft test
 ########################################
-
 # Get option for bwa index
 my $hashConfig ={
                     "-a" => "is"
                 };
 
 my $testHashConfig = toolbox::readFileConf($configFile);
-my $softInfos = toolbox::extractHashSoft($testHashConfig, "BWA index");
-cmp_deeply($hashConfig, $softInfos, 'Test for extractHashSoft... BWA');
+my $softInfos = toolbox::extractHashSoft($testHashConfig, "bwaIndex");
+cmp_deeply($hashConfig, $softInfos, 'toolbox::extractHashSoft... bwaIndex');
 
 # Get no option for picardTools createSequenceDictionary
 $hashConfig =   {
@@ -383,13 +375,13 @@ $hashConfig =   {
                 };
 
 $testHashConfig = toolbox::readFileConf($configFile);
-$softInfos = toolbox::extractHashSoft($testHashConfig, "picardTools createSequenceDictionary");
-cmp_deeply($hashConfig, $softInfos, 'Test for extractHashSoftPicard');
+$softInfos = toolbox::extractHashSoft($testHashConfig, "picardToolsCreateSequenceDictionary");
+cmp_deeply($hashConfig, $softInfos, 'toolbox::extractHashSoftPicard');
     
 # Get option for a tool that doen't exist
 $testHashConfig = toolbox::readFileConf($configFile);
 $softInfos = toolbox::extractHashSoft($testHashConfig, "picarTools sortsam pair");
-cmp_deeply(undef, $softInfos, 'Test for extractHashSoft... picarTools sortsam pair');
+cmp_deeply(undef, $softInfos, 'toolbox::extractHashSoft... picarTools sortsam pair');
 
 ########################################
 #Run command test
