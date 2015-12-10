@@ -63,6 +63,11 @@ sub launcher { #Global function for launching, will recover the command to be la
     my $hashCapability = &checkingCapability;
     
     my $runOutput;
+    
+    use Data::Dumper;
+    print Dumper($hashCapability->{"sge"});
+    print Dumper($$configInfo{"sge"});
+    
     switch (1)
     {
         case ($hashCapability->{"sge"} && $$configInfo{"sge"}){$runOutput = &sgeRun} #For SGE running
