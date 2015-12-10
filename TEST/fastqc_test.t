@@ -43,15 +43,33 @@ use lib qw(../Modules/);
 ########################################
 #use of fastqc module ok
 ########################################
-use_ok('toolbox') or exit;
-use_ok('fastqc') or exit;
-can_ok( 'fastqc','execution');
+use_ok('toolbox');
+use_ok('fastqc');
+can_ok('fastqc','execution');
 can_ok('fastqc','parse');
 
 use toolbox;
 use fastqc;
+
 toolbox::readFileConf("software.config.txt");
 
+
+
+#########################################
+#Remove files and directory created by previous test
+#########################################
+my $testingDir="../DATA-TEST/fastqcTestDir";
+my $cleaningCommand="rm -Rf $testingDir"; 
+system ($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCommand \n$!\n");
+
+my $expectedData="../../DATA/expectedData/";
+
+########################################
+#Creation of test directory
+########################################
+my $makeDirCom = "mkdir $testingDir";
+system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
+chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
 #######################################
 #Creating the IndividuSoft.txt file
@@ -65,26 +83,15 @@ system($creatingCommand) and die ("ERROR: $0 : Cannot create the individuSoft.tx
 my $cleaningCommand="rm -Rf fastqc_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCommand \n$!\n");
 
-#########################################
-#Remove the files and directory created by the previous test
-#########################################
-$cleaningCommand="rm -Rf ../DATA-TEST/fastqcTestDir";
-system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous test dir with the command $cleaningCommand \n$!\n");
 
-########################################
-#Creation of test directory
-########################################
-my $testingDir="../DATA-TEST/fastqcTestDir";
-my $makeDirCom = "mkdir $testingDir";
-system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
 
 ########################################
 #Input files
 ########################################
-my $originalFastqcFile = "../DATA/expectedData/RC3_2.fastq";     # fastq file 
-my $fastqcFile = "$testingDir/RC3_2.fastq";                             # fastq file for test
-my $fastqcFileCopyCom = "cp $originalFastqcFile $fastqcFile";           # command to copy the original fastq file into the test directory
-system ($fastqcFileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalFastqcFile in the test directory with the command $fastqcFileCopyCom\n$!\n");    # RUN the copy command
+my $fastqcFile = "RC3_2.fastq";                             # fastq file for test
+my $originalFastqcFile = $expectedData."RC3_2.fastq";     # fastq file 
+my $lnCmd = "ln -s $originalFastqcFile .";           # command to copy the original fastq file into the test directory
+system ($lnCmd) and die ("ERROR: $0 : Cannot link the  fastq file $originalFastqcFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
 ##########################################
 #Fastqc exec test
