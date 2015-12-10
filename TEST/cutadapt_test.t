@@ -49,50 +49,53 @@ use toolbox;
 use cutadapt;
 
 
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"cutadapt\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCommand\n$!\n");
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf cutadpt_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCommand \n$!\n");
-
 #########################################
-#Remove the files and directory created by the previous test
+#Remove files and directory created by previous test
 #########################################
-$cleaningCommand="rm -Rf ../DATA-TEST/cutadaptTestDir";
-system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous test dir with the command $cleaningCommand \n$!\n");
+my $testingDir="../DATA-TEST/cutadaptTestDir";
+my $cleaningCmd="rm -Rf $testingDir"; 
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+my $expectedData="../../DATA/expectedData/";
 
 ########################################
 #Creation of test directory
 ########################################
-my $testingDir="../DATA-TEST/cutadaptTestDir";
-my $makeDirCom = "mkdir $testingDir";
-system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
+my $makeDirCmd = "mkdir $testingDir";
+system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
+chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+
+#######################################
+#Creating the IndividuSoft.txt file
+#######################################
+my $creatingCmd="echo \"cutadapt\nTEST\" > individuSoft.txt";
+system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
+
+#######################################
+#Cleaning the logs for the test
+#######################################
+$cleaningCmd="rm -Rf fastqc_TEST_log.*";
+system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
 
 ########################################
 #Input files
 ########################################
-my $originalFastqFile = "../DATA/expectedData/RC3_2.fastq";     # fastq file
-my $fastqFile = "$testingDir/RC3_2.fastq";                      # fastq file for test
-my $FileCopyCom = "cp $originalFastqFile $fastqFile";          # command to copy the original fastq file into the test directory
-system ($FileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalFastqFile in the test directory with the command $FileCopyCom\n$!\n");    # RUN the copy command
+my $fastqFile = "RC3_2.fastq";                      # fastq file for test
+my $originalFastqFile = $expectedData."RC3_2.fastq";     # fastq file
+my $lnCmd = "ln -s $originalFastqFile .";          # command to copy the original fastq file into the test directory
+system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalFastqFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
-my $originalAdaptatorFile = "../DATA/expectedData/adaptators.txt";     # adaptator file
-my $adaptatorFile = "$testingDir/adaptators.txt";                         # adaptator file for test
-$FileCopyCom = "cp $originalAdaptatorFile $adaptatorFile";             # command to copy the original adaptator file into the test directory
-system ($FileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalAdaptatorFile in the test directory with the command $FileCopyCom\n$!\n");    # RUN the copy command
+my $adaptatorFile = "adaptators.txt";                         # adaptator file for test
+my $originalAdaptatorFile = $expectedData.$adaptatorFile;     # adaptator file
+$lnCmd = "ln -s $originalAdaptatorFile .";             # command to copy the original adaptator file into the test directory
+system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalAdaptatorFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
-#my $originalConfFile = "../DATA/expectedData/cutadapt.conf";            # fastqc file
-my $confFile = "$testingDir/cutadapt.conf";                             # fastqc file for test
-#$FileCopyCom = "cp $originalConfFile $confFile";           # command to copy the original fastqc file into the test directory
-#system ($FileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalConfFile in the test directory with the command $FileCopyCom\n$!\n");    # RUN the copy command
+my $confFile = "cutadapt.conf";                             # fastqc file for test
+my $originalConfFile = $expectedData.$confFile;
+$lnCmd = "ln -s $originalConfFile .";  # command to copy the original fastqc file into the test directory
+system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalConfFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
-my $fileOut = $testingDir."/RC3_2.CUTADAPT.fastq";                                                  # Output file without adaptators sequences
+my $fileOut = "RC3_2.CUTADAPT.fastq";                                                  # Output file without adaptators sequences
 ######################
 
 
@@ -100,23 +103,23 @@ my $fileOut = $testingDir."/RC3_2.CUTADAPT.fastq";                              
 ### Test of cutadapt::createConfFile ###
 my %optionsRef = ("-q" => "20","-O" => "10","-m" => "35");                                          # Hash containing informations to put into the configuration file
 my $optionref = \%optionsRef;                                                                       # Ref of the hash
-is ((cutadapt::createConfFile($adaptatorFile, $confFile, $optionref)),1, 'cutadapt::createConfFile');   # TEST IF FONCTION WORKS
+is ((cutadapt::createConfFile($confFile, $optionref)),1, 'cutadapt::createConfFile');   # TEST IF FONCTION WORKS
 #my $refConf = "../DATA/RC1/2_CUTADAPT/cutadapt.conf";                                               # configuration file for checking
 my $md5sumRefConf = "5d5257635d148cca42caf5a23ec68c82";                                             # structure of the ref configuration file
 my $md5sumFileConf = `md5sum $confFile`;                                                            # structure of the test configuration file
 my @withoutName = split (" ", $md5sumFileConf);                                                     # to separate the structure and the name of file
 $md5sumFileConf = $withoutName[0];                                                                  # just to have the md5sum result
-is_deeply ($md5sumFileConf, $md5sumRefConf, "Cutadapt configuration file checkout");                     # TEST IF THE STRUCTURE OF THE CONFIGURATION FILE IS GOOD
+is_deeply ($md5sumFileConf, $md5sumRefConf, "cutadapt::createConfFile... Cutadapt configuration file checkout");                     # TEST IF THE STRUCTURE OF THE CONFIGURATION FILE IS GOOD
 ########################################
 
 
 ### Test of cutadapt::exec ###
-is ((cutadapt::execution($fastqFile, $confFile, $fileOut)),1, 'cutadapt::execution');                      # TEST IF FONCTION WORKS
+is ((cutadapt::execution($confFile, $fastqFile, $fileOut)),1, 'cutadapt::execution');                      # TEST IF FONCTION WORKS
 my $md5sumOfRefOut = "64bb8aebb3afe426548bd822bd57e5d2";                                            # structure of the ref file for checking
 my $md5sumOfFileOut = `md5sum $fileOut`;                                                            # structure of the test file for checking
 my @nameless = split (" ", $md5sumOfFileOut);                                                       # to separate the structure and the name of file
 $md5sumOfFileOut = $nameless[0];                                                                    # just to have the md5sum result
-is_deeply ($md5sumOfFileOut, $md5sumOfRefOut, "Cutadapt out file checkout");                             # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
+is_deeply ($md5sumOfFileOut, $md5sumOfRefOut, "cutadapt::execution... Cutadapt out file checkout");                             # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
 ##############################
 
 exit;
