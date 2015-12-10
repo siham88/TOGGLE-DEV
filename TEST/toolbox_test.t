@@ -30,12 +30,11 @@
 #
 ###################################################################################################################################
 
-#Will test if toolbox works correctly
-#Modified version by Marilyne version3
-#test du 13/08/14
+#Will test if toolbox works correctlyby Marilyne version3
 
 use strict;                                                                                                 #
 use warnings;
+
 use Test::More 'no_plan'; 
 use Data::Dumper;
 use Test::Deep;
@@ -84,8 +83,8 @@ use toolbox;
 #Remove files and directory created by previous test
 #########################################
 my $testingDir="../DATA-TEST/toolboxTestDir";
-my $cleaningCommand="rm -Rf ../DATA-TEST/$testingDir"; 
-system ("rm -Rf $testingDir") and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCommand \n$!\n");
+my $cleaningCmd="rm -Rf $testingDir"; 
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 my $expectedData="../../DATA/expectedData/";
 my $configFile="../../TEST/software.config.txt";
@@ -93,22 +92,22 @@ my $configFile="../../TEST/software.config.txt";
 ########################################
 #Test directory creation
 ########################################
-my $makeDirCom = "mkdir $testingDir";
-system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
+my $makeDirCmd = "mkdir $testingDir";
+system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
 chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
 #######################################
 #Creating the IndividuSoft.txt file
 #######################################
-my $creatingCommand="echo \"toolbox\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
+my $creatingCmd="echo \"toolbox\nTEST\" > individuSoft.txt";
+system($creatingCmd) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCmd \n$!\n");
 
 
 #######################################
 #Cleaning previous tests logs
 #######################################
-$cleaningCommand="rm -Rf toolbox_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
+$cleaningCmd="rm -Rf toolbox_TEST_log.*";
+system($cleaningCmd) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCmd \n$!\n");
 
 
 #######################################
