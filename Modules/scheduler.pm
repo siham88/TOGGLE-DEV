@@ -37,8 +37,103 @@ use warnings;
 use localConfig;
 
 use toolbox;
+use Switch;
+
+##################################
+#
+#LAUNCHING
+#
+##################################
+
+our ($commandLine, $requirement, $sample, $configInfo);
+
+sub launcher { #Global function for launching, will recover the command to be launch and will re-dispatch to normal or other scheduler
+    
+    ($commandLine,$requirement, $sample, $configInfo) = @_;
+    
+    my $hashCapability = &checkingCapability;
+    my $runOutput;
+    switch (1)
+    {
+        case ($hashCapability->{"sge"} && $configInfo->{"sge"}){$runOutput = &sgeRun} #For SGE running
+        case ($hashCapability->{"slurm"} && $configInfo->{"slurm"}){$runOutput = &slurmRun} #For SLURM running
+        
+        #If no scheduler available or configurated in the config info file, let's run it in a normal way
+        else {$runOutput = &normalRun};
+    }
+    
+    return $runOutput;
+}
+
+sub checkingCapability { #Will test the capacity of launching using various schedulers on the current system
+    
+    my %capabilityValue;
+    
+    #SGE test
+    $capabilityValue{"sge"} = `qsub -help 2>/dev/null | grep usage`; #Will provide a not-empty output if SGE is installed
+    chomp $capabilityValue{"sge"};
+    
+    #SLURM test
+    $capabilityValue{"slurm"}=""; #Will provide a not-empty output if SLURM is installed
+    chomp $capabilityValue{"slurm"};
+    
+    
+    #Returning infos as a reference
+    return \%capabilityValue;
+}
 
 
+sub normalRun { #For running in normal mode, ie no scheduler
+    
+    #BASED ON TOOLBOX::RUN, but will not stop the whole pipeline for an error
+    use Capture::Tiny qw(capture);
+        
+    exportLog("INFOS: scheduler::normalRun : $commandLine\n",1);
+    
+    ##Execute the command
+    my ($result,$stderr)=capture {` $commandLine `};
+    
+    ##Log export according to the error
+    if ($?==0)
+    {
+	##DEBUG
+	exportLog("INFOS: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\n",1);
+	return 1;
+    }
+    else
+    {
+	##DEBUG
+	exportLog("WARNING: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\nThe $sample data set has provoked and error, and was not analyzed anymore.\n",2);
+	return 2;
+    }
+    
+}
 
+sub sgeRun { #For SGE cluster, running using qsub
+    
+    my $sgeOptionsHash=toolbox::extractHashSoft($configInfo,"sge");
+    my $sgeOptions=toolbox::extractOptions($sgeOptionsHash);
+}
+
+sub slurmRun{ #for SLURM cluster, running using sbatch
+    
+    my $slurmOptionsHash=toolbox::extractHashSoft($configInfo,"slurm");
+    my $slurmOptions=toolbox::extractOptions($slurmOptionsHash);
+    
+}
+
+##################################
+#
+#WAITING for schedulers ONLY!
+#
+##################################
+
+sub sgeWait {
+    
+}
+
+sub slurmWait{
+    
+}
 
 1;
