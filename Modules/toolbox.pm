@@ -1168,10 +1168,10 @@ sub checkVcfFormat
     open(my $inputHandle, "<",$file) or toolbox::exportLog("ERROR: toolbox::checkVcfFormat : Cannot open the file $file\n$!\n",0);
     
     # if the input file is a gz file
-     if($file =~ m/\.gz$/)
-	{
+    if($file =~ m/\.gz$/)
+    {
 	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: toolbox::checkVcfFormat : Cannot open the gz file $file: $GunzipError\n",0);
-	}
+    }
     while (my $line=<$inputHandle>)
     {
 	chomp $line;
