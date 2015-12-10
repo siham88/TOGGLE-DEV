@@ -65,7 +65,7 @@ sub launcher { #Global function for launching, will recover the command to be la
     use Data::Dumper;
     print Dumper($hashCapability);
     print $hashCapability->{"sge"},"\n";
-    print Dumper ($configInfo),"\n";
+    print Dumper ($$configInfo{"sge"}),"\n";
     
     my $runOutput;
     switch (1)
