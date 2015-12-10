@@ -80,10 +80,8 @@ system($creatingCommand) and die ("ERROR: $0 : Cannot create the individuSoft.tx
 #######################################
 #Cleaning the logs for the test
 #######################################
-my $cleaningCommand="rm -Rf fastqc_TEST_log.*";
+$cleaningCommand="rm -Rf fastqc_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCommand \n$!\n");
-
-
 
 ########################################
 #Input files
@@ -96,24 +94,23 @@ system ($lnCmd) and die ("ERROR: $0 : Cannot link the  fastq file $originalFastq
 ##########################################
 #Fastqc exec test
 ##########################################
-my $executionTest = "$testingDir/execution";
-$makeDirCom = "mkdir $executionTest";
-system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
+my $fastqcDir = "fastqcOut";
+my $makeDirCmd = "mkdir $fastqcDir";
+system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
+is(fastqc::execution($fastqcFile,$fastqcDir),1,'fastqc::execution');     # test if fastqc::execution works
 
-is(fastqc::execution($fastqcFile,$executionTest),1,'Test for fastqc::execution');     # test if fastqc::execution works
-
-my @expectedOutput = ('../DATA-TEST/fastqcTestDir/execution/RC3_2_fastqc.zip',
+my @expectedOutput = ('fastqcOut/RC3_2_fastqc.zip',
                       '',
-                      '../DATA-TEST/fastqcTestDir/execution/RC3_2_fastqc:',
+                      'fastqcOut/RC3_2_fastqc:',
                       'fastqc_data.txt',
                       'fastqc_report.html',
                       'Icons',
                       'Images',
                       'summary.txt');
 
-my @observedOutput = toolbox::readDir($executionTest);
+my @observedOutput = toolbox::readDir($fastqcDir);
 ##DEBUG print "ICI :\n"; print Dumper(@observedOutput);
-is_deeply(@observedOutput,\@expectedOutput,'Test for output file of fastqc::execution');        # test if the observed output of fastqc::execution is ok
+is_deeply(@observedOutput,\@expectedOutput,'fastqc::execution');        # test if the observed output of fastqc::execution is ok
 
 #########################################
 #Fastqc  parse test
@@ -127,8 +124,6 @@ my $expectedOutput= {
             'Sequence length' => '38-101',      
             '%GC' => '42'};
 
-my $observedoutput=fastqc::parse($executionTest);      # test if fastqc::parse works and will give the observed output in the same time
+my $observedoutput=fastqc::parse($fastqcDir);      # test if fastqc::parse works and will give the observed output in the same time
 ##DEBUG print Dumper($observedoutput);
-is_deeply($observedoutput,$expectedOutput,'Test for fastqc::parse and it\'s output');      # test if the observed output of fastqc::parse is ok
-
-exit;
+is_deeply($observedoutput,$expectedOutput,'fastqc::parse');      # test if the observed output of fastqc::parse is ok
