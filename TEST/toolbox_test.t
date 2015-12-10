@@ -117,47 +117,47 @@ system($cleaningCmd) and die ("ERROR: $0: Cannot clean the previous log files fo
 #Fastq file
 my $fastqFile="RC3_1.fastq";
 my $originalFastqFile=$expectedData."RC3_1.fastq";
-my $lnCommand="ln -s $originalFastqFile .";
-system($lnCommand) and die ("ERROR: $0 : Cannot link the fastq file with the command $lnCommand\n$!\n"); 
+my $lnCmd="ln -s $originalFastqFile .";
+system($lnCmd) and die ("ERROR: $0 : Cannot link the fastq file with the command $lnCmd\n$!\n"); 
 
 #Sam file
 my $samFile="RC3.BWASAMPE.sam";
 my $originalSamFile=$expectedData.$samFile;
-$lnCommand="ln -s $originalSamFile .";
-system($lnCommand) and die ("ERROR: $0 : Cannot link the sam file with the command $lnCommand\n$!\n"); 
+$lnCmd="ln -s $originalSamFile .";
+system($lnCmd) and die ("ERROR: $0 : Cannot link the sam file with the command $lnCmd\n$!\n"); 
 
 #Bam file
 my $bamFile="RC3.PICARDTOOLSSORT.bam";
 my $originalBamFile=$expectedData.$bamFile;
-$lnCommand="ln -s $originalBamFile .";
-system($lnCommand) and die ("ERROR: $0 : Cannot link the bam file with the command $lnCommand\n$!\n"); 
+$lnCmd="ln -s $originalBamFile .";
+system($lnCmd) and die ("ERROR: $0 : Cannot link the bam file with the command $lnCmd\n$!\n"); 
 
 #VCF file
 my $vcfFile="GATKHAPLOTYPECALLER.vcf";
 my $OriginalVcfFile=$expectedData.$vcfFile;
-$lnCommand="ln -s $OriginalVcfFile .";
-system($lnCommand) and die ("ERROR: $0 : Cannot link the vcf file with the command $lnCommand\n$!\n"); 
+$lnCmd="ln -s $OriginalVcfFile .";
+system($lnCmd) and die ("ERROR: $0 : Cannot link the vcf file with the command $lnCmd\n$!\n"); 
 
 #VCF file non readable
 my $chmodVcfFile="test-nonreadrigth.vcf";
-my $copyCommand="cp $OriginalVcfFile test-nonreadrigth.vcf";
-system($copyCommand) and die ("ERROR: $0 : Cannot copy the vcf file with the command $copyCommand\n$!\n"); 
+my $copyCmd="cp $OriginalVcfFile test-nonreadrigth.vcf";
+system($copyCmd) and die ("ERROR: $0 : Cannot copy the vcf file with the command $copyCmd\n$!\n"); 
 
 #File empty
 my $emptyFile="empty-file.vcf";
-my $createFileCommand="touch $emptyFile";
-system($createFileCommand) and die ("ERROR: $0 : Cannot create the empty file with the command $createFileCommand\n$!\n"); +
+my $createFileCmd="touch $emptyFile";
+system($createFileCmd) and die ("ERROR: $0 : Cannot create the empty file with the command $createFileCmd\n$!\n"); +
 
 #Fasta files
 my $reference = "correctReference.fasta";
 my $originalReference = $expectedData.$reference;
-$lnCommand=" ln -s $originalReference .";
-system($lnCommand) and die ("ERROR: $0 : Cannot copy the fasta file with the command $lnCommand\n$!\n");
+$lnCmd=" ln -s $originalReference .";
+system($lnCmd) and die ("ERROR: $0 : Cannot copy the fasta file with the command $lnCmd\n$!\n");
 
 my $wrongFasta = "wrongReference.fasta";
 my $originalWrongFasta = $expectedData.$wrongFasta;
-$lnCommand=" cp $originalWrongFasta $wrongFasta";
-system($lnCommand) and die ("ERROR: $0 : Cannot copy the fasta file with the command $lnCommand\n$!\n");
+$lnCmd=" cp $originalWrongFasta $wrongFasta";
+system($lnCmd) and die ("ERROR: $0 : Cannot copy the fasta file with the command $lnCmd\n$!\n");
 
 
 ########################################
@@ -209,15 +209,15 @@ is (toolbox::existsFile('beurk.txt',0),'0','toolbox::existsFile... return 0');
 #readFile test
 is (toolbox::readFile($configFile),'1','toolbox::readFile... return 1');
 
-my $chmodCommand="chmod -r $chmodVcfFile";
-system($chmodCommand) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
+my $chmodCmd="chmod -r $chmodVcfFile";
+system($chmodCmd) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
 is (toolbox::readFile($chmodVcfFile),'0','toolbox::readFile... return 0');
 
 #writeFile test TODO to verify
 is (toolbox::writeFile($configFile),'1','toolbox::writeFile... return 1');
 
-$chmodCommand="chmod -w $chmodVcfFile";
-system($chmodCommand) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
+$chmodCmd="chmod -w $chmodVcfFile";
+system($chmodCmd) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
 is (toolbox::writeFile($chmodVcfFile),'0','toolbox::writeFile... return 0');
 
 #sizeFile test
@@ -395,7 +395,7 @@ ok ($returnValue== 1, 'toolbox::toolbox::run return value');
 #testing correct behaviour
 my $date=`date +%D`; # The previous test will print the date in the log, format MM/DD/YYYY
 chomp $date;
-my $endOfLog=`tail -n 1 log.txt `; #The last line of log is always "Command Done", so pick up the two last and keep the n-1 line
+my $endOfLog=`tail -n 1 log.txt `; #The last line of log is always "Cmd Done", so pick up the two last and keep the n-1 line
 chomp $endOfLog;
 ok($date eq $endOfLog,'toolbox::run command behaviour');
 
