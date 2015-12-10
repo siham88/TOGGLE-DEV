@@ -318,10 +318,12 @@ is (ref($configInfos),'HASH','Test for readFileConf... the reference returned is
 
 #checking how many software configs
 my @listOfSoftwares=keys (%$configInfos);#Soft are BWA and samtoolsView
-##DEBUG foreach my $key(@listOfSoftwares){print "$key\n";}
+##DEBUG
+foreach my $key(@listOfSoftwares){print "$key\n";}
 my $numberOfSoft= scalar (@listOfSoftwares); #expecting 17
 my $command='grep "^\\\$" '.$configFile.' -c';
-##DEBUG print "DEBUG: $0: Number of softwares returned by grep command: $command\n";
+##DEBUG
+print "DEBUG: $0: Number of softwares returned by grep command: $command\n";
 my $numberOfSoftExpected=`$command`;
 chomp $numberOfSoftExpected;
 ok ($numberOfSoft == $numberOfSoftExpected, 'Test for readFileConf... the number of software to configure');
