@@ -51,9 +51,6 @@ can_ok('fastqc','parse');
 use toolbox;
 use fastqc;
 
-toolbox::readFileConf("software.config.txt");
-
-
 
 #########################################
 #Remove files and directory created by previous test
