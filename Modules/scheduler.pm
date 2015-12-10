@@ -61,6 +61,11 @@ sub launcher { #Global function for launching, will recover the command to be la
     chomp $sample;
     
     my $hashCapability = &checkingCapability;
+    
+    use Data::Dumper;
+    print Dumper($hashCapability);
+    print $hashCapability->{"sge"},"\n";
+    
     my $runOutput;
     switch (1)
     {
