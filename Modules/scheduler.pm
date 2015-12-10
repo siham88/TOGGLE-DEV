@@ -71,8 +71,10 @@ sub launcher { #Global function for launching, will recover the command to be la
         else {$runOutput = &normalRun};
     }
     
-    if ($runOutput == 0 && $requirement == 1) {#The job has to succeed either it will kill all other jobs
+    if ($runOutput == 0 && $requirement == 0) {#The job has to succeed either it will kill all other jobs
         toolbox::exportLog("WARNING: scheduler::launcher on $sample: ".$commandLine."\nThe job cannot be achieved and is mandatory, thus the whole analysis is stop\n",0);
+    
+    return 0;
     }
     
     return $runOutput;
@@ -101,7 +103,7 @@ sub normalRun { #For running in normal mode, ie no scheduler
     #BASED ON TOOLBOX::RUN, but will not stop the whole pipeline for an error
     use Capture::Tiny qw(capture);
         
-    exportLog("INFOS: scheduler::normalRun : $commandLine\n",1);
+    toolbox::exportLog("INFOS: scheduler::normalRun : $commandLine\n",1);
     
     ##Execute the command
     my ($result,$stderr)=capture {` $commandLine `};
