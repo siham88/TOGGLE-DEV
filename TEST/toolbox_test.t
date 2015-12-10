@@ -391,19 +391,19 @@ cmp_deeply(undef, $softInfos, 'toolbox::extractHashSoft... picarTools sortsam pa
 #testing rendering ie return 1
 my $testCom="date +%D >> log.txt"; # print the date in the log, format MM/DD/YYYY
 my $returnValue=toolbox::run($testCom);
-ok ($returnValue== 1, 'Test for toolbox::run return value');
+ok ($returnValue== 1, 'toolbox::toolbox::run return value');
 
 #testing correct behaviour
 my $date=`date +%D`; # The previous test will print the date in the log, format MM/DD/YYYY
 chomp $date;
 my $endOfLog=`tail -n 1 log.txt `; #The last line of log is always "Command Done", so pick up the two last and keep the n-1 line
 chomp $endOfLog;
-ok($date eq $endOfLog,'Test for toolbox::run command behaviour');
+ok($date eq $endOfLog,'toolbox::run command behaviour');
 
 ########################################
 #checkVcfFormat test TODO add test negatif
 ########################################
-is (toolbox::checkVcfFormat($vcfFile),'1','Test for checkVcfFormat... vcf file');
+is (toolbox::checkVcfFormat($vcfFile),'1','toolbox::checkVcfFormat... vcf file');
 #isnt (toolbox::checkVcfFormat($samFile),'1','Test for checkVcfFormat... sam file');
 
 
