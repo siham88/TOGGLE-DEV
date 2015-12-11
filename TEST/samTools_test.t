@@ -122,24 +122,22 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsFaidx... Ok for the conten
 ################################################################################################
 is(samTools::samToolsIndex($bamFile),1,'samTools::samToolsIndex... running');
 
-
-
 ###Checking the correct structure for the output file using md5sum
 $expectedMD5sum = "29bed7c8c70c24cd84a439d3fc473474";
 $observedMD5sum=`md5sum $bamFile.bai`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'Ok for the content of the samtools index output structure');
+is($observedMD5sum,$expectedMD5sum,'samTools::samToolsIndex... Ok for the content of the samtools index output structure');
 
-exit;
+
 ################################################################################################
 ##Samtools view
 ################################################################################################
-my $bamFileOut="$testingDir/RC3.SAMTOOLSVIEW.bam";
+my $bamFileOut="RC3.SAMTOOLSVIEW.bam";
 
 my %optionsRef = ("-h" => '', "-b" => '', "-F" => "0*02");
 my $optionRef = \%optionsRef; 
-is(samTools::samToolsView($bamFile, $bamFileOut, $optionRef),1,'Ok for samToolsView running');
+is(samTools::samToolsView($bamFile, $bamFileOut, $optionRef),1,'samTools::samToolsView... Ok for samToolsView running');
 
 
 ###Checking the correct structure for the output file using md5sum
@@ -147,9 +145,9 @@ $expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
 $observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'Ok for the content of the samtools view output structure');
+is($observedMD5sum,$expectedMD5sum,'samTools::samToolsView...Ok for the content of the samtools view output structure');
 
-
+exit; 
 ################################################################################################
 ##Samtools sort
 ################################################################################################
