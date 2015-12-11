@@ -31,18 +31,17 @@
 ###################################################################################################################################
 
 #Will test if picardsTools module works correctly
-
 use strict;
 use warnings;
 
-use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
+use Test::More 'no_plan'; 
 use Test::Deep;
 use Data::Dumper;
 use FindBin qw($Bin);
 use lib qw(../Modules/);
 
 ########################################
-#use of samtools modules ok
+#use of picardTools modules ok
 ########################################
 use_ok('toolbox') or exit;
 use_ok('picardTools') or exit;
@@ -53,42 +52,46 @@ can_ok( 'picardTools','picardToolsSortSam');
 use toolbox;
 use picardTools;
 
-toolbox::readFileConf("software.config.txt");
-
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"picardTools\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCommand\n$!\n");
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf picardTools_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCommand \n$!\n");
+my $configInfos = toolbox::readFileConf("software.config.txt");
 
 #########################################
-#Remove the files and directory created by the previous test
+#Remove files and directory created by previous test
 #########################################
-$cleaningCommand="rm -Rf ../DATA-TEST/picardtoolsTestDir";
-system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous test dir with the command $cleaningCommand \n$!\n");
+my $testingDir="../DATA-TEST/picardtoolsTestDir";
+my $cleaningCmd="rm -Rf $testingDir"; 
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+my $expectedData="../../DATA/expectedData/";
 
 ########################################
 #Creation of test directory
 ########################################
-my $testingDir="../DATA-TEST/picardtoolsTestDir";
-my $makeDirCom = "mkdir $testingDir";
-system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
+my $makeDirCmd = "mkdir $testingDir";
+system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
+chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+
+#######################################
+#Creating the IndividuSoft.txt file
+#######################################
+my $creatingCmd="echo \"picardtools\nTEST\" > individuSoft.txt";
+system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
+
+#######################################
+#Cleaning the logs for the test
+#######################################
+$cleaningCmd="rm -Rf picardtools_TEST_log.*";
+system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
 
 ##########################################
 #picardToolsCreateSequenceDictionary test
 ##########################################
-### Input files
-my $originalRefFile = "../DATA/expectedData/Reference.fasta";     # Ref fasta file 
-my $refFile = "$testingDir/Reference.fasta";         # Ref fasta file for test
-my $refFileCopyCom = "cp $originalRefFile $refFile"; # command to copy the original Ref fasta file into the test directory
-system ($refFileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $refFileCopyCom\n$!\n");    # RUN the copy command
 
+my $refFile = "Reference.fasta";  
+my $originalRefFile = $expectedData."/".$refFile;    
+
+my $lnCmd = "ln -s $originalRefFile ."; # command to copy the original Ref fasta file into the test directory
+system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
+exit;
 my $refFileDict = "$testingDir/Reference.dict";      # output of this module
 
 ### TEST OF FUNCTION
@@ -204,3 +207,9 @@ like($observedDup, qr/## METRICS CLASS/, 'Test for duplicates file of picardTool
 
 
 exit;
+
+# AF
+#PicardToolsValidateSamFile
+#PicardToolsCleanSam
+#PicardToolsSamFormatConverter
+#PicardToolsAddOrReplaceGroup
