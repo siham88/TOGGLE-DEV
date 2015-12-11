@@ -39,7 +39,6 @@ use Data::Dumper;
 
 use lib qw(../Modules/);
 
-my $configFile='software.config.txt';
 
 ########################################
 #use of pairing module ok
