@@ -97,7 +97,7 @@ system($lnCmd) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile1 for 
 
 my $fastqFile2="RC3_2.REPAIRING.fastq";
 my $originalFastqFile2=$expectedData."/".$fastqFile2;
-my $lnCmd="ln -s $originalFastqFile2 .";
+$lnCmd="ln -s $originalFastqFile2 .";
 system($lnCmd) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile2 for test with the command $lnCmd \n$!\n");    #The sequences are copied for testing
 
 my $forwardSaiFileIn="RC3_1.BWAALN.sai";
@@ -125,7 +125,7 @@ e4fdc0af9540ee8365e7e324fc5c0cc3  Reference.fasta.bwt
 '; #Expected values for the files produced by the bwa index
 my $observedMD5sum=`md5sum Reference.fasta.*`;#md5sum values observed for the current files produced
 is($observedMD5sum,$expectedMD5sum,'bwa::bwaIndex... Test for the content of the bwa index output');
-exit:
+exit;
 
 #######################################################################################################
 ###Test for bwa Aln running
@@ -139,7 +139,7 @@ is (bwa::bwaAln($fastaRef,$fastqFile2,$reverseSaiFileIn,$optionsHachees),'1',"bw
 @expectedOutput=('./RC3_1.BWAALN.sai','./RC3_1.REPAIRING.fastq','./RC3_2.BWAALN.sai','./RC3_2.REPAIRING.fastq','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
 @observedOutput=toolbox::readDir($testingDir);
 
-is_deeply(@observedOut,\@expectedOutput,'Test for bwa aln output files');
+is_deeply(@observedOutput,\@expectedOutput,'Test for bwa aln output files');
 
 ###Test for correct file value of bwa aln using a md5sum - BE CAREFUL, the sum changes based on the version of BWA!!
 TODO: {
