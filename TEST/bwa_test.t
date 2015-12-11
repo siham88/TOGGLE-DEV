@@ -168,8 +168,6 @@ my $grepResult=`grep -c "XT:A:U" RC3.BWASAMPE.sam`;
 chomp $grepResult;
 is($grepResult,1704,'Test for the result of bwa sampe');
 
-######Remove the file created
-#unlink ('../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam');
 
 ####################################################################################################################
 #####Test for bwa Samse
@@ -197,9 +195,6 @@ $grepResult= `grep -c "XT:A:U" RC3.BWASAMSE.sam`;
 chomp $grepResult;
 is($grepResult,1,'bwa::bwaSamse... Test for the content result of bwa samse');
 
-######Remove the file created
-#unlink('../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam','../DATA-TEST/bwaTestDir/RC3_1.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3_2.BWAALN.sai');
-
 exit;
 
 ########################################################################################################
@@ -215,35 +210,11 @@ my @outPut=toolbox::readDir(".");
 is_deeply(@outPut,\@expectedOutput,'bwa::bwaMem... Test for bwa mem single output files');
 
 ##Output value test
-
 $grepResult= `grep -c 'LOC' RC3.BWASAMPE.sam`;
 chomp $grepResult;
 is($grepResult,717,'bwa::bwaMem... Test for the result of bwa mem single');
 
-####Remove the file created
-unlink('RC3.BWASAMPE.sam','RC3_1.BWAALN.sai','RC3_2.BWAALN.sai');
-
-###################################################################################################################
-####Test for bwa mem paired
-#######################################################################################################
-
-## Running test
-#is (bwa::bwaMem($sampeFileOut,$fastaRef,$fastqFile1,$fastqFile2,"truc"),'1',"Test for bwa mem running paired");
-
-#### Verify if output are correct for mem paired
-#@expectedOutput=('../DATA-TEST/bwaTestDir/RC3_1.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3_2.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam','../DATA-TEST/bwaTestDir/Reference.fasta','../DATA-TEST/bwaTestDir/Reference.fasta.amb','../DATA-TEST/bwaTestDir/Reference.fasta.ann','../DATA-TEST/bwaTestDir/Reference.fasta.bwt','../DATA-TEST/bwaTestDir/Reference.fasta.pac','../DATA-TEST/bwaTestDir/Reference.fasta.sa');
-#@outPut=toolbox::readDir($testingDir);
-
-#print Dumper(\@outPut);
-
-#is_deeply(@outPut,\@expectedOutput,'Test for bwa mem paired output files');
-
-##Output value test
-#$grepResult= `grep -c 'LOC' ../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam`;
-#homp $grepResult;
-#is($grepResult,1436,'Test for the result of bwa mem paired');
-
 exit;
 
-
+### ADD BWA MEM PAIRED TEST
 
