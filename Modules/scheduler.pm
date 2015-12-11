@@ -162,12 +162,12 @@ sub sgeRun { #For SGE cluster, running using qsub
     
     my $runningNodeCommand="qstat | grep $currentJID";
     my $runningNode="";
-    while ($runningNode eq "") #If the job is not yet launched, there is no node affected, $runningMode is empty
+    while ($runningNode ne "r") #If the job is not yet launched, there is no node affected, $runningMode is empty
     {
       sleep 5;#Waiting for the job to be launched
       $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
       chomp $runningNode;
-      my @runningFields = split / +/,$runningNode; #To obtain the correct field
+      my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
       next if $runningFields[4] ne "r"; # not running
       $runningNode = $runningFields[7];
       $runningNode =~ s/.+@//;#removing queue name providing only node name
@@ -231,11 +231,19 @@ sub sgeWait {
     toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tNode\tExitStatus\n-------------------------------",1);
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
-      my $qacctCommand = "qacct -j ".$jobHash{$individual};
+      my $qacctCommand = "qacct -j ".$jobHash{$individual}." 2>&1";
       my $qacctOutput = `$qacctCommand`;
+      my $outputLine;
       chomp $qacctOutput;
+      if ($qacctOutput =~ "-bash: qacct")
+      {
+        #IF qacct cannot be run on the node
+        $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
+        toolbox::exportLog($outputLine,1);
+        next;
+      }
       my @linesQacct = split /\n/, $qacctOutput;
-      my $outputLine = $individual."\t".$jobHash{$individual}."\t";
+      $outputLine = $individual."\t".$jobHash{$individual}."\t";
       while (@linesQacct) #Parsing the qacct output
       {
         my $currentLine = shift @linesQacct;
