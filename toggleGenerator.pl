@@ -435,7 +435,7 @@ if ($orderBefore1000)
     {
       #Have to wait that all jobs are finished
       my $waitOutput = scheduler::waiter($jobList,\%jobHash);
-      if ($waitOutput == 1)
+      if ($waitOutput != 0)
       {
         #all jobs correctly finished
         toolbox::exportLog("INFOS: $0 : All intermediate jobs are finished\n",1);

@@ -165,14 +165,14 @@ sub sgeRun { #For SGE cluster, running using qsub
         $runningNode=`$runningNodeCommand`;
         chomp $runningNode;
         my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
-        if ($runningFields[4] ne "r")
+        if ($runningNode =~ /\s+r\s+/)
         {# not running yet
             $trying++;
             if ($trying == 5)
             {
                 #We already tryed to pick up the node infos 5 times, let's stop
                 $runningNode = "still unknown (either not running, or already finished)";
-                toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n",2);
+                toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
                 last;
             }
             next;
