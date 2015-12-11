@@ -85,12 +85,16 @@ system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files 
 #Input files
 ########################################
 my $originalFastqcFile = $expectedData."RC*_1.fastq";     # fastq file 
-my $lnCmd = "cp $originalFastqcFile pairingDir";           # command to copy the original fastq file into the test directory
-system ($lnCmd) and die ("ERROR: $0 : Cannot link the file $originalFastqcFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
+my $copyCmd= "cp $originalFastqcFile pairingDir";           # command to copy the original fastq file into the test directory
+system ($copyCmd) and die ("ERROR: $0 : Cannot link the file $originalFastqcFile in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
 $originalFastqcFile = $expectedData."RC*_2.fastq";     # fastq file 
-$lnCmd = "cp $originalFastqcFile pairingDir";           # command to copy the original fastq file into the test directory
-system ($lnCmd) and die ("ERROR: $0 : Cannot link the file $originalFastqcFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
+$copyCmd= "cp $originalFastqcFile pairingDir";           # command to copy the original fastq file into the test directory
+system ($copyCmd) and die ("ERROR: $0 : Cannot link the file $originalFastqcFile in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
+
+$originalFastqcFile = $expectedData."/*.CUTADAPT.fastq";     # fastq file 
+my $lnCmd= "ln -s $originalFastqcFile .";           # command to copy the original fastq file into the test directory
+system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalFastqcFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
 
 ########################################
@@ -117,66 +121,55 @@ is_deeply($obsRG2,$expectRG2,'pairing::extractName... RG RC3');
 my $expectedOutput={
           '@H3:C39R6ACXX:3:1101:1215:1877' => {
                                                          'ReadGroup' => 'RC1',
-                                                         'forward' => 'RC1_1.fastq',
-                                                         'reverse' => 'RC1_2.fastq'
+                                                         'forward' => 'pairingDir/RC1_1.fastq',
+                                                         'reverse' => 'pairingDir/RC1_2.fastq'
                                                        },
           '@H2:C381HACXX:5:1101:1359:1908' => {
                                                  'ReadGroup' => 'RC3',
-                                                 'forward' => 'RC3_1.fastq',
-                                                 'reverse' => 'RC3_2.fastq'
+                                                 'forward' => 'pairingDir/RC3_1.fastq',
+                                                 'reverse' => 'pairingDir/RC3_2.fastq'
                                                },
           '@H3:C39R6ACXX:3:1101:1192:1848' => {
                                                    'ReadGroup' => 'RC2',
-                                                   'forward' => 'RC2_1.fastq',
+                                                   'forward' => 'pairingDir/RC2_1.fastq',
                                                 } 
         };
 
-my $observedoutput=pairing::pairRecognition("./pairingDir");exit;
+my $observedoutput=pairing::pairRecognition("pairingDir");
 ##DEBUG print "pairRecognition Expected :\n"; print Dumper ($expectedOutput);print "pairRecognition Observed:\n"; print Dumper ($observedoutput);
-is_deeply($expectedOutput,$observedoutput,'pairing::pairRecognition');
+is_deeply($observedoutput,$expectedOutput,'pairing::pairRecognition');
 
 
 
 #########################################
 ##createDirPerCouple
 #########################################
-my $checkValue3=pairing::createDirPerCouple(pairing::pairRecognition("."),".");
+my $checkValue3=pairing::createDirPerCouple(pairing::pairRecognition("pairingDir"),"pairingDir");
 is ($checkValue3,1,'pairing::createDirPerCouple... running');
 
 # Filetree expected
 my $expectedFileTree = 
         [
-            'RC1:',
+            'pairingDir/RC1:',
             'RC1_1.fastq',
             'RC1_2.fastq',
             '',
-            'RC2:',
+            'pairingDir/RC2:',
             'RC2_1.fastq',
             '',
-            'RC3:',
+            'pairingDir/RC3:',
             'RC3_1.fastq',
             'RC3_2.fastq'
         ];
 
-my $observedFileTree=toolbox::readDir(".");
+my $observedFileTree=toolbox::readDir("pairingDir");
 ##DEBUG print "Expected: \n"; print Dumper ($expectedFileTree);print "Observed: \n"; print Dumper ($observedFileTree);
-is_deeply($expectedFileTree,$observedFileTree,'pairing::pairRecognition... Filetree created');
+is_deeply($observedFileTree,$expectedFileTree,'pairing::pairRecognition... Filetree created');
 
-
-########################################
-#Input file for repairing
-########################################
-#$originalFastqcFile = "../DATA/expectedData/RC3Single.fastq";     # fastq file 
-#$fastqcFileCopyCom = "cp $originalFastqcFile $testingDir";           # command to copy the original fastq file into the test directory
-#system ($fastqcFileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalFastqcFile in the test directory with the command $fastqcFileCopyCom\n$!\n");    # RUN the copy command
 
 ########################################
 #repairing 
 ########################################
-$originalFastqcFile = $expectedData."/*.CUTADAPT.fastq";     # fastq file 
-$lnCmd= "ln -s $originalFastqcFile .";           # command to copy the original fastq file into the test directory
-system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalFastqcFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
-
 
 #Check if running
 my $checkValue=pairing::repairing('RC3_1.CUTADAPT.fastq','RC3_2.CUTADAPT.fastq',".");
@@ -195,4 +188,3 @@ is ($diffForward,'','pairing::repairing... forward file');
 my $diffReverse=`diff -q RC3_2.REPAIRING.fastq ../../DATA/expectedData/RC3_2.REPAIRING.fastq`;
 is ($diffReverse,'','pairing::repairing... reverse file');
 
-exit;
