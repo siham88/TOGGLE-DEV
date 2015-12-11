@@ -187,7 +187,7 @@ is (bwa::bwaSamse($samseFileOut,$fastaRef,$singleSaiFileIn,$fastqFile3,"RC3"),'1
 
 ####Verify if output are correct for samse
 @expectedOutput=('../DATA-TEST/bwaTestDir/RC3_1.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3_1.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3_2.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3_2.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam','../DATA-TEST/bwaTestDir/RC3.BWASAMSE.sam','../DATA-TEST/bwaTestDir/RC3.REPAIRING.fastq','../DATA-TEST/bwaTestDir/Reference.fasta','../DATA-TEST/bwaTestDir/Reference.fasta.amb','../DATA-TEST/bwaTestDir/Reference.fasta.ann','../DATA-TEST/bwaTestDir/Reference.fasta.bwt','../DATA-TEST/bwaTestDir/Reference.fasta.pac','../DATA-TEST/bwaTestDir/Reference.fasta.sa');
-@outPut=toolbox::readDir($testingDir);
+my @outPut=toolbox::readDir($testingDir);
 
 is_deeply(\@expectedOutput,@outPut,'Test for bwa samse output files');
 
