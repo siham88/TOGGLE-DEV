@@ -33,6 +33,7 @@
 #Will test if samTools module work correctly works correctly
 use strict;
 use warnings;
+
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
 use Data::Dumper;
@@ -50,7 +51,6 @@ can_ok( 'samTools','samToolsIndex');
 #can_ok( 'samTools','mergeHeader');
 #can_ok( 'samTools','samToolsMerge');
 can_ok( 'samTools','samToolsView');
-#can_ok( 'samTools','mergeHeader');
 #can_ok( 'samTools','samToolsIdxstats');
 #can_ok( 'samTools','samToolsDepth');
 can_ok( 'samTools','samToolsFlagstat');
@@ -59,50 +59,62 @@ use toolbox;
 use samTools;
 
 
+my $configInfos = toolbox::readFileConf("software.config.txt");
+
+#########################################
+#Remove files and directory created by previous test
+#########################################
+my $testingDir="../DATA-TEST/samToolsTestDir";
+my $cleaningCmd="rm -Rf $testingDir"; 
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+my $expectedData="../../DATA/expectedData/";
+
+########################################
+#Creation of test directory
+########################################
+my $makeDirCmd = "mkdir $testingDir";
+system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
+chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+
 #######################################
 #Creating the IndividuSoft.txt file
 #######################################
-my $creatingCommand="echo \"samTools\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
+my $creatingCmd="echo \"samTools\nTEST\" > individuSoft.txt";
+system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
 
 #######################################
 #Cleaning the logs for the test
 #######################################
-my $cleaningCommand="rm -Rf samTools_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot remove the previous log files with the command $cleaningCommand \n$!\n");
+$cleaningCmd="rm -Rf samTools_TEST_log.*";
+system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
 
 ########################################
 #initialisation and setting configs
 ########################################
-my $testingDir="../DATA-TEST/samtoolsTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $creatingDirCom \n$!\n");
+my $fastaRef="Reference.fasta";
+my $originalFastaRef=$expectedData."/".$fastaRef;
+my $lnCmd="ln -s $originalFastaRef .";
+system($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalFastaRef in the test directory with the command $lnCmd\n$!\n");     #Now we have a ref to be tested
 
-my $originalFastaRef="../DATA/expectedData/Reference.fasta";
-my $fastaRef="$testingDir/Reference.fasta";
-my $refCopyCom="cp $originalFastaRef $fastaRef";
-system($refCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalFastaRef in the test directory with the command $refCopyCom\n$!\n");     #Now we have a ref to be tested
+my $bamFile="RC3.PICARDTOOLSSORT.bam";
+my $originalBamFile=$expectedData."/".$bamFile;
+$lnCmd="ln -s $originalBamFile .";
+system($lnCmd) and die("ERROR: $0 :Cannot copy the file $originalBamFile in the test directory with the command $lnCmd\n$!\n");
 
-my $originalBamFile="../DATA/expectedData/RC3.PICARDTOOLSSORT.bam";
-my $bamFile="$testingDir/RC3.PICARDTOOLSSORT.bam";
-my $bamFileCopyCom="cp $originalBamFile $bamFile";
-system($bamFileCopyCom) and die("ERROR: $0 :Cannot copy the file $originalBamFile in the test directory with the command $bamFileCopyCom\n$!\n");
-
-toolbox::readFileConf("software.config.txt");
 
 
 ################################################################################################
 ###Samtools faidx
 ################################################################################################
-is(samTools::samToolsFaidx($fastaRef),1,'Ok for samToolsFaidx running');
+is(samTools::samToolsFaidx($fastaRef),1,'samTools::samToolsFaidx... running');
 
 ###Checking the correct structure for the output file using md5sum
 my $expectedMD5sum="4b9a4431e72c9db7e5c1f2153eba9fe7";
 my $observedMD5sum=`md5sum $fastaRef.fai`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'Ok for the content of the samtools faidx output structure');
+is($observedMD5sum,$expectedMD5sum,'samTools::samToolsFaidx... Ok for the content of the samtools faidx output structure');
 
 
 ################################################################################################
