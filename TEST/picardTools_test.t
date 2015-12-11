@@ -124,10 +124,10 @@ is_deeply($m5Observed[1],$lastM5Expected,'picardTools::picardToolsCreateSequence
 ##########################################
 ###### SINGLE ######
 ## Input files test for single analysis
-my $samFile = "$testingDiRC3.BWASAMSE.sam";              # SAM file of test
+my $samFile = "RC3.BWASAMSE.sam";              # SAM file of test
 my $originalSamFile = $expectedData."/".$samFile;        # original SAM file
 my $lnCmd = "ln -s $originalSamFile .";                  # command to copy the original Ref fasta file into the test directory
-system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalSamFile in the test directory with the command $slnCmd\n$!\n");
+system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalSamFile in the test directory with the command $lnCmd\n$!\n");
 
 my $bamFileOut = "RC3Single.PICARDTOOLSSORT.bam";
 
@@ -177,8 +177,9 @@ exit;
 ###########################################
 ##picardToolsMarkDuplicates test
 ###########################################
-my $originalBamFile = "../DATA/expectedData/RC3.GATKINDELREALIGNER.bam";        # original BAM file
-my $bamFile = "$testingDir/RC3.GATKINDELREALIGNER.bam";                                 # BAM file of test
+my $bamFile = "RC3.GATKINDELREALIGNER.bam";                         # BAM file of test
+my $originalBamFile = $expectedData/RC3.GATKINDELREALIGNER.bam";        # original BAM file
+
 my $bamFileCopyCom = "cp $originalBamFile $bamFile";                            # command to copy the original Ref fasta file into the test directory
 system ($bamFileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalBamFile in the test directory with the command $bamFileCopyCom\n$!\n");    # RUN the copy command
 
