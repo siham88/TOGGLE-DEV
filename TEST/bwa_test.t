@@ -136,7 +136,7 @@ is (bwa::bwaAln($fastaRef,$fastqFile2,$reverseSaiFileIn,$optionsHachees),'1',"bw
 
 ###Verify if output are correct for bwa Aln
 @expectedOutput=('./RC3_1.BWAALN.sai','./RC3_1.REPAIRING.fastq','./RC3_2.BWAALN.sai','./RC3_2.REPAIRING.fastq','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
-@observedOutput=toolbox::readDir($testingDir);
+@observedOutput=toolbox::readDir(".");
 
 is_deeply(@observedOutput,\@expectedOutput,'Test for bwa aln output files');
 exit;
