@@ -53,35 +53,37 @@ can_ok('bwa','bwaMem');
 use toolbox;
 use bwa;
 
-toolbox::readFileConf("software.config.txt");
-
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"bwa\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf bwa_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
+my $configInfos = toolbox::readFileConf("software.config.txt");
 
 #########################################
-#Remove the files and directory created by the previous test
+#Remove files and directory created by previous test
 #########################################
-$cleaningCommand="rm -Rf ../DATA-TEST/bwaTestDir";
-system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous test dir with the command $cleaningCommand \n$!\n");
+my $testingDir="../DATA-TEST/bwaTestDir";
+my $cleaningCmd="rm -Rf $testingDir"; 
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+my $expectedData="../../DATA/expectedData/";
 
 ########################################
 #Creation of test directory
 ########################################
-my $testingDir="../DATA-TEST/bwaTestDir";
-my $makeDirCom = "mkdir $testingDir";
-system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
+my $makeDirCmd = "mkdir $testingDir";
+system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
+chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
+#######################################
+#Creating the IndividuSoft.txt file
+#######################################
+my $creatingCmd="echo \"bwa\nTEST\" > individuSoft.txt";
+system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
 
+#######################################
+#Cleaning the logs for the test
+#######################################
+$cleaningCmd="rm -Rf bwa_TEST_log.*";
+system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
+
+exit;
 ########################################
 #Picking up data for tests
 ########################################
