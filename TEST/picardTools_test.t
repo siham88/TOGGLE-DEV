@@ -145,7 +145,7 @@ $md5sumObserved = $nameless[0];                        # just to have the md5sum
 
 is_deeply ($md5sumObserved,$md5sumExpected, 'picardTools::picardToolsSortSam... Test for the structure of the output file for single');    # test if the structure of the output file is ok
 
-exit;
+
 
 ####### PAIR ######
 #### Input files test for pair analysis
@@ -172,6 +172,7 @@ $md5sumObserved = $nameless[0];                        # just to have the md5sum
 is_deeply ($md5sumObserved,$md5sumExpected, 'picardTools::picardToolsSortSam... Test for the structure of the output file for pair');    # test if the structure of the output file is ok
 
 
+exit;
 
 ###########################################
 ##picardToolsMarkDuplicates test
