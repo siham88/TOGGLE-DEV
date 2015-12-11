@@ -164,7 +164,8 @@ sub sgeRun { #For SGE cluster, running using qsub
         sleep 3;#Waiting for the job to be launched
         $runningNode=`$runningNodeCommand`;
         chomp $runningNode;
-        if ($runningNode =~ /\s+r\s+/)
+        $runningNode = "x" unless $runningNode; #if empty variable, problem after...
+        if ($runningNode !~ /\s+r\s+/)
         {# not running yet
             $trying++;
             if ($trying == 5)
