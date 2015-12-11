@@ -135,10 +135,10 @@ is (bwa::bwaAln($fastaRef,$fastqFile1,$forwardSaiFileIn,$optionsHachees),'1',"bw
 is (bwa::bwaAln($fastaRef,$fastqFile2,$reverseSaiFileIn,$optionsHachees),'1',"bwa::bwaAln... Test for bwa Aln running for reverse");
 
 ###Verify if output are correct for bwa Aln
-@expectedOutput=('./RC3_1.BWAALN.sai','./RC3_1.REPAIRING.fastq','./RC3_2.BWAALN.sai','./RC3_2.REPAIRING.fastq','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
+@expectedOutput=('./bwa_TEST_log.e','./bwa_TEST_log.o','./individuSoft.txt','./RC3_1.BWAALN.sai','./RC3_1.REPAIRING.fastq','./RC3_2.BWAALN.sai','./RC3_2.REPAIRING.fastq','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
 @observedOutput=toolbox::readDir(".");
 
-is_deeply(@observedOutput,\@expectedOutput,'Test for bwa aln output files');
+is_deeply(@observedOutput,\@expectedOutput,'bwa::bwaAln... Test for bwa aln output files');
 exit;
 
 ###Test for correct file value of bwa aln using a md5sum - BE CAREFUL, the sum changes based on the version of BWA!!
