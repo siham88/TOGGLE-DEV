@@ -185,7 +185,7 @@ is (bwa::bwaAln($fastaRef,$fastqFile,$singleSaiFileIn,$optionsHachees),'1',"bwa:
 is (bwa::bwaSamse($samseFileOut,$fastaRef,$singleSaiFileIn,$fastqFile,"RC3"),'1',"bwa::bwaSamse... Test for bwa samse running");
 
 ####Verify if output are correct for samse
-@expectedOutput=('./RC3_1.BWAALN.sai','./RC3_1.REPAIRING.fastq','./RC3_2.BWAALN.sai','./RC3_2.REPAIRING.fastq','./RC3.BWAALN.sai','./RC3.BWASAMPE.sam','./RC3.BWASAMSE.sam','./RC3.REPAIRING.fastq','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
+@expectedOutput=('./bwa_TEST_log.e','./bwa_TEST_log.o','./individuSoft.txt','./RC3_1.BWAALN.sai','./RC3_1.REPAIRING.fastq','./RC3_2.BWAALN.sai','./RC3_2.REPAIRING.fastq','./RC3.BWAALN.sai','./RC3.BWASAMPE.sam','./RC3.BWASAMSE.sam','./RC3.REPAIRING.fastq','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
 @observedOutput=toolbox::readDir(".");
 
 is_deeply(\@expectedOutput,@observedOutput,'Test for bwa samse output files');
@@ -205,7 +205,7 @@ exit;
 is (bwa::bwaMem($samseFileOut,$fastaRef,$fastqFile1,"","truc"),'1',"bwa::bwaMem... Test for bwa mem running single");
 
 ###Verify if output are correct for mem single
-@expectedOutput=('./RC3_1.REPAIRING.fastq','./RC3_2.REPAIRING.fastq','./RC3.BWASAMPE.sam','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
+@expectedOutput=('./bwa_TEST_log.e','./bwa_TEST_log.o','./individuSoft.txt','./RC3_1.REPAIRING.fastq','./RC3_2.REPAIRING.fastq','./RC3.BWASAMPE.sam','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
 my @outPut=toolbox::readDir(".");
 is_deeply(@outPut,\@expectedOutput,'bwa::bwaMem... Test for bwa mem single output files');
 
