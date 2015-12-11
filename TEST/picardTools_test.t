@@ -149,7 +149,7 @@ is_deeply ($md5sumObserved,$md5sumExpected, 'picardTools::picardToolsSortSam... 
 
 ####### PAIR ######
 #### Input files test for pair analysis
-$samFile = "$testingDir/RC3.BWASAMPE.sam";            # SAM file of test
+$samFile = "RC3.BWASAMPE.sam";            # SAM file of test
 $originalSamFile = $expectedData."/".$samFile;        # original SAM file
 $lnCmd = "ln -s $originalSamFile .";                            # command to copy the original Ref fasta file into the test directory
 system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalSamFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
@@ -180,7 +180,7 @@ exit;
 my $bamFile = "RC3.GATKINDELREALIGNER.bam";                         # BAM file of test
 my $originalBamFile = $expectedData."/".$bamFile;        # original BAM file
 
-my $bamFileCopyCom = "cp $originalBamFile $bamFile";                            # command to copy the original Ref fasta file into the test directory
+my $lnCm = "cp $originalBamFile $bamFile";                            # command to copy the original Ref fasta file into the test directory
 system ($bamFileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalBamFile in the test directory with the command $bamFileCopyCom\n$!\n");    # RUN the copy command
 
 $bamFileOut = "$testingDir/RC3.PICARDTOOLSMARKDUPLICATES.bam";
