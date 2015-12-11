@@ -173,7 +173,7 @@ is($grepResult,1704,'Test for the result of bwa sampe');
 #####Test for bwa Samse
 ########################################################################################################
 my $fastqFile="RC3.REPAIRING.fastq";
-my $originalFastqFile=$expectedData."/RC3.REPAIRING.fastq";
+my $originalFastqFile=$expectedData."/".$fastqFile;
 
 $lnCmd="ln -s $originalFastqFile .";
 system($lnCmd) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile for test with the command $lnCmd \n$!\n");    #The sequences are copied for testing
