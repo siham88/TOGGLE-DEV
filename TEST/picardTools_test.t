@@ -149,19 +149,19 @@ exit;
 
 ####### PAIR ######
 #### Input files test for pair analysis
-$originalSamFile = "../DATA/expectedData/RC3.BWASAMPE.sam";        # original SAM file
-$samFile = "$testingDir/RC3.BWASAMPE.sam";                                 # SAM file of test
-$samFileCopyCom = "cp $originalSamFile $samFile";                            # command to copy the original Ref fasta file into the test directory
-system ($samFileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalSamFile in the test directory with the command $samFileCopyCom\n$!\n");    # RUN the copy command
+$samFile = "$testingDir/RC3.BWASAMPE.sam";            # SAM file of test
+$originalSamFile = $expectedData."/".$samFile;        # original SAM file
+$lnCmd = "ln -s $originalSamFile .";                            # command to copy the original Ref fasta file into the test directory
+system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalSamFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
-$bamFileOut = "$testingDir/RC3.PICARDTOOLSSORT.bam";
+$bamFileOut = "RC3.PICARDTOOLSSORT.bam";
 
 %optionsRef = ("SORT_ORDER" => "coordinate","VALIDATION_STRINGENCY" => "SILENT");        # Hash containing informations
 $optionRef = \%optionsRef;                           # Ref of the hash
 
 
 #### TEST OF FUNCTION
-is(picardTools::picardToolsSortSam($samFile,$bamFileOut,$optionRef),1,'Test for picardTools::picardToolsSortSam pair');  # test if picardTools::picardToolsSortSam works
+is(picardTools::picardToolsSortSam($samFile,$bamFileOut,$optionRef),1,'picardTools::picardToolsSortSam... Running pair');  # test if picardTools::picardToolsSortSam works
 
 #### TEST OF STRUCTURE
 $md5sumExpected = "7e5a7dc36c0f0b599cc158c599c9913d";
@@ -169,7 +169,7 @@ $md5sumObserved = `md5sum $bamFileOut`;
 @nameless = split (" ", $md5sumObserved);           # to separate the structure and the name of file
 $md5sumObserved = $nameless[0];                        # just to have the md5sum result
 
-is_deeply ($md5sumObserved,$md5sumExpected, 'Test for the structure of the output file of picardTools::picardToolsSortSam for pair');    # test if the structure of the output file is ok
+is_deeply ($md5sumObserved,$md5sumExpected, 'picardTools::picardToolsSortSam... Test for the structure of the output file for pair');    # test if the structure of the output file is ok
 
 
 
