@@ -67,7 +67,7 @@ sub launcher { #Global function for launching, will recover the command to be la
     switch (1)
     {
         case (defined $hashCapability->{"sge"} && defined $$configInfo{"sge"}){$runOutput = &sgeRun} #For SGE running
-        case ($hashCapability->{"slurm"} && $$configInfo{"slurm"}){$runOutput = &slurmRun} #For SLURM running
+        case (defined $hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$runOutput = &slurmRun} #For SLURM running
         
         #If no scheduler available or configurated in the config info file, let's run it in a normal way
         else {$runOutput = &normalRun};
@@ -208,8 +208,8 @@ sub waiter { #Global function for waiting, will recover the jobID to survey and 
     my $stopWaiting;
     switch (1)
     {
-        case ($hashCapability->{"sge"} && $configInfo->{"sge"}){$stopWaiting = &sgeRun} #For SGE running
-        case ($hashCapability->{"slurm"} && $configInfo->{"slurm"}){$stopWaiting = &slurmRun} #For SLURM running
+        case (defined $hashCapability->{"sge"} && defined $$configInfo{"sge"}){$stopWaiting = &sgeRun} #For SGE running
+        case (defined $hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$stopWaiting = &slurmRun} #For SLURM running
     }
    
     return $stopWaiting;
