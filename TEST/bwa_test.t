@@ -82,39 +82,40 @@ system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt fi
 $cleaningCmd="rm -Rf bwa_TEST_log.*";
 system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
 
-exit;
 ########################################
 #Picking up data for tests
 ########################################
-my $originalFastaRef="../DATA/expectedData/Reference.fasta";
-my $fastaRef="$testingDir/Reference.fasta";
-my $refCopyCom="cp $originalFastaRef $fastaRef";
-system($refCopyCom) and die ("ERROR: $0 : Cannot copy the Reference for test with the command $refCopyCom \n$!\n");
-  #Now we have a ref to be tested
-my $originalFastqFile1="../DATA/expectedData/RC3_1.REPAIRING.fastq";
-my $originalFastqFile2="../DATA/expectedData/RC3_2.REPAIRING.fastq";
-my $fastqFile1="$testingDir/RC3_1.REPAIRING.fastq";
-my $fastqFile2="$testingDir/RC3_2.REPAIRING.fastq";
-my $seqCopyCom1="cp $originalFastqFile1 $fastqFile1";
-my $seqCopyCom2="cp $originalFastqFile2 $fastqFile2";
-system($seqCopyCom1) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile1 for test with the command $seqCopyCom1 \n$!\n");    #The sequences are copied for testing
-system($seqCopyCom2) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile2 for test with the command $seqCopyCom2 \n$!\n");    #The sequences are copied for testing
-my $forwardSaiFileIn="$testingDir/RC3_1.BWAALN.sai";
-my $reverseSaiFileIn="$testingDir/RC3_2.BWAALN.sai";
-my $sampeFileOut="$testingDir/RC3.BWASAMPE.sam";
+my $fastaRef="Reference.fasta";
+my $originalFastaRef=$expectedData."/Reference.fasta";
+my $lnCmd="ln -s $originalFastaRef .";
+system($lnCmd) and die ("ERROR: $0 : Cannot copy the Reference for test with the Command $lnCmd \n$!\n");
+
+my $fastqFile1="RC3_1.REPAIRING.fastq";
+my $originalFastqFile1=$expectedData."/".$fastqFile1;
+$lnCmd="ln -s $originalFastqFile1 .";
+system($lnCmd) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile1 for test with the command $lnCmd \n$!\n");    #The sequences are copied for testing
+
+my $fastqFile2="RC3_2.REPAIRING.fastq";
+my $originalFastqFile2=$expectedData."/".$fastqFile2;
+my $lnCmd="ln -s $originalFastqFile2 .";
+system($lnCmd) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile2 for test with the command $lnCmd \n$!\n");    #The sequences are copied for testing
+
+my $forwardSaiFileIn="RC3_1.BWAALN.sai";
+my $reverseSaiFileIn="RC3_2.BWAALN.sai";
+my $sampeFileOut="RC3.BWASAMPE.sam";
 
 #######################################################################################################
 ####Test for bwa index running
 #######################################################################################################
 ##Test for running
 my $optionsHachees=$configInfos->{'BWA index'};
-is(bwa::bwaIndex($fastaRef,$optionsHachees),1,'Test for bwaIndex running');
+is(bwa::bwaIndex($fastaRef,$optionsHachees),1,'bwa::bwaIndex... running');
 ###Verify if output are correct for bwa index
-my @expectedOutput=('../DATA-TEST/bwaTestDir/RC3_1.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3_2.REPAIRING.fastq','../DATA-TEST/bwaTestDir/Reference.fasta','../DATA-TEST/bwaTestDir/Reference.fasta.amb','../DATA-TEST/bwaTestDir/Reference.fasta.ann','../DATA-TEST/bwaTestDir/Reference.fasta.bwt','../DATA-TEST/bwaTestDir/Reference.fasta.pac','../DATA-TEST/bwaTestDir/Reference.fasta.sa');
-my @outPut=toolbox::readDir($testingDir);
+my @expectedOutput=('./bwa_TEST_log.e','./bwa_TEST_log.o','./individuSoft.txt','./RC3_1.REPAIRING.fastq','./RC3_2.REPAIRING.fastq','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
+my @observedOutput=toolbox::readDir(".");
 
-is_deeply(@outPut,\@expectedOutput,'Test for the output files produced by bwa index');
-
+is_deeply(@observedOutput,\@expectedOutput,'bwa::bwaIndex');
+exit;
 
 ###Test for correct file value of bwa index using a md5sum file control -  work through the different bwa versions
 my $expectedMD5sum='b86728bb71903f8641530e61e9687b59  ../DATA-TEST/bwaTestDir/Reference.fasta.amb
@@ -137,7 +138,7 @@ is (bwa::bwaAln($fastaRef,$fastqFile2,$reverseSaiFileIn,$optionsHachees),'1',"Te
 
 ###Verify if output are correct for bwa Aln
 @expectedOutput=('../DATA-TEST/bwaTestDir/RC3_1.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3_1.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3_2.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3_2.REPAIRING.fastq','../DATA-TEST/bwaTestDir/Reference.fasta','../DATA-TEST/bwaTestDir/Reference.fasta.amb','../DATA-TEST/bwaTestDir/Reference.fasta.ann','../DATA-TEST/bwaTestDir/Reference.fasta.bwt','../DATA-TEST/bwaTestDir/Reference.fasta.pac','../DATA-TEST/bwaTestDir/Reference.fasta.sa');
-@outPut=toolbox::readDir($testingDir);
+my @outPut=toolbox::readDir($testingDir);
 
 is_deeply(@outPut,\@expectedOutput,'Test for bwa aln output files');
 
@@ -178,8 +179,8 @@ is($grepResult,1704,'Test for the result of bwa sampe');
 ########################################################################################################
 my $originalFastqFile3="../DATA/expectedData/RC3.REPAIRING.fastq";
 my $fastqFile3="$testingDir/RC3.REPAIRING.fastq";
-my $seqCopyCom3="cp $originalFastqFile3 $fastqFile3";
-system($seqCopyCom3) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile3 for test with the command $seqCopyCom3 \n$!\n");    #The sequences are copied for testing
+my $seqCopyCmd3="cp $originalFastqFile3 $fastqFile3";
+system($seqCopyCmd3) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile3 for test with the command $seqCopyCmd3 \n$!\n");    #The sequences are copied for testing
 
 my $singleSaiFileIn="$testingDir/RC3.BWAALN.sai";
 my $samseFileOut="$testingDir/RC3.BWASAMSE.sam";
