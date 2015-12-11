@@ -180,8 +180,8 @@ exit;
 my $bamFile = "RC3.GATKINDELREALIGNER.bam";                         # BAM file of test
 my $originalBamFile = $expectedData."/".$bamFile;        # original BAM file
 
-my $lnCm = "cp $originalBamFile $bamFile";                            # command to copy the original Ref fasta file into the test directory
-system ($bamFileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalBamFile in the test directory with the command $bamFileCopyCom\n$!\n");    # RUN the copy command
+my $lnCmd = "cp $originalBamFile $bamFile";                            # command to copy the original Ref fasta file into the test directory
+system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalBamFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
 $bamFileOut = "$testingDir/RC3.PICARDTOOLSMARKDUPLICATES.bam";
 my $duplicatesFileOut = "$testingDir/RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates";
