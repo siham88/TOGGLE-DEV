@@ -158,13 +158,24 @@ sub sgeRun { #For SGE cluster, running using qsub
     
     my $runningNodeCommand="qstat | grep $currentJID";
     my $runningNode="";
-    while ($runningNode ne "r") #If the job is not yet launched, there is no node affected, $runningMode is empty
+    my $trying=0;
+    while ($runningNode ne "r") #If the job is not yet launched or already finished
     {
-      sleep 1;#Waiting for the job to be launched
-      $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
-      chomp $runningNode;
-      my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
-      next if $runningFields[4] ne "r"; # not running
+        last if ($runningNode =~ m/still unknown/);
+        sleep 3;#Waiting for the job to be launched
+        $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
+        chomp $runningNode;
+        my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
+        if ($runningFields[4] ne "r")
+        {# not running yet
+            $trying++;
+            if ($trying == 5)
+            {
+                #We already tryed to pick up the node infos 5 times, let's stop
+                $runningNode = "still unknown (either not running, or already finished)"
+            }
+            next;
+        }
       $runningNode = $runningFields[7];
       $runningNode =~ s/.+@//;#removing queue name providing only node name
     }
