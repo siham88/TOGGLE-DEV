@@ -39,6 +39,22 @@ use Test::Deep;
 use lib qw(../Modules/);
 use Data::Dumper;
 
+########################################
+#use of bwa module ok
+########################################
+use_ok('toolbox') or exit;
+use_ok('bwa') or exit;
+can_ok( 'bwa','bwaIndex');
+can_ok('bwa','bwaAln');
+can_ok('bwa','bwaSampe');
+can_ok('bwa','bwaSamse');
+can_ok('bwa','bwaMem');
+
+use toolbox;
+use bwa;
+
+toolbox::readFileConf("software.config.txt");
+
 #######################################
 #Creating the IndividuSoft.txt file
 #######################################
@@ -65,21 +81,6 @@ my $testingDir="../DATA-TEST/bwaTestDir";
 my $makeDirCom = "mkdir $testingDir";
 system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
 
-########################################
-#use of bwa module ok
-########################################
-use_ok('toolbox') or exit;
-use_ok('bwa') or exit;
-can_ok( 'bwa','bwaIndex');
-can_ok('bwa','bwaAln');
-can_ok('bwa','bwaSampe');
-can_ok('bwa','bwaSamse');
-can_ok('bwa','bwaMem');
-
-use toolbox;
-use bwa;
-
-toolbox::readFileConf("software.config.txt");
 
 ########################################
 #Picking up data for tests
