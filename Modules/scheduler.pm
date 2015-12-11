@@ -235,7 +235,7 @@ sub sgeWait {
       chomp $nbRunningJobs;
       sleep 50;
     }
-    
+    print "TUTU ->";
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 25;#Needed for qacct to register infos...
     toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tNode\tExitStatus\n-------------------------------",1);

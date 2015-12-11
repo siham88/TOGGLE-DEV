@@ -515,7 +515,7 @@ if ($orderBefore1000)
                 my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
                 ##DEBUG toolbox::exportLog($cpLnCommand,1);
                 ##DEBUG
-                toolbox::exportLog("--------->".$file."-".$basicName,2);
+                ##DEBUG toolbox::exportLog("--------->".$file."-".$basicName,2);
                 if(toolbox::run($cpLnCommand))       #Execute command
                 {
                     toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $finalDir\n",1);
