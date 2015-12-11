@@ -91,35 +91,35 @@ my $originalRefFile = $expectedData."/".$refFile;
 
 my $lnCmd = "ln -s $originalRefFile ."; # command to copy the original Ref fasta file into the test directory
 system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
-exit;
-my $refFileDict = "$testingDir/Reference.dict";      # output of this module
+
+my $refFileDict = "Reference.dict";      # output of this module
 
 ### TEST OF FUNCTION
-is(picardTools::picardToolsCreateSequenceDictionary($refFile,$refFileDict),1,'Test for picardTools::picardToolsCreateSequenceDictionary');     # test if picardTools::picardToolsCreateSequenceDictionary works
+is(picardTools::picardToolsCreateSequenceDictionary($refFile,$refFileDict),1,'picardTools::picardToolsCreateSequenceDictionary... Running');     # test if picardTools::picardToolsCreateSequenceDictionary works
 
 ### TEST OF STRUCTURE
 my $nbOfLineExpected= "952";
 my $nbOfLineObserved= `wc -l $refFileDict`;
 my @nameless=split /\s/, $nbOfLineObserved;
 
-is_deeply($nameless[0],$nbOfLineExpected,'Test for the lines number of the output file of picardTools::picardToolsCreateSequenceDictionary');
+is_deeply($nameless[0],$nbOfLineExpected,'picardTools::picardToolsCreateSequenceDictionary... Test for the lines number of the output file');
 
 my $firstM5Expected= "bedc1338f03b37384785c231069eae0e";
 my $firstM5Observed= `head -n2 $refFileDict`;
 chomp $firstM5Observed;
 my @m5Observed=split /M5:/, $firstM5Observed;
 
-is_deeply($m5Observed[1],$firstM5Expected,'Test for the MD5 value in the first line of the output file of picardTools::picardToolsCreateSequenceDictionary');
+is_deeply($m5Observed[1],$firstM5Expected,'picardTools::picardToolsCreateSequenceDictionary... Test for the MD5 value in the first line of the output file');
 
 my $lastM5Expected= "872df605abe21dcfe7cfcc7f4d491ea1";
 my $lastM5Observed= `tail -n 1 $refFileDict`;
 chomp $lastM5Observed;
 @m5Observed=split /M5:/, $lastM5Observed;
 
-is_deeply($m5Observed[1],$lastM5Expected,'Test for the MD5 value in the last line of the output file of picardTools::picardToolsCreateSequenceDictionary');
+is_deeply($m5Observed[1],$lastM5Expected,'picardTools::picardToolsCreateSequenceDictionary... Test for the MD5 value in the last line of the output file');
 
 
-
+exit;
 
 ##########################################
 #picardToolsSortSam test
