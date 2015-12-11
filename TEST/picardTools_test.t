@@ -172,7 +172,7 @@ $md5sumObserved = $nameless[0];                        # just to have the md5sum
 is_deeply ($md5sumObserved,$md5sumExpected, 'picardTools::picardToolsSortSam... Test for the structure of the output file for pair');    # test if the structure of the output file is ok
 
 
-exit;
+
 
 ###########################################
 ##picardToolsMarkDuplicates test
@@ -180,18 +180,18 @@ exit;
 my $bamFile = "RC3.GATKINDELREALIGNER.bam";                         # BAM file of test
 my $originalBamFile = $expectedData."/".$bamFile;        # original BAM file
 
-my $lnCmd = "cp $originalBamFile $bamFile";                            # command to copy the original Ref fasta file into the test directory
+my $lnCmd = "ln -s $originalBamFile .";                            # command to copy the original Ref fasta file into the test directory
 system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalBamFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
-$bamFileOut = "$testingDir/RC3.PICARDTOOLSMARKDUPLICATES.bam";
-my $duplicatesFileOut = "$testingDir/RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates";
+$bamFileOut = "RC3.PICARDTOOLSMARKDUPLICATES.bam";
+my $duplicatesFileOut = "RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates";
 
 %optionsRef = ("VALIDATION_STRINGENCY" => "SILENT");        # Hash containing informations
 $optionRef = \%optionsRef;                           # Ref of the hash
 
 
 #### TEST OF FUNCTION
-is(picardTools::picardToolsMarkDuplicates($bamFile, $bamFileOut, $duplicatesFileOut, $optionRef),1,'Test for picardTools::picardToolsMarkDuplicates');  # test if picardTools::picardToolsMarkDuplicates works
+is(picardTools::picardToolsMarkDuplicates($bamFile, $bamFileOut, $duplicatesFileOut, $optionRef),1,'picardTools::picardToolsMarkDuplicates... Running');  # test if picardTools::picardToolsMarkDuplicates works
 
 #### TEST OF STRUCTURE
 my $expectedBam = "1c3687f4e0dcfe532cdcd8e2488317a2";
@@ -199,10 +199,10 @@ my $observedBam = `md5sum $bamFileOut`;
 @nameless = split (" ", $observedBam);           # to separate the structure and the name of file
 $observedBam = $nameless[0];                        # just to have the md5sum result
 
-is_deeply ($observedBam, $expectedBam, 'Test for BAM file of picardTools::picardToolsMarkDuplicates');      # test if the structure of BAM file is ok
+is_deeply ($observedBam, $expectedBam, 'picardTools::picardToolsMarkDuplicates... Test for BAM file');      # test if the structure of BAM file is ok
 
 my $observedDup = `less $duplicatesFileOut`;
-like($observedDup, qr/## METRICS CLASS/, 'Test for duplicates file of picardTools::picardToolsMarkDuplicates');     # test if the structure of duplicates file is ok
+like($observedDup, qr/## METRICS CLASS/, 'picardTools::picardToolsMarkDuplicates... Test for duplicates file');     # test if the structure of duplicates file is ok
 
 
 exit;
