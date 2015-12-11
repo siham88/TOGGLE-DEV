@@ -157,14 +157,13 @@ sub sgeRun { #For SGE cluster, running using qsub
     $currentJID = $infosList[2];
     
     my $runningNodeCommand="qstat | grep $currentJID";
-    my $runningNode="";
+    my $runningNode="x";
     my $trying=0;
     while ($runningNode ne "r") #If the job is not yet launched or already finished
     {
         sleep 3;#Waiting for the job to be launched
         $runningNode=`$runningNodeCommand`;
         chomp $runningNode;
-        my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
         if ($runningNode =~ /\s+r\s+/)
         {# not running yet
             $trying++;
@@ -177,8 +176,9 @@ sub sgeRun { #For SGE cluster, running using qsub
             }
             next;
         }
-      $runningNode = $runningFields[7];
-      $runningNode =~ s/.+@//;#removing queue name providing only node name
+        my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
+        $runningNode = $runningFields[7];
+        $runningNode =~ s/.+@//;#removing queue name providing only node name
     }
     toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
     
