@@ -43,70 +43,71 @@ use lib qw(../Modules/);
 ########################################
 #use of fastqc module ok
 ########################################
-use_ok('toolbox') or exit;
-use_ok('fastqc') or exit;
-can_ok( 'fastqc','execution');
+use_ok('toolbox');
+use_ok('fastqc');
+can_ok('fastqc','execution');
 can_ok('fastqc','parse');
 
 use toolbox;
 use fastqc;
-toolbox::readFileConf("software.config.txt");
 
-
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"fastqc\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCommand\n$!\n");
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf fastqc_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCommand \n$!\n");
 
 #########################################
-#Remove the files and directory created by the previous test
+#Remove files and directory created by previous test
 #########################################
-$cleaningCommand="rm -Rf ../DATA-TEST/fastqcTestDir";
-system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous test dir with the command $cleaningCommand \n$!\n");
+my $testingDir="../DATA-TEST/fastqcTestDir";
+my $cleaningCmd="rm -Rf $testingDir"; 
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+my $expectedData="../../DATA/expectedData/";
 
 ########################################
 #Creation of test directory
 ########################################
-my $testingDir="../DATA-TEST/fastqcTestDir";
-my $makeDirCom = "mkdir $testingDir";
-system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
+my $makeDirCmd = "mkdir $testingDir";
+system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
+chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+
+#######################################
+#Creating the IndividuSoft.txt file
+#######################################
+my $creatingCmd="echo \"fastqc\nTEST\" > individuSoft.txt";
+system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
+
+#######################################
+#Cleaning the logs for the test
+#######################################
+$cleaningCmd="rm -Rf fastqc_TEST_log.*";
+system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
 
 ########################################
 #Input files
 ########################################
-my $originalFastqcFile = "../DATA/expectedData/RC3_2.fastq";     # fastq file 
-my $fastqcFile = "$testingDir/RC3_2.fastq";                             # fastq file for test
-my $fastqcFileCopyCom = "cp $originalFastqcFile $fastqcFile";           # command to copy the original fastq file into the test directory
-system ($fastqcFileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalFastqcFile in the test directory with the command $fastqcFileCopyCom\n$!\n");    # RUN the copy command
+my $fastqcFile = "RC3_2.fastq";                             # fastq file for test
+my $originalFastqcFile = $expectedData."RC3_2.fastq";     # fastq file 
+my $lnCmd = "ln -s $originalFastqcFile .";           # command to copy the original fastq file into the test directory
+system ($lnCmd) and die ("ERROR: $0 : Cannot link the  fastq file $originalFastqcFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
 ##########################################
 #Fastqc exec test
 ##########################################
-my $executionTest = "$testingDir/execution";
-$makeDirCom = "mkdir $executionTest";
-system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
+my $fastqcDir = "fastqcOut";
+$makeDirCmd = "mkdir $fastqcDir";
+system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
+is(fastqc::execution($fastqcFile,$fastqcDir),1,'fastqc::execution');     # test if fastqc::execution works
 
-is(fastqc::execution($fastqcFile,$executionTest),1,'Test for fastqc::execution');     # test if fastqc::execution works
-
-my @expectedOutput = ('../DATA-TEST/fastqcTestDir/execution/RC3_2_fastqc.zip',
+my @expectedOutput = ('fastqcOut/RC3_2_fastqc.zip',
                       '',
-                      '../DATA-TEST/fastqcTestDir/execution/RC3_2_fastqc:',
+                      'fastqcOut/RC3_2_fastqc:',
                       'fastqc_data.txt',
                       'fastqc_report.html',
                       'Icons',
                       'Images',
                       'summary.txt');
 
-my @observedOutput = toolbox::readDir($executionTest);
+my @observedOutput = toolbox::readDir($fastqcDir);
 ##DEBUG print "ICI :\n"; print Dumper(@observedOutput);
-is_deeply(@observedOutput,\@expectedOutput,'Test for output file of fastqc::execution');        # test if the observed output of fastqc::execution is ok
+is_deeply(@observedOutput,\@expectedOutput,'fastqc::execution');        # test if the observed output of fastqc::execution is ok
 
 #########################################
 #Fastqc  parse test
@@ -120,8 +121,6 @@ my $expectedOutput= {
             'Sequence length' => '38-101',      
             '%GC' => '42'};
 
-my $observedoutput=fastqc::parse($executionTest);      # test if fastqc::parse works and will give the observed output in the same time
+my $observedoutput=fastqc::parse($fastqcDir);      # test if fastqc::parse works and will give the observed output in the same time
 ##DEBUG print Dumper($observedoutput);
-is_deeply($observedoutput,$expectedOutput,'Test for fastqc::parse and it\'s output');      # test if the observed output of fastqc::parse is ok
-
-exit;
+is_deeply($observedoutput,$expectedOutput,'fastqc::parse');      # test if the observed output of fastqc::parse is ok
