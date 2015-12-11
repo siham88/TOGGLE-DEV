@@ -119,26 +119,23 @@ chomp $lastM5Observed;
 is_deeply($m5Observed[1],$lastM5Expected,'picardTools::picardToolsCreateSequenceDictionary... Test for the MD5 value in the last line of the output file');
 
 
-exit;
-
 ##########################################
 #picardToolsSortSam test
 ##########################################
 ###### SINGLE ######
 ## Input files test for single analysis
-my $originalSamFile = "../DATA/expectedData/RC3.BWASAMSE.sam";        # original SAM file
-my $samFile = "$testingDir/RC3.BWASAMSE.sam";                                 # SAM file of test
-my $samFileCopyCom = "cp $originalSamFile $samFile";                            # command to copy the original Ref fasta file into the test directory
-system ($samFileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalSamFile in the test directory with the command $samFileCopyCom\n$!\n");    # RUN the copy command
+my $samFile = "$testingDiRC3.BWASAMSE.sam";              # SAM file of test
+my $originalSamFile = $expectedData."/".$samFile;        # original SAM file
+my $lnCmd = "ln -s $originalSamFile .";                  # command to copy the original Ref fasta file into the test directory
+system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalSamFile in the test directory with the command $slnCmd\n$!\n");
 
-my $bamFileOut = "$testingDir/RC3Single.PICARDTOOLSSORT.bam";
+my $bamFileOut = "RC3Single.PICARDTOOLSSORT.bam";
 
-my %optionsRef = ("SORT_ORDER" => "coordinate","VALIDATION_STRINGENCY" => "SILENT");        # Hash containing informations
+my %optionsRef = ("SORT_ORDER" => "coordinate","VALIDATION_STRINGENCY" => "SILENT");   
 my $optionRef = \%optionsRef;                           # Ref of the hash
 
-
 #### TEST OF FUNCTION
-is(picardTools::picardToolsSortSam($samFile,$bamFileOut,$optionRef),1,'Test for picardTools::picardToolsSortSam single');  # test if picardTools::picardToolsSortSam works
+is(picardTools::picardToolsSortSam($samFile,$bamFileOut,$optionRef),1,'picardTools::picardToolsSortSam... Running single');  
 
 #### TEST OF STRUCTURE
 my $md5sumExpected = "22e0135ae3488cf16fdb095283ac91c4";
@@ -146,9 +143,9 @@ my $md5sumObserved = `md5sum $bamFileOut`;
 @nameless = split (" ", $md5sumObserved);           # to separate the structure and the name of file
 $md5sumObserved = $nameless[0];                        # just to have the md5sum result
 
-is_deeply ($md5sumObserved,$md5sumExpected, 'Test for the structure of the output file of picardTools::picardToolsSortSam for single');    # test if the structure of the output file is ok
+is_deeply ($md5sumObserved,$md5sumExpected, 'picardTools::picardToolsSortSam... Test for the structure of the output file for single');    # test if the structure of the output file is ok
 
-
+exit;
 
 ####### PAIR ######
 #### Input files test for pair analysis
