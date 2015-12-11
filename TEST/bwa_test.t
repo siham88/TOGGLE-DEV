@@ -174,8 +174,8 @@ is($grepResult,1704,'Test for the result of bwa sampe');
 ####################################################################################################################
 #####Test for bwa Samse
 ########################################################################################################
-$fastqFile="RC3.REPAIRING.fastq";
-$originalFastqFile=$expectedData."/RC3.REPAIRING.fastq";
+my $fastqFile="RC3.REPAIRING.fastq";
+my $originalFastqFile=$expectedData."/RC3.REPAIRING.fastq";
 
 $lnCmd="ln -s $originalFastqFile .";
 system($lnCmd) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile for test with the command $lnCmd \n$!\n");    #The sequences are copied for testing
@@ -210,7 +210,7 @@ exit;
 is (bwa::bwaMem($samseFileOut,$fastaRef,$fastqFile1,"","truc"),'1',"bwa::bwaMem... Test for bwa mem running single");
 
 ###Verify if output are correct for mem single
-@expectedOutput=('../DATA-TEST/bwaTestDir/RC3_1.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3_2.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam','../DATA-TEST/bwaTestDir/Reference.fasta','../DATA-TEST/bwaTestDir/Reference.fasta.amb','../DATA-TEST/bwaTestDir/Reference.fasta.ann','../DATA-TEST/bwaTestDir/Reference.fasta.bwt','../DATA-TEST/bwaTestDir/Reference.fasta.pac','../DATA-TEST/bwaTestDir/Reference.fasta.sa');
+@expectedOutput=('./RC3_1.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3_2.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam','../DATA-TEST/bwaTestDir/Reference.fasta','../DATA-TEST/bwaTestDir/Reference.fasta.amb','../DATA-TEST/bwaTestDir/Reference.fasta.ann','../DATA-TEST/bwaTestDir/Reference.fasta.bwt','../DATA-TEST/bwaTestDir/Reference.fasta.pac','../DATA-TEST/bwaTestDir/Reference.fasta.sa');
 my @outPut=toolbox::readDir($testingDir);
 is_deeply(@outPut,\@expectedOutput,'Test for bwa mem single output files');
 
