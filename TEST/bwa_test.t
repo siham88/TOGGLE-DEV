@@ -117,7 +117,7 @@ my @observedOutput=toolbox::readDir(".");
 is_deeply(@observedOutput,\@expectedOutput,'bwa::bwaIndex');
 
 ###Test for correct file value of bwa index using a md5sum file control -  work through the different bwa versions
-my $expectedMD5sum='b86728bb71903f8641530e61e9687b59  ../DATA-TEST/bwaTestDir/Reference.fasta.amb
+my $expectedMD5sum='b86728bb71903f8641530e61e9687b59  Reference.fasta.amb
 a51b6a5152f51b13833a40fe609474ea  Reference.fasta.ann
 e4fdc0af9540ee8365e7e324fc5c0cc3  Reference.fasta.bwt
 03454e7242900c436d9d7126f492e4d5  Reference.fasta.pac
