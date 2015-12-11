@@ -211,8 +211,8 @@ sub waiter { #Global function for waiting, will recover the jobID to survey and 
     print "\nTITI->";
     switch (1)
     {
-        case (defined $hashCapability->{"sge"} && defined $$configInfo{"sge"}){print "TOTO->";$stopWaiting = &sgeRun} #For SGE running
-        case (defined $hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$stopWaiting = &slurmRun} #For SLURM running
+        case (defined $hashCapability->{"sge"} && defined $$configInfo{"sge"}){print "TOTO->";$stopWaiting = &sgeWait} #For SGE running
+        case (defined $hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$stopWaiting = &slurmWait} #For SLURM running
     }
     print $stopWaiting,"\n";
     return $stopWaiting;
