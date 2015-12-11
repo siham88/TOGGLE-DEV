@@ -92,7 +92,7 @@ system ($lnCmd) and die ("ERROR: $0 : Cannot link the  fastq file $originalFastq
 #Fastqc exec test
 ##########################################
 my $fastqcDir = "fastqcOut";
-my $makeDirCmd = "mkdir $fastqcDir";
+$makeDirCmd = "mkdir $fastqcDir";
 system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
 is(fastqc::execution($fastqcFile,$fastqcDir),1,'fastqc::execution');     # test if fastqc::execution works
 
