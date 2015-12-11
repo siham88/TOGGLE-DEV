@@ -160,7 +160,7 @@ sub sgeRun { #For SGE cluster, running using qsub
     my $runningNode="";
     while ($runningNode ne "r") #If the job is not yet launched, there is no node affected, $runningMode is empty
     {
-      sleep 5;#Waiting for the job to be launched
+      sleep 1;#Waiting for the job to be launched
       $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
       chomp $runningNode;
       my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
