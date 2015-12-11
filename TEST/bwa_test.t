@@ -115,59 +115,56 @@ my @expectedOutput=('./bwa_TEST_log.e','./bwa_TEST_log.o','./individuSoft.txt','
 my @observedOutput=toolbox::readDir(".");
 
 is_deeply(@observedOutput,\@expectedOutput,'bwa::bwaIndex');
-exit;
 
 ###Test for correct file value of bwa index using a md5sum file control -  work through the different bwa versions
 my $expectedMD5sum='b86728bb71903f8641530e61e9687b59  ../DATA-TEST/bwaTestDir/Reference.fasta.amb
-a51b6a5152f51b13833a40fe609474ea  ../DATA-TEST/bwaTestDir/Reference.fasta.ann
-e4fdc0af9540ee8365e7e324fc5c0cc3  ../DATA-TEST/bwaTestDir/Reference.fasta.bwt
-03454e7242900c436d9d7126f492e4d5  ../DATA-TEST/bwaTestDir/Reference.fasta.pac
-9243bf066de0cc18aa0d3813f174cae8  ../DATA-TEST/bwaTestDir/Reference.fasta.sa
+a51b6a5152f51b13833a40fe609474ea  Reference.fasta.ann
+e4fdc0af9540ee8365e7e324fc5c0cc3  Reference.fasta.bwt
+03454e7242900c436d9d7126f492e4d5  Reference.fasta.pac
+9243bf066de0cc18aa0d3813f174cae8  Reference.fasta.sa
 '; #Expected values for the files produced by the bwa index
-my $observedMD5sum=`md5sum ../DATA-TEST/bwaTestDir/Reference.fasta.*`;#md5sum values observed for the current files produced
-is($observedMD5sum,$expectedMD5sum,'Test for the content of the bwa index output');
-
+my $observedMD5sum=`md5sum Reference.fasta.*`;#md5sum values observed for the current files produced
+is($observedMD5sum,$expectedMD5sum,'bwa::bwaIndex... Test for the content of the bwa index output');
+exit:
 
 #######################################################################################################
 ###Test for bwa Aln running
 #######################################################################################################
 
 $optionsHachees=$configInfos->{'BWA aln'};
-is (bwa::bwaAln($fastaRef,$fastqFile1,$forwardSaiFileIn,$optionsHachees),'1',"Test for bwa Aln running for forward");
-is (bwa::bwaAln($fastaRef,$fastqFile2,$reverseSaiFileIn,$optionsHachees),'1',"Test for bwa Aln running for reverse");
+is (bwa::bwaAln($fastaRef,$fastqFile1,$forwardSaiFileIn,$optionsHachees),'1',"bwa::bwaAln... Test for bwa Aln running for forward");
+is (bwa::bwaAln($fastaRef,$fastqFile2,$reverseSaiFileIn,$optionsHachees),'1',"bwa::bwaAln... Test for bwa Aln running for reverse");
 
 ###Verify if output are correct for bwa Aln
-@expectedOutput=('../DATA-TEST/bwaTestDir/RC3_1.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3_1.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3_2.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3_2.REPAIRING.fastq','../DATA-TEST/bwaTestDir/Reference.fasta','../DATA-TEST/bwaTestDir/Reference.fasta.amb','../DATA-TEST/bwaTestDir/Reference.fasta.ann','../DATA-TEST/bwaTestDir/Reference.fasta.bwt','../DATA-TEST/bwaTestDir/Reference.fasta.pac','../DATA-TEST/bwaTestDir/Reference.fasta.sa');
-my @outPut=toolbox::readDir($testingDir);
+@expectedOutput=('./RC3_1.BWAALN.sai','./RC3_1.REPAIRING.fastq','./RC3_2.BWAALN.sai','./RC3_2.REPAIRING.fastq','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
+@observedOutput=toolbox::readDir($testingDir);
 
-is_deeply(@outPut,\@expectedOutput,'Test for bwa aln output files');
+is_deeply(@observedOut,\@expectedOutput,'Test for bwa aln output files');
 
 ###Test for correct file value of bwa aln using a md5sum - BE CAREFUL, the sum changes based on the version of BWA!!
 TODO: {
     local $TODO = "The file structure depends of the version of BWA in use. Here, tested for bwa 0.7.9a";
     
-    $expectedMD5sum ='1be54c4d8d37870cbd78d93cee30b26f  ../DATA-TEST/bwaTestDir/RC3_1.BWAALN.sai
-53ae4174a5bd3cdf2958a59614cf0eb1  ../DATA-TEST/bwaTestDir/RC3_2.BWAALN.sai
+    $expectedMD5sum ='1be54c4d8d37870cbd78d93cee30b26f  RC3_1.BWAALN.sai
+53ae4174a5bd3cdf2958a59614cf0eb1  RC3_2.BWAALN.sai
 ';
-    $observedMD5sum=`md5sum ../DATA-TEST/bwaTestDir/*.sai`;#md5sum values observed for the current files produced
-    is($observedMD5sum,$expectedMD5sum,'Test for the content of the bwa aln output');
-    
-    
+    $observedMD5sum=`md5sum *.sai`;#md5sum values observed for the current files produced
+    is($observedMD5sum,$expectedMD5sum,'bwa::bwaAln... est for the content of the bwa aln output');
 }
 
 ########################################################################################################
 ####Test for bwa sampe
 #######################################################################################################
-is(bwa::bwaSampe($sampeFileOut,$fastaRef,$forwardSaiFileIn,$reverseSaiFileIn,$fastqFile1,$fastqFile2,"RC3"),'1',"Test for bwa sampe running");
+is(bwa::bwaSampe($sampeFileOut,$fastaRef,$forwardSaiFileIn,$reverseSaiFileIn,$fastqFile1,$fastqFile2,"RC3"),'1',"bwa::bwaSampe... Test for bwa sampe running");
 ####Verify if output are correct for sampe
-@expectedOutput=('../DATA-TEST/bwaTestDir/RC3_1.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3_1.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3_2.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3_2.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam','../DATA-TEST/bwaTestDir/Reference.fasta','../DATA-TEST/bwaTestDir/Reference.fasta.amb','../DATA-TEST/bwaTestDir/Reference.fasta.ann','../DATA-TEST/bwaTestDir/Reference.fasta.bwt','../DATA-TEST/bwaTestDir/Reference.fasta.pac','../DATA-TEST/bwaTestDir/Reference.fasta.sa');
-@outPut=toolbox::readDir($testingDir);
-is_deeply(@outPut,\@expectedOutput,'Test for Output file ok for bwa sampe');
+@expectedOutput=('./RC3_1.BWAALN.sai','./RC3_1.REPAIRING.fastq','./RC3_2.BWAALN.sai','./RC3_2.REPAIRING.fastq','./RC3.BWASAMPE.sam','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
+@observedOutput=toolbox::readDir($testingDir);
+is_deeply(@observedOutput,\@expectedOutput,'bwa::bwaSampe... Test for Output file ok for bwa sampe');
 
 
 ###Test for correct file value of bwa sampe
 #GREP command result
-my $grepResult=`grep -c "XT:A:U" ../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam`;
+my $grepResult=`grep -c "XT:A:U" RC3.BWASAMPE.sam`;
 chomp $grepResult;
 is($grepResult,1704,'Test for the result of bwa sampe');
 
