@@ -120,7 +120,9 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsFaidx... Ok for the conten
 ################################################################################################
 ##Samtools index
 ################################################################################################
-is(samTools::samToolsIndex($bamFile),1,'Ok for samToolsIndex running');
+is(samTools::samToolsIndex($bamFile),1,'samTools::samToolsIndex... running');
+
+exit;
 
 ###Checking the correct structure for the output file using md5sum
 $expectedMD5sum = "29bed7c8c70c24cd84a439d3fc473474";
