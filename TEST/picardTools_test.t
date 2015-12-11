@@ -178,7 +178,7 @@ exit;
 ##picardToolsMarkDuplicates test
 ###########################################
 my $bamFile = "RC3.GATKINDELREALIGNER.bam";                         # BAM file of test
-my $originalBamFile = $expectedData/RC3.GATKINDELREALIGNER.bam";        # original BAM file
+my $originalBamFile = $expectedData."/".$bamFile;        # original BAM file
 
 my $bamFileCopyCom = "cp $originalBamFile $bamFile";                            # command to copy the original Ref fasta file into the test directory
 system ($bamFileCopyCom) and die ("ERROR: $0 : Cannot copy the file $originalBamFile in the test directory with the command $bamFileCopyCom\n$!\n");    # RUN the copy command
