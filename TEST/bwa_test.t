@@ -195,7 +195,6 @@ $grepResult= `grep -c "XT:A:U" RC3.BWASAMSE.sam`;
 chomp $grepResult;
 is($grepResult,1,'bwa::bwaSamse... Test for the content result of bwa samse');
 
-exit;
 
 ########################################################################################################
 #####Test for bwa mem single
