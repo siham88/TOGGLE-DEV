@@ -161,9 +161,8 @@ sub sgeRun { #For SGE cluster, running using qsub
     my $trying=0;
     while ($runningNode ne "r") #If the job is not yet launched or already finished
     {
-        last if ($runningNode =~ m/still unknown/);
         sleep 3;#Waiting for the job to be launched
-        $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
+        $runningNode=`$runningNodeCommand`;
         chomp $runningNode;
         my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
         if ($runningFields[4] ne "r")
@@ -172,7 +171,9 @@ sub sgeRun { #For SGE cluster, running using qsub
             if ($trying == 5)
             {
                 #We already tryed to pick up the node infos 5 times, let's stop
-                $runningNode = "still unknown (either not running, or already finished)"
+                $runningNode = "still unknown (either not running, or already finished)";
+                toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n",2);
+                last;
             }
             next;
         }
@@ -206,12 +207,13 @@ sub waiter { #Global function for waiting, will recover the jobID to survey and 
         
     my $hashCapability = &checkingCapability;
     my $stopWaiting;
+    print "\nTITI->";
     switch (1)
     {
-        case (defined $hashCapability->{"sge"} && defined $$configInfo{"sge"}){$stopWaiting = &sgeRun} #For SGE running
+        case (defined $hashCapability->{"sge"} && defined $$configInfo{"sge"}){print "TOTO->";$stopWaiting = &sgeRun} #For SGE running
         case (defined $hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$stopWaiting = &slurmRun} #For SLURM running
     }
-   
+    print $stopWaiting,"\n";
     return $stopWaiting;
 }
 
