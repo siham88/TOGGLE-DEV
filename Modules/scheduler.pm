@@ -208,13 +208,11 @@ sub waiter { #Global function for waiting, will recover the jobID to survey and 
         
     my $hashCapability = &checkingCapability;
     my $stopWaiting;
-    print "\nTITI->";
     switch (1)
     {
-        case (defined $hashCapability->{"sge"} && defined $$configInfo{"sge"}){print "TOTO->";$stopWaiting = &sgeWait} #For SGE running
+        case (defined $hashCapability->{"sge"} && defined $$configInfo{"sge"}){$stopWaiting = &sgeWait} #For SGE running
         case (defined $hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$stopWaiting = &slurmWait} #For SLURM running
     }
-    print $stopWaiting,"\n";
     return $stopWaiting;
 }
 
@@ -235,7 +233,6 @@ sub sgeWait {
       chomp $nbRunningJobs;
       sleep 50;
     }
-    print "TUTU ->";
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 25;#Needed for qacct to register infos...
     toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tNode\tExitStatus\n-------------------------------",1);
