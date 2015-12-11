@@ -210,18 +210,18 @@ exit;
 is (bwa::bwaMem($samseFileOut,$fastaRef,$fastqFile1,"","truc"),'1',"bwa::bwaMem... Test for bwa mem running single");
 
 ###Verify if output are correct for mem single
-@expectedOutput=('./RC3_1.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3_2.REPAIRING.fastq','../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam','../DATA-TEST/bwaTestDir/Reference.fasta','../DATA-TEST/bwaTestDir/Reference.fasta.amb','../DATA-TEST/bwaTestDir/Reference.fasta.ann','../DATA-TEST/bwaTestDir/Reference.fasta.bwt','../DATA-TEST/bwaTestDir/Reference.fasta.pac','../DATA-TEST/bwaTestDir/Reference.fasta.sa');
-my @outPut=toolbox::readDir($testingDir);
-is_deeply(@outPut,\@expectedOutput,'Test for bwa mem single output files');
+@expectedOutput=('./RC3_1.REPAIRING.fastq','./RC3_2.REPAIRING.fastq','./RC3.BWASAMPE.sam','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
+my @outPut=toolbox::readDir(".");
+is_deeply(@outPut,\@expectedOutput,'bwa::bwaMem... Test for bwa mem single output files');
 
 ##Output value test
 
-$grepResult= `grep -c 'LOC' ../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam`;
+$grepResult= `grep -c 'LOC' RC3.BWASAMPE.sam`;
 chomp $grepResult;
-is($grepResult,717,'Test for the result of bwa mem single');
+is($grepResult,717,'bwa::bwaMem... Test for the result of bwa mem single');
 
 ####Remove the file created
-unlink('../DATA-TEST/bwaTestDir/RC3.BWASAMPE.sam','../DATA-TEST/bwaTestDir/RC3_1.BWAALN.sai','../DATA-TEST/bwaTestDir/RC3_2.BWAALN.sai');
+unlink('RC3.BWASAMPE.sam','RC3_1.BWAALN.sai','RC3_2.BWAALN.sai');
 
 ###################################################################################################################
 ####Test for bwa mem paired
