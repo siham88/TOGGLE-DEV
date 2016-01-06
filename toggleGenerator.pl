@@ -433,6 +433,8 @@ if ($orderBefore1000)
           $errorList="$|".$individualName;
           #Need to remove the empty name...
           $errorList =~ s/obiWanKenobi\$\|//;
+          ##DEBUG
+          print "++$errorList++\n";
         }
         next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
         
@@ -458,6 +460,8 @@ if ($orderBefore1000)
       {
         #Creating a chain with the list of individual with an error in the job...
         $errorList=join ("$|",@{$waitOutput});
+        ##DEBUG
+        print "==$errorList==\n";
         
       }
       if ($errorList ne "obiWanKenobi")
