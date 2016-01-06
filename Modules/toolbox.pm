@@ -855,7 +855,7 @@ sub checkFormatFastq
                 $i=$i+4; 												# jumping to next read.
             }
             
-            last if ($stop==200000);                                    # stoping treatment if 50000 reads were analysed.
+            last if ($stop==20);                                    # stoping treatment if 50000 reads were analysed.
             
             undef @linesF1;
             $comp=0;
