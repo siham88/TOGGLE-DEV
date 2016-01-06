@@ -269,7 +269,7 @@ sub sgeWait {
 	  }
 	  else
 	  {
-	    push $individual, @jobsInError;
+	    push @jobsInError, $individual;
 	    $currentLine = "Error";
 	  }
           $outputLine .= $currentLine;
