@@ -405,8 +405,9 @@ if ($orderBefore1000)
       my @tempList = ($trueDirName);
       $listSamples = \@tempList;
     }
+    my $errorList="obiWanKenobi";
     
-    #FOR SGE launching
+    #we need those variable for Scheduler launching
     my $jobList="";
     my %jobHash;
         
@@ -419,7 +420,15 @@ if ($orderBefore1000)
         
         #Launching through the scheduler launching system  
         my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
-        
+        if ($jobOutput == 0)
+        {
+          #the linear job is not ok, need to pick up the number of jobs
+          my $individualName= `basename $currentDir` and warn("Cannot pick up basename for $individualName: $!\n");
+          $individualName = $currentDir unless ($individualName); # Basename did not succeed...
+          $errorList="$|".$individualName;
+          #Need to remove the empty name...
+          $errorList =~ s/obiWanKenobi\$\|//;
+        }
         next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
         
         $jobList = $jobList.$jobOutput."|";
@@ -431,7 +440,6 @@ if ($orderBefore1000)
     
     #If qsub mode, we have to wait the end of jobs before populating
     chop $jobList if ($jobList =~ m/\|$/);
-    my $errorList="";
     if ($jobList ne "")
     {
       #Have to wait that all jobs are finished
@@ -443,12 +451,19 @@ if ($orderBefore1000)
       }
       else
       {
-        #problem somewhere for some individuals, reporting the info
-        $errorList=join (",",@{$waitOutput});
-        toolbox::exportLog("WARNINGS: $0 : Some individuals are erroneous: $errorList\n",2);
         #Creating a chain with the list of individual with an error in the job...
-        $errorList=~ s/,/\$\|/;
+        $errorList=join ("$|",@{$waitOutput});
+        
       }
+      if ($errorList ne "obiWanKenobi")
+      {
+        #Some errors appears
+        #problem somewhere for some individuals, reporting the info
+        my $outputErrors = $errorList;
+        $outputErrors =~ s/\$\|/,/;
+        toolbox::exportLog("WARNINGS: $0 : Some individuals are erroneous and not treated: $outputErrors\n",2);
+      }
+
     }
     
     # Going through the individual tree
@@ -456,6 +471,7 @@ if ($orderBefore1000)
     foreach my $currentDir (@{$listSamples})
     {
       next unless $currentDir =~ m/\//; # Will work only on folders
+      next if $currentDir =~ m/$errorList/; # A job in error will not be transfered, to avoid errors.
       my $fileList = toolbox::readDir($currentDir);
       foreach my $file (@{$fileList}) #Copying intermediate data in the intermediate directory
       {
