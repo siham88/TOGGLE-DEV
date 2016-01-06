@@ -154,6 +154,7 @@ There only the last step result (samtools sort) will be conserved. The folders a
 # Scheduler and parallel runs
 The current version is scheduler-aware (**SGE** and **Slurm** on v0.3), and is able to decide by itself to launch on such a system.
 The jobs will be launched in parallel however only if the *software.config* file contains informations for scheduling, *i.e.* the queue name, number of core/threads per jobs, etc...
+
 As an example for **SGE**:
 ````
 $sge
@@ -164,6 +165,11 @@ $sge
 -V
 
 ````
+
+If the *software.config* file contains those **SGE** informations AND the machine is **SGE** capable, the *toggleBzz.pl* and the *toggleMultiple.pl* scripts will be launched as parallel jobs.
+
+Moreover, in parallel as in linear mode, an error in one individual will not stop the whole process. This individual will be marked as error in the error log, but the others will continue.
+
 # Drawing the pipeline
 If *Graphviz* is installed on the running server, the **toggleGenerator.pl** script will also generate a graphical view of the pipeline in the output folder.
 If *Graphviz* is not installed, a .dot file is nevertheless created, allowing the user to create a graphical view on another machine having *Graphviz*
