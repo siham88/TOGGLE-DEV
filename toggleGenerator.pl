@@ -430,7 +430,7 @@ if ($orderBefore1000)
           $individualName = $currentDir unless ($individualName); # Basename did not succeed...
           ##DEBUG
           print "--$individualName--\n";
-          $errorList="$|".$individualName;
+          $errorList.="$|".$individualName;
           ##DEBUG
           print "++$errorList++\n";
           #Need to remove the empty name...
