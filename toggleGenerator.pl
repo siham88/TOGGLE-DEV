@@ -420,12 +420,16 @@ if ($orderBefore1000)
         
         #Launching through the scheduler launching system  
         my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
+        ##DEBUG
+        print "**$jobOutput** \n";
         if ($jobOutput == 0)
         {
           #the linear job is not ok, need to pick up the number of jobs
           my $individualName = `basename $currentDir` or warn("Cannot pick up basename for $currentDir : $!\n");
           chomp $individualName;
           $individualName = $currentDir unless ($individualName); # Basename did not succeed...
+          ##DEBUG
+          print "--$individualName--\n";
           $errorList="$|".$individualName;
           #Need to remove the empty name...
           $errorList =~ s/obiWanKenobi\$\|//;
