@@ -444,7 +444,7 @@ if ($orderBefore1000)
       else
       {
         #problem somewhere for some individuals, reporting the info
-        $errorList=join (","@{$waitOutput});
+        $errorList=join (",",@{$waitOutput});
         toolbox::exportLog("WARNINGS: $0 : Some individuals are erroneous: $errorList\n",2);
         #Creating a chain with the list of individual with an error in the job...
         $errorList=~ s/,/\$\|/;
