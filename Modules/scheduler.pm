@@ -221,6 +221,7 @@ sub waiter { #Global function for waiting, will recover the jobID to survey and 
 sub sgeWait {
     
     my $nbRunningJobs = 1;
+    my @jobsInError=();
     ##Waiting for jobs to finish
     while ($nbRunningJobs)
     {  
@@ -262,7 +263,15 @@ sub sgeWait {
         elsif ($currentLine =~ m/^exit_status/) #Picking up exit status
         {
           $currentLine =~ s/exit_status  //;
-          $currentLine = "Normal" if $currentLine == 0;
+          if ($currentLine == 0) #No errors
+	  {
+	    $currentLine = "Normal";
+	  }
+	  else
+	  {
+	    push $individual, @jobsInError;
+	    $currentLine = "Error";
+	  }
           $outputLine .= $currentLine;
         }
         else
@@ -276,6 +285,10 @@ sub sgeWait {
     }
     toolbox::exportLog("-------------------------------\n",1);#To have a better table presentation
   
+  if (scalar @jobsInError) {
+    #at least one job has failed
+    return \@jobsInError;
+  }
   return 1;
 }
 

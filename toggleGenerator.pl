@@ -431,19 +431,22 @@ if ($orderBefore1000)
     
     #If qsub mode, we have to wait the end of jobs before populating
     chop $jobList if ($jobList =~ m/\|$/);
+    my $errorList;
     if ($jobList ne "")
     {
       #Have to wait that all jobs are finished
       my $waitOutput = scheduler::waiter($jobList,\%jobHash);
-      if ($waitOutput != 0)
+      if ($waitOutput == 1)
       {
         #all jobs correctly finished
         toolbox::exportLog("INFOS: $0 : All intermediate jobs are finished\n",1);
       }
       else
       {
-        #problem somewhere
-        toolbox::exportLog("ERROR: $0 : All intermediate jobs are not finished, please check error log...\n",0);
+        #problem somewhere for some individuals, reporting the info
+        toolbox::exportLog("WARNINGS: $0 : Some individuals are erroneous: ".@{$waitOutput}."\n",2);
+        #Creating a chain with the list of individual with an error in the job...
+        $errorList=join ("|",@{$waitOutput});
       }
     }
     
@@ -477,6 +480,8 @@ if ($orderBefore1000)
         foreach my $currentDir (@{$listSamples})
         {
             next unless $currentDir =~ m/\//; # Will work only on folders
+            next if $currentDir =~ m/$errorList/; # A job in error will not be transfered, to avoid errors.
+
             my $lastDir = $currentDir."/".$lastOrderBefore1000."_".$$orderBefore1000{$lastOrderBefore1000};
             $lastDir =~ s/ //g;
             my $fileList = toolbox::readDir($lastDir);
@@ -503,6 +508,8 @@ if ($orderBefore1000)
             ##DEBUG toolbox::exportLog($currentDir,1);
 
             next unless $currentDir =~ m/\//; # Will work only on folders
+            next if $currentDir =~ m/$errorList/; # A job in error will not be transfered, to avoid errors.
+
             my $lastDir = $currentDir."/".$lastOrderBefore1000."_".$$orderBefore1000{$lastOrderBefore1000};
             $lastDir =~ s/ //g;
             ##DEBUG toolbox::exportLog($lastDir,1);
