@@ -432,7 +432,7 @@ if ($orderBefore1000)
           print "--$individualName--\n";
           $errorList="$|".$individualName;
           ##DEBUG
-          print "++$errorList++\n"
+          print "++$errorList++\n";
           #Need to remove the empty name...
           $errorList =~ s/obiWanKenobi\$\|//;
           ##DEBUG
