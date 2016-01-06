@@ -540,25 +540,27 @@ if ($orderAfter1000)
 
     #Launching through the scheduler launching system  
     my $jobOutput = scheduler::launcher($launcherCommand, "1", "Global analysis", $configInfo); #not blocking job, explaining the '1'
-    next unless $jobOutput ne 1; #1 means the job is Ok and is running in a normal linear way, ie no scheduling
-    $jobList = $jobOutput;
-    $jobHash{"global"}=$jobOutput;
-    
-    #If qsub mode, we have to wait the end of jobs before populating
-    chop $jobList if ($jobList =~ m/\|$/);
-    if ($jobList ne "")
+    if ($jobOutput ne 1) #1 means the job is Ok and is running in a normal linear way, ie no scheduling
     {
-      #Have to wait that all jobs are finished
-      my $waitOutput = scheduler::waiter($jobList,\%jobHash);
-      if ($waitOutput == 1)
+      $jobList = $jobOutput;
+      $jobHash{"global"}=$jobOutput;
+    
+      #If qsub mode, we have to wait the end of jobs before populating
+      chop $jobList if ($jobList =~ m/\|$/);
+      if ($jobList ne "")
       {
-        #all jobs correctly finished
-        toolbox::exportLog("INFOS: $0 : Global final job is finished\n",1);
-      }
-      else
-      {
-        #problem somewhere
-        toolbox::exportLog("ERROR: $0 : Global final job is not finished, please check error log...\n",0);
+        #Have to wait that all jobs are finished
+        my $waitOutput = scheduler::waiter($jobList,\%jobHash);
+        if ($waitOutput == 1)
+        {
+          #all jobs correctly finished
+          toolbox::exportLog("INFOS: $0 : Global final job is finished\n",1);
+        }
+        else
+        {
+          #problem somewhere
+          toolbox::exportLog("ERROR: $0 : Global final job is not finished, please check error log...\n",0);
+        }
       }
     }
     

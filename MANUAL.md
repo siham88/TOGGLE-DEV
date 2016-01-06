@@ -6,7 +6,7 @@ You can modify not only the different options for each software but also define 
 
 You can therefore remove some steps compared to the previous version, starting from SAM/BAM or VCF files instead of FASTQ only, asking for individual treatments only, individual then common (such as mapping followed by common calling), or even only common treatment.
 
-#Launching an analysis
+# Launching an analysis
 The current version is based on the **toggleGenerator.pl** script
 
 ````
@@ -14,7 +14,7 @@ $toggleGenerator.pl -d initialDirectory -r referenceFile -c configurationFile -o
 ````
 
 with
-> -d initialDirectory: a folder with raw data to be treated (FASTQ, FASTQ.GZ, SAM, BAM, VCF) 
+> -d initialDirectory: a folder with raw data to be treated (FASTQ, FASTQ.GZ, SAM, BAM, VCF)
 
 >>!!! THE FILE NAMES MUST BE UNDER THE FORM **individual1_1.fastq** OR **mapping1.sam**
 
@@ -68,13 +68,13 @@ OTHEROPTIONS
 ````
 
 
-#Creating a pipeline
+# Creating a pipeline
 
 The **toggleGenerator.pl** script will use the configuration file informations (generally named as *software.config.txt* file, but not mandatory) to create specific pipeline scripts in the output folder called **toggleBzz.pl** for individual treatments (individual mapping e.g.) and **toggleMultiple.pl** for global treatment (global SNP calling e.g.).
 
 The order will be verified before creating the scripts, by checking if the output files from the step n-1 will be accepted as input for the step n.
 
-###Providing an order
+### Providing an order
 The order of a specific pipeline is provided in the *software.config.txt* as the software *order*
 
 Thus, if you provide option such as:
@@ -108,7 +108,7 @@ $samtools View 2
 -f 0x02
 ````
 
-###Giving a common step to all individuals
+### Giving a common step to all individuals
 
 If you want for instance to map all individuals separately then perform a common SNP calling, please add a step number higher than 999.
 
@@ -121,7 +121,7 @@ $order
 ````
 This pipeline will map FASTQ then sort per coordinates the SAM for each individuals, and then will launch a common step for all as a global SNP calling. You can add after this calling other steps (1001=gatkVariantFiltrator for example).
 
-###Starting only as a common treatment
+### Starting only as a common treatment
 If you want only a global treatment (you may have all your formatted BAM and you want to perform the calling and subsequent steps), you can create the following pipeline:
 ````
 $order
@@ -132,7 +132,7 @@ $order
 
 The pipeline will treat the data as a global pipeline in this case, without separating the individual files.
 
-#Cleaning steps
+# Cleaning steps
 In order to gain hard drive space, you may want to remove some steps from your complete analysis.
 
 In this case, you can specify in the configuration file which step must be REMOVED along the pipeline (as soon as the step following them has been correctly completed), using the key *cleaner*.
@@ -151,6 +151,19 @@ $cleaner
 
 There only the last step result (samtools sort) will be conserved. The folders and logs of the cleaned steps are conserved, but not the resulting files.
 
-#Drawing the pipeline
+# Scheduler and parallel runs
+The current version is scheduler-aware (**SGE** and **Slurm** on v0.3), and is able to decide by itself to launch on such a system.
+The jobs will be launched in parallel however only if the *software.config* file contains informations for scheduling, *i.e.* the queue name, number of core/threads per jobs, etc...
+As an example for **SGE**:
+````
+$sge
+-q myqueue.q
+-pe ompi 2
+-b Y
+-cwd
+-V
+
+````
+# Drawing the pipeline
 If *Graphviz* is installed on the running server, the **toggleGenerator.pl** script will also generate a graphical view of the pipeline in the output folder.
 If *Graphviz* is not installed, a .dot file is nevertheless created, allowing the user to create a graphical view on another machine having *Graphviz*
