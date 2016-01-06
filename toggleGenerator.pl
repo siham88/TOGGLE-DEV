@@ -431,7 +431,7 @@ if ($orderBefore1000)
     
     #If qsub mode, we have to wait the end of jobs before populating
     chop $jobList if ($jobList =~ m/\|$/);
-    my $errorList;
+    my $errorList="";
     if ($jobList ne "")
     {
       #Have to wait that all jobs are finished
