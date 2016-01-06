@@ -423,7 +423,7 @@ if ($orderBefore1000)
         if ($jobOutput == 0)
         {
           #the linear job is not ok, need to pick up the number of jobs
-          my $individualName= `basename $currentDir` and warn("Cannot pick up basename for $individualName: $!\n");
+          my $individualName = `basename $currentDir` and warn("Cannot pick up basename for $individualName : $!\n");
           $individualName = $currentDir unless ($individualName); # Basename did not succeed...
           $errorList="$|".$individualName;
           #Need to remove the empty name...
