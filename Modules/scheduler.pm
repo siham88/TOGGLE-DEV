@@ -91,7 +91,7 @@ sub checkingCapability { #Will test the capacity of launching using various sche
     chomp $capabilityValue{"sge"};
     
     #SLURM test
-    $capabilityValue{"slurm"}=""; #Will provide a not-empty output if SLURM is installed
+    $capabilityValue{"slurm"}=`sbatch -V | grep slurm`; #Will provide a not-empty output if SLURM is installed
     chomp $capabilityValue{"slurm"};
     
     
@@ -191,6 +191,60 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
     
     my $slurmOptionsHash=toolbox::extractHashSoft($configInfo,"slurm");
     my $slurmOptions=toolbox::extractOptions($slurmOptionsHash);
+    
+    #Adding slurm options
+    my $launcherCommand = "sbatch ".$slurmOptions." ".$commandLine;
+    $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
+    my $currentJID = `$launcherCommand`;
+    
+    if ($!) #There are errors in the launching...
+    {
+        warn ("WARNING : $0 : Cannot launch the job for $sample: $!\n");
+        $currentJID = "";
+    }
+        
+    #Parsing infos and informing logs
+    chomp $currentJID;
+    
+    unless ($currentJID) #The job has no output in STDOUT, ie there is a problem...
+    {
+        return 0; #Returning to launcher subprogram the error type
+    }
+    
+    toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in sbatch mode through the command:\n\t$launcherCommand\n\n",1);
+    toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
+    
+    my @infosList=split /\s/, $currentJID; #the format is such as "Submitted batch job 3"
+    $currentJID = $infosList[3];
+    
+    my $runningNodeCommand="squeue | grep \"  $currentJID \"";
+    my $runningNode="x";
+    my $trying=0;
+    while ($runningNode ne "R") #If the job is not yet launched or already finished
+    {
+        sleep 3;#Waiting for the job to be launched
+        $runningNode=`$runningNodeCommand`;
+        chomp $runningNode;
+        $runningNode = "x" unless $runningNode; #if empty variable, problem after...
+        if ($runningNode !~ /\s+R\s+/)
+        {# not running yet
+            $trying++;
+            if ($trying == 5)
+            {
+                #We already tryed to pick up the node infos 5 times, let's stop
+                $runningNode = "still unknown (either not running, or already finished)";
+                toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
+                last;
+            }
+            next;
+        }
+        my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
+        $runningNode = $runningFields[8];
+    }
+    toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
+    
+    #Provide the job ID
+    return $currentJID;
     
 }
 
