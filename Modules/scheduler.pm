@@ -389,9 +389,10 @@ sub slurmWait{
       while (@lineSacct)
       {
 	my $line = shift @lineSacct;
+	print $line;
 	#Passing the header lines
 	next if $line =~ m/JobID/;
-	next if $line =~ m/----/;
+	next if $line =~ m/$----/;
 	my @fields = split /\t/, $line;
 	if ($fields[5] eq "COMPLETED") #No errors
 	  {
