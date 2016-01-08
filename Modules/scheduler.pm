@@ -401,6 +401,8 @@ sub slurmWait{
 	toolbox::exportLog($line3,2);
 	
 	my @fields = split /\t/, $line;
+	my $tempJoin = join(",",@fields)."-->".scalar @fields." fields";
+	toolbox::exportLog($tempJoin,2);
 
 	if ($fields[5] eq "COMPLETED") #No errors
 	  {
