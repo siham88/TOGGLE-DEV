@@ -468,8 +468,7 @@ if ($orderBefore1000)
         #Some errors appears
         #problem somewhere for some individuals, reporting the info
         my $outputErrors = $errorList;
-         ##DEBUG
-        print "==$errorList==\n";
+         ##DEBUG        print "==$errorList==\n";
         $outputErrors =~ s/\$\|/,/;
         toolbox::exportLog("WARNINGS: $0 : Some individuals are erroneous and not treated: $outputErrors\n",2);
       }
