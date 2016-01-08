@@ -395,7 +395,7 @@ sub slurmWait{
 	
 	#Passing the header lines
 	next if $line =~ m/JobID/;
-	next if $line =~ m/$------------/;
+	next if $line !~ m/^-----/;
 	
 	my $line3 = $line."***";
 	toolbox::exportLog($line3,2);
