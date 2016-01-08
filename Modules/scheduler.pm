@@ -389,12 +389,19 @@ sub slurmWait{
       while (@lineSacct)
       {
 	my $line = shift @lineSacct;
+	
 	my $line2 = $line."+++";
 	toolbox::exportLog($line2,2);
+	
 	#Passing the header lines
 	next if $line =~ m/JobID/;
 	next if $line =~ m/$----/;
+	
+	my $line3 = $line."***";
+	toolbox::exportLog($line3,2);
+	
 	my @fields = split /\t/, $line;
+	print "@fields";
 	if ($fields[5] eq "COMPLETED") #No errors
 	  {
 	    $outputLine .= "Normal";
