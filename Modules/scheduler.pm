@@ -390,15 +390,11 @@ sub slurmWait{
       {
 	my $line = shift @lineSacct;
 	
-	my $line2 = $line."+++";
-	toolbox::exportLog($line2,2);
-	
+
 	#Passing the header lines
 	next if $line =~ m/JobID/;
 	next if $line !~ m/^\d/;
 	
-	my $line3 = $line."***";
-	toolbox::exportLog($line3,2);
 	
 	my @fields = split /\t/, $line;
 	my $tempJoin = join(",",@fields)."-->".scalar @fields." fields";
