@@ -443,7 +443,7 @@ if ($orderBefore1000)
     }
     
     
-    #If qsub mode, we have to wait the end of jobs before populating
+    #If parallel mode, we have to wait the end of jobs before populating
     chop $jobList if ($jobList =~ m/\|$/);
     if ($jobList ne "")
     {
@@ -457,7 +457,7 @@ if ($orderBefore1000)
       else
       {
         #Creating a chain with the list of individual with an error in the job...
-        $errorList=join ("$|",@{$waitOutput});
+        $errorList=join ("\$\|",@{$waitOutput});
        
         
       }

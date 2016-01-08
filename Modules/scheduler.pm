@@ -193,7 +193,12 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
     my $slurmOptions=toolbox::extractOptions($slurmOptionsHash);
     
     #Adding slurm options
-    my $launcherCommand = "sbatch ".$slurmOptions." ".$commandLine;
+    my $launcherCommand = "sbatch ".$slurmOptions;
+    #Creating the bash script for slurm to launch the command
+    my $bashScriptCreationCommand= "echo -e \"#!/bin/bash\n".$commandLine."\nexit 0;\" | cat - >> /tmp/slurmScript.sh && chmod 777 /tmp/slurmScript.sh";
+    toolbox::run($bashScriptCreationCommand);
+    toolbox::exportLog("INFOS : $0 : Created the slurm bash file",1);
+    $launcherCommand.=" /tmp/slurmScript.sh";
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
     my $currentJID = `$launcherCommand`;
     
