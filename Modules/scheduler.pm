@@ -389,7 +389,7 @@ sub slurmWait{
       while (@lineSacct)
       {
 	my $line = shift @lineSacct;
-	print $line;
+	toolbox::exportLog($line,2);
 	#Passing the header lines
 	next if $line =~ m/JobID/;
 	next if $line =~ m/$----/;
