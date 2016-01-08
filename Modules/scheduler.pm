@@ -396,7 +396,7 @@ sub slurmWait{
 	next if $line !~ m/^\d/;
 	
 	
-	my @fields = split /\t/, $line;
+	my @fields = split /\s+/, $line;
 	my $tempJoin = join(",",@fields)."-->".scalar @fields." fields";
 	toolbox::exportLog($tempJoin,2);
 
