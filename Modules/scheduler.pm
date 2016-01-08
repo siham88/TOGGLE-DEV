@@ -197,10 +197,10 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
     #Creating the bash script for slurm to launch the command
     my $bashScriptCreationCommand= "echo \"#!/bin/bash\n".$commandLine."\nexit 0;\" | cat - > ~/slurmScript.sh && chmod 777 ~/slurmScript.sh";
     toolbox::run($bashScriptCreationCommand);
-    toolbox::exportLog("INFOS : $0 : Created the slurm bash file",1);
+    ##DEBUG toolbox::exportLog("INFOS : $0 : Created the slurm bash file",1);
     $launcherCommand.=" ~/slurmScript.sh";
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
-    toolbox::exportLog($launcherCommand,2);
+    ##DEBUG toolbox::exportLog($launcherCommand,2);
     my $currentJID = `$launcherCommand`;
     
     if ($!) #There are errors in the launching...
@@ -395,13 +395,13 @@ sub slurmWait{
 	
 	#Passing the header lines
 	next if $line =~ m/JobID/;
-	next if $line =~ m/$----/;
+	next if $line =~ m/$------------/;
 	
 	my $line3 = $line."***";
 	toolbox::exportLog($line3,2);
 	
 	my @fields = split /\t/, $line;
-	print "@fields";
+
 	if ($fields[5] eq "COMPLETED") #No errors
 	  {
 	    $outputLine .= "Normal";
