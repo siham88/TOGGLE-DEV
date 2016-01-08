@@ -303,7 +303,7 @@ sub sgeWait {
       my $qacctOutput = `$qacctCommand`;
       my $outputLine;
       chomp $qacctOutput;
-      if ($qacctOutput =~ "-bash: qacct")
+      if ($qacctOutput =~ "-bash: qacct" or $qacctOutput =~ "installed")
       {
         #IF qacct cannot be run on the node
         $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
@@ -373,7 +373,7 @@ sub slurmWait{
     toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tExitStatus\n-------------------------------",1);
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
-      my $sacctCommand = "sacct -j ".$jobHash{$individual}." 2>&1";
+      my $sacctCommand = "sacct -j ".$jobHash{$individual};
       my $sacctOutput = `$sacctCommand`;
       my $outputLine;
       chomp $sacctOutput;
@@ -389,6 +389,7 @@ sub slurmWait{
       while (@lineSacct)
       {
 	my $line = shift @lineSacct;
+	my $line2 = $line."+++";
 	toolbox::exportLog($line,2);
 	#Passing the header lines
 	next if $line =~ m/JobID/;
