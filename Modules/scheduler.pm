@@ -195,10 +195,10 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
     #Adding slurm options
     my $launcherCommand = "sbatch ".$slurmOptions;
     #Creating the bash script for slurm to launch the command
-    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n".$commandLine."\nexit 0;\" | cat - > /tmp/slurmScript.sh && chmod 777 /tmp/slurmScript.sh";
+    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n".$commandLine."\nexit 0;\" | cat - > ~/slurmScript.sh && chmod 777 ~/slurmScript.sh";
     toolbox::run($bashScriptCreationCommand);
     toolbox::exportLog("INFOS : $0 : Created the slurm bash file",1);
-    $launcherCommand.=" /tmp/slurmScript.sh";
+    $launcherCommand.=" ~/slurmScript.sh";
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
     my $currentJID = `$launcherCommand`;
     
