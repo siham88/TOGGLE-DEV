@@ -384,7 +384,7 @@ sub slurmWait{
         toolbox::exportLog($outputLine,1);
         next;
       }
-      my @lineSacct=split/\s/, $sacctOutput;
+      my @lineSacct=split/\n/, $sacctOutput;
       $outputLine=$individual."\t".$jobHash{$individual}."\t";
       while (@lineSacct)
       {
