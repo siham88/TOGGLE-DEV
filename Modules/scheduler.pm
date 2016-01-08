@@ -200,6 +200,7 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
     toolbox::exportLog("INFOS : $0 : Created the slurm bash file",1);
     $launcherCommand.=" ~/slurmScript.sh";
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
+    toolbox::exportLog($launcherCommand,2);
     my $currentJID = `$launcherCommand`;
     
     if ($!) #There are errors in the launching...
