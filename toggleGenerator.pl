@@ -256,11 +256,7 @@ foreach my $file (@{$initialDirContent})
     my ($shortName)=toolbox::extractPath($file);
     my $lnCommand = "ln -s $file $workingDir/$shortName";
     ##DEBUG print $lnCommand,"\n";
-    
-    if(toolbox::run($lnCommand)==1)       #Execute command
-    {
-        toolbox::exportLog("INFOS: $0 : Transferring $file to $workingDir\n",1);
-    }
+    toolbox::run($lnCommand,"noprint");      
 }
 
 my $listOfFiles = toolbox::readDir($workingDir);                     # read it to recover files in it
