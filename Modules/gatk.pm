@@ -39,7 +39,7 @@ use Data::Dumper;
 # GATK Base Recalibrator: recalibrate the quality score of bases from informations stemming from SNP VCF file
 sub gatkBaseRecalibrator
 {
-    my ($refFastaFileIn, $bamToRecalibrate, $optionsHachees, $tableReport) = @_;      # recovery of information
+    my ($refFastaFileIn, $bamToRecalibrate, $tableReport, $optionsHachees) = @_;      # recovery of information
     if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
@@ -66,11 +66,11 @@ sub gatkBaseRecalibrator
         toolbox::exportLog("ERROR: gatk::gatkBaseRecalibrator : The files $refFastaFileIn or/and $bamToRecalibrate are incorrects\n", 0);     # returns the error message
         return 0;
     }
-    
+}  
 
 sub gatkPrintReads
 {
-    my ($refFastaFileIn, $bamToRecalibrate, $bamOut, $optionsHachees, $tableReport) = @_;      # recovery of information
+    my ($refFastaFileIn, $bamToRecalibrate, $bamOut, $tableReport, $optionsHachees) = @_;      # recovery of information
     if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1) and (toolbox::sizeFile($tableReport)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
@@ -99,8 +99,9 @@ sub gatkPrintReads
     }    
     
 
-    
 }
+
+
 # GATK Realigner Target Creator: determine (small) suspicious intervals which are likely in need of realignment
 sub gatkRealignerTargetCreator
 {
