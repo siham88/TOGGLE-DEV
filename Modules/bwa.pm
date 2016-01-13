@@ -50,7 +50,7 @@ sub bwaIndex
         #Execute command
         if(toolbox::run($command)==1)		##The command should be executed correctly (ie return) before exporting the log
 	{
-            toolbox::exportLog("INFOS: bwa::bwaIndex : correctly done\n",1);		# bwaIndex have been correctly done
+            ##DEBUG toolbox::exportLog("INFOS: bwa::bwaIndex : correctly done\n",1);		# bwaIndex have been correctly done
             return 1;
         }
         else
@@ -61,7 +61,7 @@ sub bwaIndex
     }
     else
     {
-        toolbox::exportLog("ERROR: bwa::bwaIndex : Problem with the file $refFastaFileIn\n",0);		# bwaIndex can not function because of wrong/missing reference file
+        toolbox::exportLog("ERROR: bwa::bwaIndex : the file $refFastaFileIn is empty\n",0);		# bwaIndex can not function because of wrong/missing reference file
         return 0;
     }
 }
