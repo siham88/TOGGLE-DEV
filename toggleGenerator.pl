@@ -153,8 +153,8 @@ print F1 "ANALYSIS_$date\n";
 toolbox::exportLog("#########################################\nINFOS: Global analysis \n#########################################\n",1);
 toolbox::exportLog("----------------------------------------",1);
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
-toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
-toolbox::exportLog("----------------------------------------",1);
+toolbox::exportLog("INFOS: Your output folder is $outputDir",1);
+toolbox::exportLog("----------------------------------------\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
 toolbox::existsDir($initialDir);                            # check if this directory exists
 toolbox::checkFile($refFastaFile);                          #Retriving the configuration
