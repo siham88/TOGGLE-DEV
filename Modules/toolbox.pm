@@ -1390,13 +1390,11 @@ sub checkFormatFasta{
 ################################################################################################
 sub relativeToAbsolutePath
 {
-    if (not defined @_)
-    {
-	return 0;
-    }
     
     my ($relative)=@_;
-    
+ 
+    return 0 if (not defined($relative));
+ 
     my ($absolutePath,$log);
     
     if ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
