@@ -145,32 +145,16 @@ sub checkFile
     
     #Check read and write right   
     my $readingRights = readFile($file);
-    my $writingRights = writeFile($file);
     
     my $logOut;
     
-    if ($readingRights == 1 and $writingRights == 1)
+  
+    if($readingRights == 0)
     {
-        $logOut= "INFOS: toolbox::checkFile : The file $file is readable and writable\n";
-    }
-    elsif($readingRights == 1 and $writingRights == 0)
-    {
-        $logOut="ERROR: toolbox::checkFile : The file $file is readable but not writable\n";
-    }
-    elsif($readingRights == 0 and $writingRights ==1)
-    {
-        $logOut="ERROR: toolbox::checkFile : The file $file is writable but not readable\n";
+        $logOut="ERROR: toolbox::checkFile : The file $file is not readable\n";
         exportLog($logOut,0);
-        return 1;
     }
-    else
-    {
-        $logOut="ERROR: toolbox::checkFile : The file $file is not readable and writable\n";
-        exportLog($logOut,0);
-        return 1;
-    }
-    
-    exportLog($logOut,1);   
+     
     return 1;
 }
 ################################################################################################
