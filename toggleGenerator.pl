@@ -351,19 +351,19 @@ foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash 
 #########################################
 
 #Creating global output folder
-
-
 my $finalDir = $outputDir."/finalResults";
 my $intermediateDir = $workingDir."/intermediateResults";
 
-
-toolbox::exportLog("#########################################\nINFOS: Generating graphical view of the current pipeline \n#########################################\n",1);
 #Graphviz Graphic generator
+toolbox::exportLog("#########################################\nINFOS: Generating graphical view of the current pipeline \n#########################################\n",1);
 onTheFly::generateGraphviz($hashOrder,$outputDir);
 
 
 if ($orderBefore1000)
 {
+    toolbox::exportLog("#########################################\nINFOS: Creating pipeline script \n#########################################\n",1);
+
+    #generate toggleBzzzz.pl
     onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner);
     my $listSamples=toolbox::readDir($workingDir);
     
