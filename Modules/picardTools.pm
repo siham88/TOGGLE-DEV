@@ -77,7 +77,6 @@ sub picardToolsCreateSequenceDictionary
 	    my $command="$picard/picard.jar CreateSequenceDictionary $options REFERENCE=$refFastaFile OUTPUT=$dictFileOut";        #creation of the command line
 	    if(toolbox::run($command)==1)       #Execution of the command line
 	    {
-	        toolbox::exportLog("INFOS: picardTools::picardToolsCreateSequenceDictionary : Correctly run\n",1);
 	        return 1;
 	    }
 	}
