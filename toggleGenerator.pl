@@ -174,8 +174,6 @@ toolbox::run($copyCommand,"noprint");
 ##DEBUG   toolbox::exportLog($logInfo,1);
 ##DEBUG }
 
-
-
 #Verifying the correct ordering for the experiment, based on input output files and recovering the last step value
 my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo);
 
@@ -295,7 +293,6 @@ elsif ($firstOrder<1000) #Other types of data requesting a single treatment
 
 #Generation of Index required for the analysis to work (on the reference only)
 toolbox::exportLog("#########################################\nINFOS: Generating reference index if requested \n#########################################\n",1);
-toolbox::exportLog("----------------------------------------",1);
 
 #Linking of the reference file and of already existing index in the output folder to avoid writing rights limitations
 ##DEBUG print $refFastaFile,"\n";
@@ -317,10 +314,7 @@ while (@listOfRefFiles)
   my $shortRefFileName = toolbox::extractName($currentRefFile);
   my $refLsCommand = "cp $currentRefFile $refDir/$shortRefFileName";
   ##DEBUG print $refLsCommand,"\n";
-  if (toolbox::run($refLsCommand) == 1)
-  {
-    toolbox::exportLog("INFOS : $0 : Copying $currentRefFile to $refDir/$shortRefFileName\n",1);
-  }
+  toolbox::run($refLsCommand,"noprint");
 }
 #Providing the good reference location 
 $refFastaFile = $refDir."/".$shortRefFileName;
