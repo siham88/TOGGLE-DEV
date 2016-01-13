@@ -673,13 +673,13 @@ sub run
     if ($?==0)
     {
 	##DEBUG
-	exportLog("INFOS: toolbox::run : ".$result."\n--".$stderr."\n",1);
+	exportLog("INFOS: toolbox::run : stderr1 ".$result."\n--".$stderr."\n",1);
 	return 1;
     }
     else
     {
 	##DEBUG
-	exportLog("ERROR: toolbox::run : ".$result."\n--".$stderr."\n",0);
+	exportLog("ERROR: toolbox::run : stderr2".$result."\n--".$stderr."\n",0);
 	return 0;
     }   
 
