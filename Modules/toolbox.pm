@@ -637,18 +637,9 @@ sub extractName
 sub run
 {
     use Capture::Tiny qw(capture);
-    # copy STDOUT and STDERR to another filehandle
-    #open (my $STDOUT_, '>&', STDOUT);
-    #open (my $STDERR_, '>&', STDERR);
-
-    # redirect STDOUT and STDERR to log.txt
-    #open (STDOUT, '>>', 'log.txt');
-    #open (STDERR, '>>', 'log.txt');
-
-    #TODO: Change the adresses for STDOUT and STDERR
     
-    my($command)=@_;
-    exportLog("INFOS: toolbox::run : $command\n",1);
+    my($command,$print)=@_;
+    exportLog("INFOS: toolbox::run : $command\n",1) if (not defined $print);
     
     ##Execute the command
     my ($result,$stderr)=capture {` $command `};
