@@ -91,7 +91,7 @@ sub checkingCapability { #Will test the capacity of launching using various sche
     chomp $capabilityValue{"sge"};
     
     #SLURM test
-    $capabilityValue{"slurm"}=`sbatch -V | grep slurm`; #Will provide a not-empty output if SLURM is installed
+    $capabilityValue{"slurm"}=`sbatch -V 2>/dev/null | grep slurm`; #Will provide a not-empty output if SLURM is installed
     chomp $capabilityValue{"slurm"};
     
     
