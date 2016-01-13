@@ -255,8 +255,8 @@ sub existsFile
     }
     else		#file does not exists and boolean==0 means log 
     {
-        my $logOut ="INFOS: toolbox::existsFile : The file $file does not exist or is not a file\n$!\n";
-        exportLog($logOut,1);
+        ##DEBUG my $logOut ="INFOS: toolbox::existsFile : The file $file does not exist or is not a file\n$!\n";
+        ##DEBUG exportLog($logOut,1);
 	return 0;
     }
 }
