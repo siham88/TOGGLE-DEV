@@ -63,7 +63,7 @@ $toggleGenerator.pl -c SNPdiscoveryPaired.config.txt -d DATA/testData/fastq/pair
 ````
 tail /tmp/toggleOUTPUT/finalResults/GATKVARIANTFILTRATION.vcf
 
-TO BE CHANGED FOR THE FINAL VCF USING IRIGIN
+TO BE CHANGED FOR  THE FINAL VCF USING IRIGIN
 ````
 
 
