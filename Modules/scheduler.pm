@@ -113,8 +113,7 @@ sub normalRun { #For running in normal mode, ie no scheduler
     ##Log export according to the error
     if ($?==0) #Success, no error
     {
-	##DEBUG
-	toolbox::exportLog("INFOS: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\n",1);
+	##DEBUG toolbox::exportLog("INFOS: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\n",1);
 	return 1;
     }
     else  #Error, the job cannot be achieved for any reason
