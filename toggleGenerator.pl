@@ -316,15 +316,14 @@ while (@listOfRefFiles)
   ##DEBUG print $refLsCommand,"\n";
   toolbox::run($refLsCommand,"noprint");
 }
+
 #Providing the good reference location 
 $refFastaFile = $refDir."/".$shortRefFileName;
 ##DEBUG print $refFastaFile,"\n";
 
-
 onTheFly::indexCreator($configInfo,$refFastaFile);
 
 #Generate script
-
 my $scriptSingle = "$outputDir/toggleBzz.pl";
 my $scriptMultiple = "$outputDir/toggleMultiple.pl";
 
