@@ -87,9 +87,8 @@ Mesg
 my @logPathInfos;
 foreach my $inputParameters (keys %param)
 {
-  ##DEBUG print $param{$inputParameters},"**";
-  
   my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
+  die ("ERROR: A empty parameter has been given!\n") if ($newPath==0);
   $param{$inputParameters}=$newPath;
   push @logPathInfos,$log;
 }
@@ -164,21 +163,16 @@ toolbox::checkFile($refFastaFile);                          #Retriving the confi
 ########################################
 
 my $configInfo=toolbox::readFileConf($fileConf);
-
 my $copyCommand = "cp $fileConf $outputDir/.";
-
-if(toolbox::run($copyCommand,"noprint")==1)       #Execute command
-{
-  toolbox::exportLog("INFOS: $0 : Copying $fileConf to $outputDir\n",1);
-}
+toolbox::run($copyCommand,"noprint");
 
 ##########################################
 # Printing the absolutePath changing logs
 #########################################
-foreach my $logInfo (@logPathInfos)
-  {
-  toolbox::exportLog($logInfo,1);
-  }
+##DEBUG foreach my $logInfo (@logPathInfos)
+##DEBUG {
+##DEBUG   toolbox::exportLog($logInfo,1);
+##DEBUG }
 
 
 
