@@ -51,7 +51,7 @@ $cutadapt
 ````
 
 ````
-$cd /pathToToggle 
+$cd /pathToToggle
 $toggleGenerator.pl -c SNPdiscoveryPaired.config.txt -d DATA/testData/fastq/pairedTwoIndividusIrigin/ -r DATA/Bank/referenceIrigin.fasta -o toggleout2/
 ````
 
