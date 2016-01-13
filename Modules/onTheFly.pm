@@ -384,7 +384,7 @@ sub generateGraphviz
     close OUT;
     
     #Verification if dot can work on this installation
-    my $dotHelpCommand = `dot -?`;
+    my $dotHelpCommand = `dot -? 2>/dev/null`;
     if ($dotHelpCommand !~ m/Usage: dot/)
     {
 	#The dot soft is not installed on this machine
