@@ -43,13 +43,13 @@ sub gatkBaseRecalibrator
     if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        print $options,"\n";
         if ($options !~ m/-T/) # The type of walker is not informed in the options
         {
             $options .= " -T BaseRecalibrator";
         }
     
         my $comGatkBaseRecalibrator = "$GATK"."$options"." -I $bamToRecalibrate -R $refFastaFileIn -o $tableReport";       # command line
-        toolbox::run($comGatkBaseRecalibrator);
         if(toolbox::run($comGatkBaseRecalibrator)==1)
         {
             toolbox::exportLog("INFOS: gatk::gatkBaseRecalibrator : Correctly done\n",1);
@@ -80,7 +80,6 @@ sub gatkPrintReads
         }
     
         my $comGatkPrintReads = "$GATK"."$options"." -I $bamToRecalibrate -R $refFastaFileIn -BQSR $tableReport -o $bamOut  ";       # command line
-        toolbox::run($comGatkPrintReads);
         if(toolbox::run($comGatkPrintReads)==1)
         {
             toolbox::exportLog("INFOS: gatk::gatkPrintReads : Correctly done\n",1);
