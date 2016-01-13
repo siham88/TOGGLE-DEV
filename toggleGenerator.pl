@@ -376,18 +376,6 @@ my $intermediateDir = $workingDir."/intermediateResults";
 #Graphviz Graphic generator
 onTheFly::generateGraphviz($hashOrder,$outputDir);
 
-#Is the computer a SGE cluster?
-my $sgeExistence = `qsub -help 2>/dev/null | grep usage`;
-chomp $sgeExistence;
-
-my $sgeOptionsHash=toolbox::extractHashSoft($configInfo,"sge");
-my $sgeOptions=toolbox::extractOptions($sgeOptionsHash);
-if ($sgeExistence ne "") #The system if SGE capable
-{
-  my @listSoft = keys %{$configInfo};
-  my $i=grep /sge/i, @listSoft; # A SGE key has been defined in the software.config file
-  $sgeExistence = "" if ($i == 0); # No SGE parameters specified
-}
 
 if ($orderBefore1000)
 {
