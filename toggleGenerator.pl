@@ -167,7 +167,7 @@ my $configInfo=toolbox::readFileConf($fileConf);
 
 my $copyCommand = "cp $fileConf $outputDir/.";
 
-if(toolbox::run($copyCommand)==1)       #Execute command
+if(toolbox::run($copyCommand,"noprint")==1)       #Execute command
 {
   toolbox::exportLog("INFOS: $0 : Copying $fileConf to $outputDir\n",1);
 }
