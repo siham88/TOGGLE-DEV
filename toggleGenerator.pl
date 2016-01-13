@@ -88,7 +88,7 @@ my @logPathInfos;
 foreach my $inputParameters (keys %param)
 {
   my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
-  die ("ERROR: A empty parameter has been given!\n") if ($newPath==0);
+  die ("ERROR: An empty parameter has been given!\n") if ($newPath eq 0);
   $param{$inputParameters}=$newPath;
   push @logPathInfos,$log;
 }
