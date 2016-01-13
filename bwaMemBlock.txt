@@ -1,0 +1,23 @@
+##########################################
+# Block for bwa::bwaMem
+##########################################
+
+$fastqForward=$$fileList[0];
+
+if (scalar(@{$fileList})==2)        # paired mode
+{
+    $fastqReverse=$$fileList[1];
+}
+else
+{
+    $fastqReverse=undef;            # single mode
+}
+
+$samFileOut=$newDir."/".$readGroup."BWAMEM.sam";
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);        # recovery of specific parameters of bwa mem 
+
+
+print LOG "INFOS bwa argument: $newDir,$refFastaFile,$fastqForward,$fastqReverse,$readGroup";
+
+bwa::bwaMem($samFileOut,$refFastaFile,$fastqForward,$fastqReverse,$readGroup,$softParameters);
+
