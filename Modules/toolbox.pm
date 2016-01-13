@@ -842,7 +842,7 @@ sub checkFormatFastq
                     }
                     else 												# error if fasta line length and quality line length are differents.
                     {
-                        toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Fasta line $nbLineFasta has not the same lenght than quality line $nbQualityLine in file $fileToTest.\n",0);
+                        toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Fasta line $nbLineFasta has not the same length than quality line $nbQualityLine in file $fileToTest.\n",0);
                         $notOk++;
                     }
                 }
@@ -855,7 +855,7 @@ sub checkFormatFastq
                 $i=$i+4; 												# jumping to next read.
             }
             
-            last if ($stop==200000);                                    # stoping treatment if 50000 reads were analysed.
+            last if ($stop==20000);                                    # stoping treatment if 50000 reads were analysed.
             
             undef @linesF1;
             $comp=0;

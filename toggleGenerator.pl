@@ -38,6 +38,7 @@ use Data::Dumper;
 use pairing;
 use toolbox;
 use onTheFly;
+use scheduler;
 
 #For gz files
 use IO::Compress::Gzip qw(gzip $GzipError);
@@ -404,11 +405,12 @@ if ($orderBefore1000)
       my @tempList = ($trueDirName);
       $listSamples = \@tempList;
     }
+    my $errorList="obiWanKenobi";
     
-    #FOR SGE launching
+    #we need those variable for Scheduler launching
     my $jobList="";
     my %jobHash;
-    
+        
     foreach my $currentDir(@{$listSamples})
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
@@ -416,106 +418,67 @@ if ($orderBefore1000)
         my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile";
         $launcherCommand.=" -g $gffFile" if (defined $gffFile);
         
-        ##DEBUG print "\n",$launcherCommand,"\n";
+        #Launching through the scheduler launching system  
+        my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
+        ##DEBUG        print "**$jobOutput** \n";
+        if ($jobOutput == 0)
+        {
+          #the linear job is not ok, need to pick up the number of jobs
+          my $individualName = `basename $currentDir` or warn("Cannot pick up basename for $currentDir : $!\n");
+          chomp $individualName;
+          $individualName = $currentDir unless ($individualName); # Basename did not succeed...
+          ##DEBUG          print "--$individualName--\n";
+          $errorList.="\$\|".$individualName;
+          ##DEBUG          print "++$errorList++\n";
+          #Need to remove the empty name...
+          $errorList =~ s/obiWanKenobi\$\|//;
+          ##DEBUG          print "++$errorList++\n";
+        }
+        next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
         
-        if ($sgeExistence ne "") #The system is SGE capable
-        {
-          $launcherCommand = "qsub $sgeOptions ".$launcherCommand;
-          my $currentJID = `$launcherCommand`;
-          chomp $currentJID;
-          my $baseNameDir=`basename $currentDir` or die("ERROR : $0 : Cannot pickup the basename for $currentDir: $!\n");
-          chomp $baseNameDir;
-          toolbox::exportLog("INFOS: $0 : Correctly launched for $baseNameDir in qsub mode $scriptSingle through the command:\n\t$launcherCommand\n\n",1);
-          toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
-          my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
-          $currentJID = $infosList[2];
-          $jobList.= $currentJID."|";
-          $jobHash{$baseNameDir}=$currentJID;
-          my $runningNodeCommand="qstat | grep $currentJID";
-          my $runningNode="";
-          while ($runningNode eq "") #If the job is not yet launched, there is no node affected, $runningMode is empty
-          {
-            sleep 5;#Waiting for the job to be launched
-            $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
-            chomp $runningNode;
-            $runningNode =~ s/ +/_/g;
-            my @runningFields = split /_/,$runningNode; #To obtain the correct field
-            next if $runningFields[4] ne "r"; # not running
-            $runningNode = $runningFields[7];
-            $runningNode =~ s/.+@//;#removing queue name
-          }
-          toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
-          
-          #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
-          next;
-        }
-        else #Not SGE capable system
-        {
-          if(toolbox::run($launcherCommand))       #Execute command
-          {
-              toolbox::exportLog("INFOS: $0 : Correctly launched $scriptSingle\n",1);
-          }
-        }
+        $jobList = $jobList.$jobOutput."|";
+        my $baseNameDir=`basename $currentDir` or die("ERROR : $0 : Cannot pickup the basename for $currentDir: $!\n");
+        chomp $baseNameDir;
+        $jobHash{$baseNameDir}=$jobOutput;
     }
     
-    #If qsub mode, we have to wait the end of jobs before populating
+    
+    #If parallel mode, we have to wait the end of jobs before populating
     chop $jobList if ($jobList =~ m/\|$/);
     if ($jobList ne "")
     {
-      my $nbRunningJobs = 1;
-      #Waiting for jobs to finish
-      while ($nbRunningJobs)
-      {  
-        ##DEBUG my $date = `date`;
-        ##DEBUG chomp $date;
-        ##DEBUG toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
-        #Picking up the number of currently running jobs
-        my $qstatCommand = "qstat | egrep -c \"$jobList\"";
-        $nbRunningJobs = `$qstatCommand`;
-        chomp $nbRunningJobs;
-        sleep 50;
-      }
-      #Compiling infos about sge jobs: jobID, node number, exit status
-      sleep 25;#Needed for qacct to register infos...
-      toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tNode\tExitStatus\n-------------------------------",1);
-      foreach my $individual (sort {$a cmp $b} keys %jobHash)
+      #Have to wait that all jobs are finished
+      my $waitOutput = scheduler::waiter($jobList,\%jobHash);
+      if ($waitOutput == 1)
       {
-        my $qacctCommand = "qacct -j ".$jobHash{$individual};
-        my $qacctOutput = `$qacctCommand`;
-        chomp $qacctOutput;
-        my @linesQacct = split /\n/, $qacctOutput;
-        my $outputLine = $individual."\t".$jobHash{$individual}."\t";
-        while (@linesQacct) #Parsing the qacct output
-        {
-          my $currentLine = shift @linesQacct;
-          if ($currentLine =~ m/^hostname/) #Picking up hostname
-          {
-            $currentLine =~ s/hostname     //;
-            $outputLine .= $currentLine."\t";
-          }
-          elsif ($currentLine =~ m/^exit_status/) #Picking up exit status
-          {
-            $currentLine =~ s/exit_status  //;
-            $currentLine = "Normal" if $currentLine == 0;
-            $outputLine .= $currentLine;
-          }
-          else
-          {
-            next;
-          }
-          
-        }
-        toolbox::exportLog($outputLine,1);
+        #all jobs correctly finished
+        toolbox::exportLog("INFOS: $0 : All intermediate jobs are finished\n",1);
+      }
+      else
+      {
+        #Creating a chain with the list of individual with an error in the job...
+        $errorList=join ("\$\|",@{$waitOutput});
+       
         
       }
-      toolbox::exportLog("-------------------------------\n",1);#To have a better table presentation
+
     }
+    if ($errorList ne "obiWanKenobi")
+      {
+        #Some errors appears
+        #problem somewhere for some individuals, reporting the info
+        my $outputErrors = $errorList;
+         ##DEBUG        print "==$errorList==\n";
+        $outputErrors =~ s/\$\|/,/;
+        toolbox::exportLog("WARNINGS: $0 : Some individuals are erroneous and not treated: $outputErrors\n",2);
+      }
     
     # Going through the individual tree
     #Transferring unmapped bam generated by tophat from tempory directory into tophat directory
     foreach my $currentDir (@{$listSamples})
     {
       next unless $currentDir =~ m/\//; # Will work only on folders
+      next if $currentDir =~ m/$errorList/; # A job in error will not be transfered, to avoid errors.
       my $fileList = toolbox::readDir($currentDir);
       foreach my $file (@{$fileList}) #Copying intermediate data in the intermediate directory
       {
@@ -541,6 +504,8 @@ if ($orderBefore1000)
         foreach my $currentDir (@{$listSamples})
         {
             next unless $currentDir =~ m/\//; # Will work only on folders
+            next if $currentDir =~ m/$errorList/; # A job in error will not be transfered, to avoid errors.
+
             my $lastDir = $currentDir."/".$lastOrderBefore1000."_".$$orderBefore1000{$lastOrderBefore1000};
             $lastDir =~ s/ //g;
             my $fileList = toolbox::readDir($lastDir);
@@ -567,6 +532,8 @@ if ($orderBefore1000)
             ##DEBUG toolbox::exportLog($currentDir,1);
 
             next unless $currentDir =~ m/\//; # Will work only on folders
+            next if $currentDir =~ m/$errorList/; # A job in error will not be transfered, to avoid errors.
+
             my $lastDir = $currentDir."/".$lastOrderBefore1000."_".$$orderBefore1000{$lastOrderBefore1000};
             $lastDir =~ s/ //g;
             ##DEBUG toolbox::exportLog($lastDir,1);
@@ -579,7 +546,7 @@ if ($orderBefore1000)
                 my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
                 ##DEBUG toolbox::exportLog($cpLnCommand,1);
                 ##DEBUG
-                toolbox::exportLog("--------->".$file."-".$basicName,2);
+                ##DEBUG toolbox::exportLog("--------->".$file."-".$basicName,2);
                 if(toolbox::run($cpLnCommand))       #Execute command
                 {
                     toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $finalDir\n",1);
@@ -602,96 +569,30 @@ if ($orderAfter1000)
     my $jobList="";
     my %jobHash;
 
-    if ($sgeExistence ne "") #The system is SGE capable
+    #Launching through the scheduler launching system  
+    my $jobOutput = scheduler::launcher($launcherCommand, "1", "Global analysis", $configInfo); #not blocking job, explaining the '1'
+    if ($jobOutput ne 1) #1 means the job is Ok and is running in a normal linear way, ie no scheduling
     {
-      $launcherCommand = "qsub $sgeOptions ".$launcherCommand;
-      my $currentJID = `$launcherCommand`;
-      chomp $currentJID;
-      my $baseNameDir=`basename $workingDir` or die("ERROR : $0 : Cannot pickup the basename for $workingDir: $!\n");
-      chomp $baseNameDir;
-      toolbox::exportLog("INFOS: $0 : Correctly launched for $baseNameDir in qsub mode $scriptSingle through the command:\n\t$launcherCommand\n\n",1);
-      toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
-      my @infosList=split /\s/, $currentJID; #the format is such as "Your job ID ("NAME") has been submitted"
-      $currentJID = $infosList[2];
-      $jobList.= $currentJID."|";
-      
-      $jobHash{$baseNameDir}=$currentJID;
-      my $runningNodeCommand="qstat | grep $currentJID";
-      my $runningNode="";
-      while ($runningNode eq "") #If the job is not yet launched, there is no node affected, $runningMode is empty
-      {
-        sleep 5;#Waiting for the job to be launched
-        $runningNode=`$runningNodeCommand` or warn("WARNING : $0 : Cannot pickup the running node for $currentJID: $!\n");
-        chomp $runningNode;
-        $runningNode =~ s/ +/_/g;
-        my @runningFields = split /_/,$runningNode; #To obtain the correct field
-        next if $runningFields[4] ne "r"; # not running
-        $runningNode = $runningFields[7];
-        $runningNode =~ s/.+@//;#removing queue name
-      }
-      
-      toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
-      #toolbox::exportLog("DEBUG: $0 : "."$jobList"."\n",2);
-    }
-    else # The system if not SGE capable
-    {
-      if(toolbox::run($launcherCommand)==1)       #Execute command
-      {
-        toolbox::exportLog("INFOS: $0 : Correctly launched $scriptMultiple\n",1);
-      }
-    }
+      $jobList = $jobOutput;
+      $jobHash{"global"}=$jobOutput;
     
-    #If qsub mode, we have to wait the end of jobs before populating
-    chop $jobList if ($jobList =~ m/\|$/);
-    if ($jobList ne "")
-    {
-      my $nbRunningJobs = 1;
-      while ($nbRunningJobs)
-      {  
-        ##DEBUG my $date = `date`;
-        ##DEBUG chomp $date;
-        ##DEBUG toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
-        #Picking up the number of currently running jobs
-        my $qstatCommand = "qstat | egrep -c \"$jobList\"";
-        $nbRunningJobs = `$qstatCommand`;
-        chomp $nbRunningJobs;
-        sleep 50;
-      }
-      #Compiling infos about sge jobs: jobID, node number, exit status
-      sleep 25;#Needed for qacct to register infos...
-      toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tNode\tExitStatus\n-------------------------------",1);
-      foreach my $individual (sort {$a cmp $b} keys %jobHash)
+      #If qsub mode, we have to wait the end of jobs before populating
+      chop $jobList if ($jobList =~ m/\|$/);
+      if ($jobList ne "")
       {
-        my $qacctCommand = "qacct -j ".$jobHash{$individual};
-        my $qacctOutput = `$qacctCommand`;
-        chomp $qacctOutput;
-        my @linesQacct = split /\n/, $qacctOutput;
-        my $outputLine = $individual."\t".$jobHash{$individual}."\t";
-        while (@linesQacct) #Parsing the qacct output
+        #Have to wait that all jobs are finished
+        my $waitOutput = scheduler::waiter($jobList,\%jobHash);
+        if ($waitOutput == 1)
         {
-          my $currentLine = shift @linesQacct;
-          if ($currentLine =~ m/^hostname/) #Picking up hostname
-          {
-            $currentLine =~ s/hostname     //;
-            $outputLine .= $currentLine."\t";
-          }
-          elsif ($currentLine =~ m/^exit_status/) #Picking up exit status
-          {
-            $currentLine =~ s/exit_status  //;
-            $currentLine = "Normal" if $currentLine == 0;
-            $outputLine .= $currentLine;
-          }
-          else
-          {
-            next;
-          }
-          
+          #all jobs correctly finished
+          toolbox::exportLog("INFOS: $0 : Global final job is finished\n",1);
         }
-        toolbox::exportLog($outputLine,1);
-        
+        else
+        {
+          #problem somewhere
+          toolbox::exportLog("ERROR: $0 : Global final job is not finished, please check error log...\n",0);
+        }
       }
-      toolbox::exportLog("-------------------------------\n",1);#To have a better table presentation
-      
     }
     
     #Creating final directory

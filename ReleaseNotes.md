@@ -8,7 +8,11 @@
 - Adding the picardTools AddOrReplaceReadGroup CleanSam ValidateSamFile SamFormatConverter
 - Adding the GATK UnifiedGenotyper
 - Adding the samTools sortSam flagstats depth idxstats
+<<<<<<< HEAD
 - Adding scheduler.pm module for scheduling system
+=======
+- Adding the SGE and Slurm schedulers
+>>>>>>> scheduler
 
 ### Functions
 
