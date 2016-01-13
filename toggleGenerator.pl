@@ -149,11 +149,11 @@ open (F1, ">",$infosFile) or die ("$0 : open error of $infosFile .... $!\n");
 print F1 "GLOBAL\n";
 print F1 "ANALYSIS_$date\n";
 
-toolbox::exportLog("#########################################\nINFOS: Global analysis \n#########################################\n",1);
-toolbox::exportLog("----------------------------------------",1);
+toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);;
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
-toolbox::exportLog("INFOS: Your output folder is $outputDir",1);
-toolbox::exportLog("----------------------------------------\n",1);
+toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
+
+toolbox::exportLog("#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
 toolbox::existsDir($initialDir);                            # check if this directory exists
 toolbox::checkFile($refFastaFile);                          #Retriving the configuration
@@ -269,7 +269,7 @@ if ($previousExtension eq "fastq")               # the data are all in FASTQ for
     my $pairsInfos = pairing::pairRecognition($workingDir);            # from files fasta recognition of paired files
     pairing::createDirPerCouple($pairsInfos,$workingDir);              # from infos of pairs, construction of the pair folder
     
-    toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
+    ##DEBUG toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
     
 }
 
@@ -284,7 +284,7 @@ elsif ($firstOrder<1000) #Other types of data requesting a single treatment
         my $dirName=$workingDir."/".$basicName."Directory";
         toolbox::makeDir($dirName);
         my $mvCommand = "mv $file $dirName/$basicName";
-        if (toolbox::run($mvCommand) == 1)
+        if (toolbox::run($mvCommand,"noprint") == 1)
         {
             toolbox::exportLog("INFOS : $0 : Transferring $file to $dirName\n",1);
         }
