@@ -384,6 +384,7 @@ if ($orderBefore1000)
     my $jobList="";
     my %jobHash;
         
+    toolbox::exportLog("#########################################\nINFOS: Running pipeline \n#########################################\n",1);
     foreach my $currentDir(@{$listSamples})
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
