@@ -54,7 +54,7 @@ sub samToolsFaidx
           my $command=$samtools." faidx ".$refFastaFileIn;
           if(toolbox::run($command)==1)
           {
-               toolbox::exportLog("INFOS: samTools::samToolsFaidx : Correctly done\n",1);
+               ##DEBUG toolbox::exportLog("INFOS: samTools::samToolsFaidx : Correctly done\n",1);
                return 1;#Command Ok
           }
           else
