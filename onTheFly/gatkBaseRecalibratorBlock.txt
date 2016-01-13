@@ -1,0 +1,7 @@
+#########################################
+# GATK BASE RECALIBRATOR
+#########################################
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                  # recovery of specific parameters of GATK Base Recalibrator
+$fileWithoutExtention = toolbox::extractName($$fileList[0]);                                    # extract name of file without extention
+$tableReport = "$newDir"."/"."$fileWithoutExtention".".GATKBASERECALIBRATOR.tableReport";       # name for the output file of gatk base recalibrator
+gatk::gatkBaseRecalibrator($refFastaFileIn, $bamFileOut, $tableReport, $softParameters);  

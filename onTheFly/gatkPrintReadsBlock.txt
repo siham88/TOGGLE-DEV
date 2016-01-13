@@ -1,0 +1,31 @@
+
+##########################################
+# Block for gatk::gatkPrintReads
+##########################################
+
+#VERIFYING IF TABLE REPORT FILE IS DEFINED
+
+unless ($tableReport)
+{
+    toolbox::exportLog("ERROR : $0 : gatk::gatkPrintReads: the tableReport file is not defined, will generate it automatically.\n",2);
+    #########################################
+    # GATK BASE RECALIBRATOR
+    #########################################
+    $softParameters = toolbox::extractHashSoft($optionRef,"gatkBaseRecalibrator");                  # recovery of specific parameters of GATK Base Recalibrator
+    $fileWithoutExtention = toolbox::extractName($$fileList[0]);                                    # extract name of file without extention
+    $tableReport = "$newDir"."/"."$fileWithoutExtention".".GATKBASERECALIBRATOR.tableReport";       # name for the output file of gatk base recalibrator
+    gatk::gatkBaseRecalibrator($refFastaFileIn, $bamFileOut, $tableReport, $softParameters);  
+}
+
+#########################################
+# GATK PrintReads
+#########################################
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                       # recovery of specific parameters of GATK PrintReads
+$bamOut = "$newDir"."/"."$fileWithoutExtention".".GATKPRINTREADS.bam";                  # name for the output file of gatk print reads
+gatk::gatkPrintReads($refFastaFileIn, $bamToRecalibrate, $bamOut, $tableReport, $softParameters);   # run the realigner over the intervals producted by gatk::gatkRealignerTargetCreator (see above)
+
+
+#Cleaning and removing the table report file that may cause a problem in the next steps
+my $tableReportRemoverCommand= " rm -f ".$tableReport;
+toolbox::run($tableReportRemoverCommand);
