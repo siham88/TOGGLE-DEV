@@ -159,9 +159,9 @@ sub generateScript
     
     ##DEBUG print $catCommand,"\n";
     
-    if(toolbox::run($catCommand)==1)       #Execute command
+    if(toolbox::run($catCommand,"noprint")==1)       #Execute command
     {
-        toolbox::exportLog("INFOS: onTheFly::generateScript : Correctly done\n",1);
+        toolbox::exportLog("INFOS: onTheFly::generateScript : The script $script has been generated\n",1);
         return 1;
     }
     
@@ -179,7 +179,6 @@ sub generateScript
 # 	- hash of complete configuration
 #       - reference file
 ################################################################################################
-
 sub indexCreator
 {
     my ($hashConf,$reference)=@_;
@@ -318,7 +317,6 @@ sub indexCreator
 # 	- hash of complete configuration
 #       - output directory
 ################################################################################################
-
 sub generateGraphviz
 {
     my ($hashOrder,$outDir)=@_;
