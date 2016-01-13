@@ -10,6 +10,10 @@ $bwaSamse
 IN=fastq,sai
 OUT=sam
 
+$bwaMem
+IN=fastq
+OUT=sam
+
 $bowtieBuild
 IN=fasta
 OUT=NA
