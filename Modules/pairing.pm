@@ -153,9 +153,9 @@ sub createDirPerCouple
 	    }
 	    #Everything is Ok, we copy the files in the correct place and remove the files from their original place
 	    my $forwardCopyCommand="mv $forwardFile ".$ReadGroup."/."; # removing will be effective ONLY if copy is ok
-	    toolbox::run($forwardCopyCommand);
+	    toolbox::run($forwardCopyCommand,"noprint");
 	    my $reverseCopyCommand="mv $reverseFile ".$ReadGroup."/." if $reverseFile;#reverse file may be absent
-	    toolbox::run($reverseCopyCommand) if $reverseFile;
+	    toolbox::run($reverseCopyCommand,"noprint") if $reverseFile;
 	}
     }
     return 1;
