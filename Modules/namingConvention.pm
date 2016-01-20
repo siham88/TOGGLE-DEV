@@ -47,7 +47,7 @@ sub softwareNomenclature # Will rewrite the correct name in the hash of configur
 {
     my ($hash) = @_;
     
-    foreach my $currentSoft (keys $hash)
+    foreach my $currentSoft (keys %{$hash})
     {
         my $correctName;
         if ($currentSoft eq "order") # We aredealing with the order hash...

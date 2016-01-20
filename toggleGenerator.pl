@@ -51,7 +51,7 @@ use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 ##########################################
 my $cmd_line=$0." @ARGV";
 my ($nomprog)=$0=~/([^\/]+)$/;
-unless ($#ARGV>=0)                                                                                          # if no argument given
+unless ($#ARGV>=0)                    # if no argument given
 {
 
   print <<"Mesg";
@@ -63,7 +63,7 @@ Mesg
   exit;
 }
 
-my %param = @ARGV;                                                                                          # get the parameters 
+my %param = @ARGV;                     # get the parameters 
 if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}) or not defined ($param{'-o'}))
 {
   print <<"Mesg";
@@ -87,25 +87,19 @@ Mesg
 my @logPathInfos;
 foreach my $inputParameters (keys %param)
 {
-  ##DEBUG print $param{$inputParameters},"**";
-  
   my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
+  die ("ERROR: $0 : An empty parameter has been given!\n") if ($newPath eq 0);
   $param{$inputParameters}=$newPath;
   push @logPathInfos,$log;
 }
 
 my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
-##DEBUG print "init Dir = $initialDir\n";
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
-##DEBUG print "file Conf = $fileConf\n";
 my $refFastaFile = $param{'-r'};      # recovery of the reference file
-##DEBUG print "reference = $refFastaFile\n";
 my $outputDir = $param{'-o'};         # recovery of the output folder
 
 my $gffFile;                          # recovery of the gff file used by topHat and rnaseq analysis
 $gffFile = $param{'-g'} if (defined $param{'-g'});
-
-##DEBUG print "out Dir = $outputDir\n";
 
 
 
@@ -115,11 +109,11 @@ $gffFile = $param{'-g'} if (defined $param{'-g'});
 # Creation of the output folder
 ##########################################
 
-if (not -d $outputDir) #The output folder is not existing yet
+if (not -d $outputDir) #if the output folder is not existing yet
 {
-    #creating the folder
+    #creating the output folder
     my $createOutputDirCommand = "mkdir -p $outputDir";
-    system ("$createOutputDirCommand") and die ("\n$0 cannot create the output folder $outputDir: $!\nExiting...\n");
+    system ("$createOutputDirCommand") and die ("\nERROR: $0 : cannot create the output folder $outputDir: $!\nExiting...\n");
 }
 
 chdir $outputDir;
@@ -130,7 +124,7 @@ my $lsOutputDir = `ls`;
 chomp $lsOutputDir;
 if ($lsOutputDir ne "") # The folder is not empty
 {
-  die ("\nThe output directory $outputDir is not empty, TOGGLE will not continue\nPlease provide an empty directory for outputting results.\n\nExiting...\n\n");
+  die ("\nERROR: $0 : The output directory $outputDir is not empty, TOGGLE will not continue\nPlease provide an empty directory for outputting results.\n\nExiting...\n\n");
 }
 
 my $infosFile = "individuSoft.txt";
@@ -150,11 +144,11 @@ open (F1, ">",$infosFile) or die ("$0 : open error of $infosFile .... $!\n");
 print F1 "GLOBAL\n";
 print F1 "ANALYSIS_$date\n";
 
-toolbox::exportLog("#########################################\nINFOS: Global analysis \n#########################################\n",1);
-toolbox::exportLog("----------------------------------------",1);
+toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);;
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
 toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
-toolbox::exportLog("----------------------------------------",1);
+
+toolbox::exportLog("#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
 toolbox::existsDir($initialDir);                            # check if this directory exists
 toolbox::checkFile($refFastaFile);                          #Retriving the configuration
@@ -164,23 +158,16 @@ toolbox::checkFile($refFastaFile);                          #Retriving the confi
 ########################################
 
 my $configInfo=toolbox::readFileConf($fileConf);
-
 my $copyCommand = "cp $fileConf $outputDir/.";
-
-if(toolbox::run($copyCommand)==1)       #Execute command
-{
-  toolbox::exportLog("INFOS: $0 : Copying $fileConf to $outputDir\n",1);
-}
+toolbox::run($copyCommand,"noprint");
 
 ##########################################
 # Printing the absolutePath changing logs
 #########################################
-foreach my $logInfo (@logPathInfos)
-  {
-  toolbox::exportLog($logInfo,1);
-  }
-
-
+##DEBUG foreach my $logInfo (@logPathInfos)
+##DEBUG {
+##DEBUG   toolbox::exportLog($logInfo,1);
+##DEBUG }
 
 #Verifying the correct ordering for the experiment, based on input output files and recovering the last step value
 my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo);
@@ -261,12 +248,7 @@ foreach my $file (@{$initialDirContent})
 {    
     my ($shortName)=toolbox::extractPath($file);
     my $lnCommand = "ln -s $file $workingDir/$shortName";
-    ##DEBUG print $lnCommand,"\n";
-    
-    if(toolbox::run($lnCommand)==1)       #Execute command
-    {
-        toolbox::exportLog("INFOS: $0 : Transferring $file to $workingDir\n",1);
-    }
+    toolbox::run($lnCommand,"noprint");      
 }
 
 my $listOfFiles = toolbox::readDir($workingDir);                     # read it to recover files in it
@@ -279,7 +261,7 @@ if ($previousExtension eq "fastq")               # the data are all in FASTQ for
     my $pairsInfos = pairing::pairRecognition($workingDir);            # from files fasta recognition of paired files
     pairing::createDirPerCouple($pairsInfos,$workingDir);              # from infos of pairs, construction of the pair folder
     
-    toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
+    ##DEBUG toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
     
 }
 
@@ -294,7 +276,7 @@ elsif ($firstOrder<1000) #Other types of data requesting a single treatment
         my $dirName=$workingDir."/".$basicName."Directory";
         toolbox::makeDir($dirName);
         my $mvCommand = "mv $file $dirName/$basicName";
-        if (toolbox::run($mvCommand) == 1)
+        if (toolbox::run($mvCommand,"noprint") == 1)
         {
             toolbox::exportLog("INFOS : $0 : Transferring $file to $dirName\n",1);
         }
@@ -305,7 +287,6 @@ elsif ($firstOrder<1000) #Other types of data requesting a single treatment
 
 #Generation of Index required for the analysis to work (on the reference only)
 toolbox::exportLog("#########################################\nINFOS: Generating reference index if requested \n#########################################\n",1);
-toolbox::exportLog("----------------------------------------",1);
 
 #Linking of the reference file and of already existing index in the output folder to avoid writing rights limitations
 ##DEBUG print $refFastaFile,"\n";
@@ -327,20 +308,16 @@ while (@listOfRefFiles)
   my $shortRefFileName = toolbox::extractName($currentRefFile);
   my $refLsCommand = "cp $currentRefFile $refDir/$shortRefFileName";
   ##DEBUG print $refLsCommand,"\n";
-  if (toolbox::run($refLsCommand) == 1)
-  {
-    toolbox::exportLog("INFOS : $0 : Copying $currentRefFile to $refDir/$shortRefFileName\n",1);
-  }
+  toolbox::run($refLsCommand,"noprint");
 }
+
 #Providing the good reference location 
 $refFastaFile = $refDir."/".$shortRefFileName;
 ##DEBUG print $refFastaFile,"\n";
 
-
 onTheFly::indexCreator($configInfo,$refFastaFile);
 
 #Generate script
-
 my $scriptSingle = "$outputDir/toggleBzz.pl";
 my $scriptMultiple = "$outputDir/toggleMultiple.pl";
 
@@ -368,22 +345,23 @@ foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash 
 #########################################
 
 #Creating global output folder
-
-
 my $finalDir = $outputDir."/finalResults";
 my $intermediateDir = $workingDir."/intermediateResults";
 
 #Graphviz Graphic generator
+toolbox::exportLog("#########################################\nINFOS: Generating graphical view of the current pipeline \n#########################################\n",1);
 onTheFly::generateGraphviz($hashOrder,$outputDir);
 
 
 if ($orderBefore1000)
 {
+    toolbox::exportLog("\n#########################################\nINFOS: Running individual pipeline script \n#########################################\n",1);
+
+    #generate toggleBzzzz.pl
     onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner);
     my $listSamples=toolbox::readDir($workingDir);
     
     #CORRECTING $listSamples if only one individual, ie readDir will provide only the list of files...
-    
     if (scalar @{$listSamples} < 3) #ex: Data/file_1.fastq, Data/file_2.fastq, or a single SAM/BAM/VCF individual
     {
       my @listPath = split /\//, $$listSamples[0];
@@ -412,10 +390,10 @@ if ($orderBefore1000)
         if ($jobOutput == 0)
         {
           #the linear job is not ok, need to pick up the number of jobs
-          my $individualName = `basename $currentDir` or warn("Cannot pick up basename for $currentDir : $!\n");
+          my $individualName = `basename $currentDir` or warn("\nERROR: $0 : Cannot pick up basename for $currentDir : $!\n");
           chomp $individualName;
           $individualName = $currentDir unless ($individualName); # Basename did not succeed...
-          ##DEBUG          print "--$individualName--\n";
+
           $errorList.="\$\|".$individualName;
           ##DEBUG          print "++$errorList++\n";
           #Need to remove the empty name...
@@ -425,7 +403,7 @@ if ($orderBefore1000)
         next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
         
         $jobList = $jobList.$jobOutput."|";
-        my $baseNameDir=`basename $currentDir` or die("ERROR : $0 : Cannot pickup the basename for $currentDir: $!\n");
+        my $baseNameDir=`basename $currentDir` or die("\nERROR : $0 : Cannot pickup the basename for $currentDir: $!\n");
         chomp $baseNameDir;
         $jobHash{$baseNameDir}=$jobOutput;
     }
@@ -437,17 +415,10 @@ if ($orderBefore1000)
     {
       #Have to wait that all jobs are finished
       my $waitOutput = scheduler::waiter($jobList,\%jobHash);
-      if ($waitOutput == 1)
-      {
-        #all jobs correctly finished
-        toolbox::exportLog("INFOS: $0 : All intermediate jobs are finished\n",1);
-      }
-      else
+      if ($waitOutput != 1)
       {
         #Creating a chain with the list of individual with an error in the job...
-        $errorList=join ("\$\|",@{$waitOutput});
-       
-        
+        $errorList=join ("\$\|",@{$waitOutput}); 
       }
 
     }
@@ -458,7 +429,7 @@ if ($orderBefore1000)
         my $outputErrors = $errorList;
          ##DEBUG        print "==$errorList==\n";
         $outputErrors =~ s/\$\|/,/;
-        toolbox::exportLog("WARNINGS: $0 : Some individuals are erroneous and not treated: $outputErrors\n",2);
+        toolbox::exportLog("\n>>>>>>>>>>>>>>>> WARNINGS: $0 : Some individuals are erroneous and not treated: $outputErrors\n",2);
       }
     
     # Going through the individual tree
@@ -501,16 +472,12 @@ if ($orderBefore1000)
             {
                 my ($basicName)=toolbox::extractPath($file);
                 my $lnCommand="ln -s $file $intermediateDir/$basicName";
-                if(toolbox::run($lnCommand))       #Execute command
-                {
-                    toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $intermediateDir\n",1);
-                }   
+                toolbox::run($lnCommand,"noprint")         
             }
         }
     }
     else #There is no global analysis afterward
     {
-        ##DEBUG toolbox::exportLog("After everything\n",1);
         #Creating final directory
         toolbox::makeDir($finalDir);
                 
@@ -525,6 +492,7 @@ if ($orderBefore1000)
             my $lastDir = $currentDir."/".$lastOrderBefore1000."_".$$orderBefore1000{$lastOrderBefore1000};
             $lastDir =~ s/ //g;
             ##DEBUG toolbox::exportLog($lastDir,1);
+            
             my $fileList = toolbox::readDir($lastDir);
             foreach my $file (@{$fileList}) #Copying the final data in the final directory
             {
@@ -532,13 +500,7 @@ if ($orderBefore1000)
 		$file =~s/://g;
 		my ($basicName)=toolbox::extractPath($file);
                 my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
-                ##DEBUG toolbox::exportLog($cpLnCommand,1);
-                ##DEBUG
-                ##DEBUG toolbox::exportLog("--------->".$file."-".$basicName,2);
-                if(toolbox::run($cpLnCommand))       #Execute command
-                {
-                    toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $finalDir\n",1);
-                }   
+                toolbox::run($cpLnCommand,"noprint")       
             }
         }
     }
@@ -547,6 +509,9 @@ if ($orderBefore1000)
 
 if ($orderAfter1000)
 {
+  
+    toolbox::exportLog("\n#########################################\n INFOS: Running multiple pipeline script \n#########################################\n",1);
+
     onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner);
     
     $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
@@ -557,7 +522,7 @@ if ($orderAfter1000)
     my $jobList="";
     my %jobHash;
 
-    #Launching through the scheduler launching system  
+    #Launching through the scheduler launching system
     my $jobOutput = scheduler::launcher($launcherCommand, "1", "Global analysis", $configInfo); #not blocking job, explaining the '1'
     if ($jobOutput ne 1) #1 means the job is Ok and is running in a normal linear way, ie no scheduling
     {
@@ -570,15 +535,9 @@ if ($orderAfter1000)
       {
         #Have to wait that all jobs are finished
         my $waitOutput = scheduler::waiter($jobList,\%jobHash);
-        if ($waitOutput == 1)
+        if ($waitOutput != 1)
         {
-          #all jobs correctly finished
-          toolbox::exportLog("INFOS: $0 : Global final job is finished\n",1);
-        }
-        else
-        {
-          #problem somewhere
-          toolbox::exportLog("ERROR: $0 : Global final job is not finished, please check error log...\n",0);
+          toolbox::exportLog("ERROR: $0 : Multiple job is not finished correctly, please check error log.\n",0);
         }
       }
     }
@@ -596,15 +555,22 @@ if ($orderAfter1000)
         my ($basicName)=toolbox::extractPath($file);
         my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
         ##DEBUG toolbox::exportLog($cpLnCommand,1);
-        if(toolbox::run($cpLnCommand))       #Execute command
-        {
-            toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $finalDir\n",1);
-        }   
+        toolbox::run($cpLnCommand,"noprint")       
     }
     
 }
 
 close F1;
+
+toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. \n#########################################\n",1);
+toolbox::exportLog("\nThank you for using TOGGLE!
+###########################################################################################################################
+#\tCITATION:
+#\tTOGGLE: Toolbox for generic NGS analyses.
+#\tCécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud,
+#\tSouhila Amanzougarene,Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
+#\tBMC Bioinformatics 2015, 16:374
+###########################################################################################################################",1);  
 
 exit;
 
