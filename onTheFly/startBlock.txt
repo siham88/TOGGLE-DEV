@@ -87,6 +87,8 @@ Mesg
 }
 
 
+my $cmd_line=$0." @ARGV";
+
 ##########################################
 # recovery of initial informations/files
 ##########################################
@@ -126,7 +128,7 @@ open (LOG, ">",$logFile) or die ("ERROR: $0 : Cannot open the file $logFile\n$!\
 
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
-toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
+
 
 toolbox::exportLog("#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                                                                              # check if this file exists
