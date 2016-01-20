@@ -921,7 +921,8 @@ sub addInfoHeader
 # arguments : filename to analyze
 # Returns boolean (1 if the fileformat is sam, 2 bam and 0 neither bam or sam)
 ################################################################################################
-sub checkSamOrBamFormat {
+sub checkSamOrBamFormat
+{
     
     my ($samFile)=@_;
     
@@ -945,7 +946,7 @@ sub checkSamOrBamFormat {
     
     if ($formatValidation == 1)                    # if no error occured in extracting header, ok
     {
-        toolbox::exportLog("INFOS: toolbox::checkSamOrBamFormat : The file $samFile is a SAM/BAM file\n",1);
+        ##DEBUG toolbox::exportLog("INFOS: toolbox::checkSamOrBamFormat : The file $samFile is a SAM/BAM file\n",1);
 	return 1 if $binary == 0;# Return 1 if the file is a SAM
 	return 2 if $binary == 1;# Return 2 if the file is a BAM
     }
