@@ -165,7 +165,7 @@ sub bwaSamse
     }
     else
     {
-        toolbox::exportLog("ERROR: bwa::bwaSamse : Problem with the files $refFastaFileIn or $SaiFileIn or $FastqFileIn\n",0);
+        toolbox::exportLog("ERROR: bwa::bwaSamse : Problem with the files $refFastaFileIn or $saiFileIn or $fastqFileIn\n",0);
         return 0;
     }
 }
