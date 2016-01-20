@@ -51,7 +51,6 @@ sub gatkBaseRecalibrator
         toolbox::run($comGatkBaseRecalibrator);
         if(toolbox::run($comGatkBaseRecalibrator)==1)
         {
-            toolbox::exportLog("INFOS: gatk::gatkBaseRecalibrator : Correctly done\n",1);
             return 1;
         }
         else        # if one or some previous files doesn't exist or is/are empty or if gatkBaseRecalibrator failed
@@ -80,7 +79,6 @@ sub gatkRealignerTargetCreator
         my $comGatkRealignerTargetCreator = "$GATK"."$options"." -R $refFastaFileIn -I $bamToRealigne -o $intervalsFile ";#--fix_misencoded_quality_scores -fixMisencodedQuals";        # command line
         if(toolbox::run($comGatkRealignerTargetCreator)==1)     # command line execution
         {
-            toolbox::exportLog("INFOS: gatk::gatkRealignerTargetCreator : Correctly done\n",1);
             return 1;
         }
     }
@@ -104,7 +102,6 @@ sub gatkIndelRealigner
         my $comGatkIndelRealigner = "$GATK"."$options"." -R $refFastaFileIn -I $bamToRealigne -targetIntervals $intervalsFile -o $bamRealigned";# --fix_misencoded_quality_scores -fixMisencodedQuals";     # command line
         if(toolbox::run($comGatkIndelRealigner)==1)
         {                                                                                                                                                                               # command line execution
-            toolbox::exportLog("INFOS: gatk::gatkIndelRealigner : Correctly done\n",1);
             return 1;
         }
     }
@@ -172,7 +169,6 @@ sub gatkHaplotypeCaller
         my $comGatkHaplotypeCaller = "$GATK"."$options"." -R $refFastaFileIn $bamFiles_names $dbsnp $intervals -o $vcfCalled";      # command line
         if(toolbox::run($comGatkHaplotypeCaller)==1)        # command line execution
         {
-            toolbox::exportLog("INFOS: gatk::gatkHaplotypeCaller : Correctly done\n",1);
             return 1;
         }
         else
@@ -202,7 +198,6 @@ sub gatkSelectVariants
         my $comGatkSelectVariants = "$GATK"."$options"." -R $refFastaFileIn --variant $vcfSnpKnownFile -o $vcfVariantsSelected";        # command line
         if(toolbox::run($comGatkSelectVariants)==1)     # command line execution
         {
-            toolbox::exportLog("INFOS: gatk::gatkSelectVariants : Correctly done\n",1);
             return 1;
         }
         else        # if one or some previous files doesn't exist or is/are empty or if gatkSelectVariants failed
@@ -217,6 +212,9 @@ sub gatkSelectVariants
         return 0;
     }
 }
+
+
+
 # GATK Variant Filtration: filter variant calls using a number of user-selectable, parameterizable criteria.
 sub gatkVariantFiltration
 {
@@ -237,7 +235,6 @@ sub gatkVariantFiltration
         my $comGatkVariantFiltration = "$GATK"."$options"." -R $refFastaFileIn -o $vcfFiltered --variant $vcfToFilter";     # command line
         if(toolbox::run($comGatkVariantFiltration)==1)      # command line execution
         {
-            toolbox::exportLog("INFOS: gatk::gatkVariantFiltration : Correctly done\n",1);
             return 1;
         }
         else        # if one or some previous files doesn't exist or is/are empty or if gatkVariantFiltration failed
@@ -252,6 +249,10 @@ sub gatkVariantFiltration
         return 0;
     }
 }
+
+
+
+
 # GATK Unified Genotyper: A variant caller which unifies the approaches of several disparate callers -- Works for single-sample and multi-sample data.
 sub gatkUnifiedGenotyper
 {
@@ -279,7 +280,6 @@ sub gatkUnifiedGenotyper
     my $comGatkUnifiedGenotyper = "$GATK"."$options"." -R $refFastaFileIn $bamFilesNames -o $vcfFileOut";        # command line
     if(toolbox::run($comGatkUnifiedGenotyper)==1)       # command line execution
     {
-        toolbox::exportLog("INFOS: gatk::gatkUnifiedGenotyper : Correctly done\n",1);
         return 1;
     }
     else        # if one or some previous files doesn't exist or is/are empty or if gatkVariantFiltration failed
@@ -304,7 +304,6 @@ sub gatkReadBackedPhasing
         my $comGatkReadBackedPhasing = "$GATK"."$options"." -R $refFastaFileIn -I $bamFileIn --variant $vcfVariant -o $vcfFileOut";     # command line
         if(toolbox::run($comGatkReadBackedPhasing)==1)      # command line execution
         {
-            toolbox::exportLog("INFOS: gatk::gatkReadBackedPhasing : Correctly done\n",1);
             return 1;
         }
     }
