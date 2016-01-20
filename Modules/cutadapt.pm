@@ -59,36 +59,34 @@ sub createConfFile
     my ($fileConf, $optionref)=@_;							# recovery of arguments
     my %optionsRef = %$optionref;      
     
-    my $fileAdaptator="$toggle/adaptator.txt";
+    open(CONF, ">", $fileConf) or toolbox::exportLog("ERROR: cutadapt::createConfFile : Can't open the configuration file $fileConf $!\n",0); 	# opening the configuration file to fill
     if (exists $optionsRef{"-adaptatorFile"})
     {
-	    $fileAdaptator=$optionsRef{'-adaptatorFile'};
+	    my $fileAdaptator=$optionsRef{'-adaptatorFile'};
 	    delete($optionsRef{'-adaptatorFile'});
+     
+        open(ADAPTATOR, "<", $fileAdaptator) or toolbox::exportLog("ERROR: cutadapt::createConfFile : Cannot open the adaptator file $fileAdaptator $!\n",0);	# opening the adaptators file
+        while (my $seq=<ADAPTATOR>)
+        {
+        next if ($seq=~m/^$/);										    # next if empty line
+        chomp $seq;											            # remove "\n" at the end of the line
+            print CONF "-b $seq\n";										# print in the configuration file the "-b" parameter and the adaptators sequence cooresponding
+            
+            $seq = reverse $seq;										# do the reverse adaptators sequence
+            $seq =~ tr/AaCcGgTt/TtGgCcAa/;								# do the complement adaptators sequence
+            print CONF "-b $seq\n";										# print in the configuration file the "-b" parameter and the reverse adaptators sequence cooresponding
+        }
+        close ADAPTATOR;
     }
- 
- 
-    open(CONF, ">", $fileConf) or toolbox::exportLog("ERROR: cutadapt::createConfFile : Can't open the configuration file $fileConf $!\n",0); 	# opening the configuration file to fill
- 
-    open(ADAPTATOR, "<", $fileAdaptator) or toolbox::exportLog("ERROR: cutadapt::createConfFile : Cannot open the adaptator file $fileAdaptator $!\n",0);	# opening the adaptators file
-    while (my $seq=<ADAPTATOR>)
-    {
-	next if ($seq=~m/^$/);										# next if empty line
-	chomp $seq;											# remove "\n" at the end of the line
-        print CONF "-b $seq\n";										# print in the configuration file the "-b" parameter and the adaptators sequence cooresponding
-        
-        $seq = reverse $seq;										# do the reverse adaptators sequence
-        $seq =~ tr/AaCcGgTt/TtGgCcAa/;									# do the complement adaptators sequence
-        print CONF "-b $seq\n";										# print in the configuration file the "-b" parameter and the reverse adaptators sequence cooresponding
-    }
- 
+    
+    
     foreach my $parameter (keys %optionsRef)
     {
 
-	print CONF "$parameter $optionsRef{$parameter}\n";							# print in the configuration file the parameter and the options cooresponding to
+	print CONF "$parameter $optionsRef{$parameter}\n";					# print in the configuration file the parameter and the options cooresponding to
     }
        
     close CONF;
-    close ADAPTATOR;
     
     if (toolbox::sizeFile($fileConf))
     {									# Check if the configuration file is not empty
