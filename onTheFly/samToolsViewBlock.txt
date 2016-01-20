@@ -23,9 +23,6 @@ if ($samFile eq '0') #No SAM/BAM file found in the previous folder
 
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools view pair
 
-##DEBUG print LOG $stepOrder."\n";
-##DEBUG print LOG $newDir."\n";
-##DEBUG print LOG Dumper($softParameters);
 
 
 #Verifying the output type
