@@ -119,10 +119,6 @@ my $indivName = `head -n 1 individuSoft.txt`;
 chomp $indivName;
 
 
-#### A EFFACER ######### 
-my $logFile=$indivName."_Global"."_log";
-open (LOG, ">",$logFile) or die ("ERROR: $0 : Cannot open the file $logFile\n$!\n");
-#########################################
 
 
 
