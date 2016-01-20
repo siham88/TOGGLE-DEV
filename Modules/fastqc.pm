@@ -54,7 +54,7 @@ sub execution
 	toolbox::exportLog("ERROR: fastqc::execution : should get at least two arguments\n",0) if (@_ < 2);
 	my ($filein,$dirOut,$optionsHachees)=@_; 
 	
-	toolbox::exportLog("INFOS: fastqc::execution : running\n", 1);
+	##DEBUG toolbox::exportLog("INFOS: fastqc::execution : running\n", 1);
 	
 	my $options="";
         if ($optionsHachees)
@@ -67,7 +67,6 @@ sub execution
 	
 	 if(toolbox::run($cmd_line)==1)		## if the command has been excuted correctly, export the log
 	{
-            toolbox::exportLog("INFOS: fastqc::execution : correctly done\n",1);
             return 1;
         }
 	else
