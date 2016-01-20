@@ -27,7 +27,7 @@ if (scalar @listOfSai != 2) # Two sai and only two are required for bwa sampe
     toolbox::exportLog("ERROR : $0 : BWA sampe requires two and only two sai files.\n",0);
 }
 
-toolbox::exportLog("#########################################\nINFOS: $0  "INFOS: $0 : Start $stepName\n",1);
+print LOG "INFOS: $0 : Start $stepName\n";
 $samFileOut = "$newDir"."/"."$readGroup".".BWASAMPE.sam";                                     # name for the output file of bwa sampe
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                      # recovery of specific parameters of bwa sampe
 bwa::bwaSampe($samFileOut,$refFastaFile,$listOfSai[0],$listOfSai[1],$fastq1,$fastq2,$readGroup,$softParameters); # generate alignement in SAM format
