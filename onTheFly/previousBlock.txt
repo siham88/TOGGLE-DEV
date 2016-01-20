@@ -8,11 +8,13 @@ $newDir = shift @dirList;                                                       
 $stepName = $$hashOrder{$stepOrder};
 $stepF1=$stepName;
 $stepF1 =~ s/ /_/g;
-print F1 "$stepF1\n";
-
 
 #### A EFFACER ######### 
+#print F1 "$stepF1\n";
+
+
+
 #print LOG "INFOS: $0 : Start $stepName\n";
 #### A EFFACER ######### 
 
-toolbox::exportLog("#########################################\nINFOS: $0 : Start $stepName \n#########################################\n",1);
+toolbox::exportLog("#########################################\nINFOS: $stepName analysis start \n#########################################\n",1);
