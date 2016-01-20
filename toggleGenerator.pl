@@ -362,7 +362,6 @@ if ($orderBefore1000)
     my $listSamples=toolbox::readDir($workingDir);
     
     #CORRECTING $listSamples if only one individual, ie readDir will provide only the list of files...
-    
     if (scalar @{$listSamples} < 3) #ex: Data/file_1.fastq, Data/file_2.fastq, or a single SAM/BAM/VCF individual
     {
       my @listPath = split /\//, $$listSamples[0];
@@ -394,7 +393,7 @@ if ($orderBefore1000)
           my $individualName = `basename $currentDir` or warn("\nERROR: $0 : Cannot pick up basename for $currentDir : $!\n");
           chomp $individualName;
           $individualName = $currentDir unless ($individualName); # Basename did not succeed...
-          ##DEBUG          print "--$individualName--\n";
+
           $errorList.="\$\|".$individualName;
           ##DEBUG          print "++$errorList++\n";
           #Need to remove the empty name...
@@ -479,7 +478,6 @@ if ($orderBefore1000)
     }
     else #There is no global analysis afterward
     {
-        ##DEBUG toolbox::exportLog("After everything\n",1);
         #Creating final directory
         toolbox::makeDir($finalDir);
                 
@@ -494,6 +492,7 @@ if ($orderBefore1000)
             my $lastDir = $currentDir."/".$lastOrderBefore1000."_".$$orderBefore1000{$lastOrderBefore1000};
             $lastDir =~ s/ //g;
             ##DEBUG toolbox::exportLog($lastDir,1);
+            
             my $fileList = toolbox::readDir($lastDir);
             foreach my $file (@{$fileList}) #Copying the final data in the final directory
             {
@@ -501,13 +500,7 @@ if ($orderBefore1000)
 		$file =~s/://g;
 		my ($basicName)=toolbox::extractPath($file);
                 my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
-                ##DEBUG toolbox::exportLog($cpLnCommand,1);
-                ##DEBUG
-                ##DEBUG toolbox::exportLog("--------->".$file."-".$basicName,2);
-                if(toolbox::run($cpLnCommand))       #Execute command
-                {
-                    toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $finalDir\n",1);
-                }   
+                toolbox::run($cpLnCommand,"noprint")       
             }
         }
     }
@@ -542,15 +535,9 @@ if ($orderAfter1000)
       {
         #Have to wait that all jobs are finished
         my $waitOutput = scheduler::waiter($jobList,\%jobHash);
-        if ($waitOutput == 1)
+        if ($waitOutput != 1)
         {
-          #all jobs correctly finished
-          toolbox::exportLog("INFOS: $0 : Global final job is finished\n",1);
-        }
-        else
-        {
-          #problem somewhere
-          toolbox::exportLog("ERROR: $0 : Global final job is not finished, please check error log...\n",0);
+          toolbox::exportLog("ERROR: $0 : Multiple job is not finished correctly, please check error log.\n",0);
         }
       }
     }
@@ -578,10 +565,11 @@ close F1;
 toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. \n#########################################\n",1);
 toolbox::exportLog("\nThank you for using TOGGLE!
 ###########################################################################################################################
-\tCITATION:
-\tTOGGLE: Toolbox for generic NGS analyses.
-\tCécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
-\tBMC Bioinformatics 2015, 16:374
+#\tCITATION:
+#\tTOGGLE: Toolbox for generic NGS analyses.
+#\tCécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud,
+#\tSouhila Amanzougarene,Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
+#\tBMC Bioinformatics 2015, 16:374
 ###########################################################################################################################",1);  
 
 exit;
