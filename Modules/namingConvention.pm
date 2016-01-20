@@ -127,6 +127,7 @@ sub correctName
         
         #FOR gatk.pm
         case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*base[\s|\.|\-| \/|\\|\|]*recalibrator/i){$correctedName="gatkBaseRecalibrator"} # Correction for gatkBaseRecalibrator
+        case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*print[\s|\.|\-| \/|\\|\|]*reads/i){$correctedName="gatkPrintReads"} # Correction for gatkPrintReads
         case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*realigner[\s|\.|\-| \/|\\|\|]*target[\s|\.|\-| \/|\\|\|]*creator/i){$correctedName="gatkRealignerTargetCreator"} # Correction for gatkRealignerTargetCreator
         case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*indel[\s|\.|\-| \/|\\|\|]*realigner/i){$correctedName="gatkIndelRealigner"} # Correction for gatkIndelRealigner
         case ($name =~ m/gatk[\s|\.|\-| \/|\\|\|]*haplotype[\s|\.|\-| \/|\\|\|]*caller/i){$correctedName="gatkHaplotypeCaller"} # Correction for gatkHaplotypeCaller

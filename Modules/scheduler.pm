@@ -270,8 +270,8 @@ sub waiter { #Global function for waiting, will recover the jobID to survey and 
     my $stopWaiting;
     switch (1)
     {
-        case (defined $hashCapability->{"sge"} && defined $$configInfo{"sge"}){$stopWaiting = &sgeWait} #For SGE running
-        case (defined $hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$stopWaiting = &slurmWait} #For SLURM running
+        case ($hashCapability->{"sge"} && defined $$configInfo{"sge"}){$stopWaiting = &sgeWait} #For SGE running
+        case ($hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$stopWaiting = &slurmWait} #For SLURM running
     }
     return $stopWaiting;
 }

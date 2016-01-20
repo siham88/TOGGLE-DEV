@@ -70,9 +70,13 @@ $gatkHaplotypeCaller
 IN=bam,vcf
 OUT=vcf
 
-#$gatkBaseRecalibrator
-#IN=bam,fasta
-#OUT=NA
+$gatkBaseRecalibrator
+IN=bam
+OUT=NA
+
+$gatkPrintReads
+IN=bam
+OUT=bam
 
 $gatkRealignerTargetCreator
 IN=bam,fasta

@@ -39,16 +39,17 @@ use Data::Dumper;
 # GATK Base Recalibrator: recalibrate the quality score of bases from informations stemming from SNP VCF file
 sub gatkBaseRecalibrator
 {
-    my ($refFastaFileIn, $bamToRecalibrate, $vcfSnpKnownFile, $tableReport, $optionsHachees) = @_;      # recovery of information
-    if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($vcfSnpKnownFile)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
+    my ($refFastaFileIn, $bamToRecalibrate, $tableReport, $optionsHachees) = @_;      # recovery of information
+    if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        print $options,"\n";
         if ($options !~ m/-T/) # The type of walker is not informed in the options
         {
             $options .= " -T BaseRecalibrator";
         }
-        my $comGatkBaseRecalibrator = "$GATK"."$options"." -I $bamToRecalibrate -R $refFastaFileIn -knownSites $vcfSnpKnownFile -o $tableReport";       # command line
-        toolbox::run($comGatkBaseRecalibrator);
+    
+        my $comGatkBaseRecalibrator = "$GATK"."$options"." -I $bamToRecalibrate -R $refFastaFileIn -o $tableReport";       # command line
         if(toolbox::run($comGatkBaseRecalibrator)==1)
         {
             toolbox::exportLog("INFOS: gatk::gatkBaseRecalibrator : Correctly done\n",1);
@@ -62,10 +63,44 @@ sub gatkBaseRecalibrator
     }
     else        # if one or some previous files doesn't exist or is/are empty or if gatkBaseRecalibrator failed
     {
-        toolbox::exportLog("ERROR: gatk::gatkBaseRecalibrator : The files $refFastaFileIn, $vcfSnpKnownFile or/and $bamToRecalibrate are incorrects\n", 0);     # returns the error message
+        toolbox::exportLog("ERROR: gatk::gatkBaseRecalibrator : The files $refFastaFileIn or/and $bamToRecalibrate are incorrects\n", 0);     # returns the error message
         return 0;
     }
+}  
+
+sub gatkPrintReads
+{
+    my ($refFastaFileIn, $bamToRecalibrate, $bamOut, $tableReport, $optionsHachees) = @_;      # recovery of information
+    if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1) and (toolbox::sizeFile($tableReport)==1))     # check if files exists and arn't empty and stop else
+    {
+        my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            $options .= " -T PrintReads";
+        }
+    
+        my $comGatkPrintReads = "$GATK"."$options"." -I $bamToRecalibrate -R $refFastaFileIn -BQSR $tableReport -o $bamOut  ";       # command line
+        if(toolbox::run($comGatkPrintReads)==1)
+        {
+            toolbox::exportLog("INFOS: gatk::gatkPrintReads : Correctly done\n",1);
+            return 1;
+        }
+        else        # if one or some previous files doesn't exist or is/are empty or if gatkPrintReads failed
+        {
+            toolbox::exportLog("ERROR: gatk::gatkPrintReads : Uncorrectly done\n", 0);        # returns the error message
+            return 0;
+        }
+    }
+    else        # if one or some previous files doesn't exist or is/are empty or if gatkPrintReads failed
+    {
+        toolbox::exportLog("ERROR: gatk::gatkPrintReads : The files $refFastaFileIn, $tableReport or/and $bamToRecalibrate are incorrects\n", 0);     # returns the error message
+        return 0;
+    }    
+    
+
 }
+
+
 # GATK Realigner Target Creator: determine (small) suspicious intervals which are likely in need of realignment
 sub gatkRealignerTargetCreator
 {
@@ -349,11 +384,17 @@ sub gatkReadBackedPhasing
 
 =head3 gatk::gatkBaseRecalibrator
 
-This module recalibrate the quality score of bases from informations stemming from SNP VCF file
+This module recalibrate the quality score of bases from informations stemming from SNP VCF file if it is done by user
 It takes at least three arguments: the database indexed, the file ".bam" to recalibrate, the name of table of report which will be created by this module
 The file of already known SNP is not mandatory
 The last argument is the options of gatk baseRecalibrator, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_bqsr_BaseRecalibrator.php
 
+
+=head3 gatk::gatkPrintReads
+
+This module apply the recalibration to your sequence data
+It takes at least three arguments: the database indexed, the file ".bam" to recalibrate, the table created by gatkBaseRecalibrator
+The last argument is the options of gatk baseRecalibrator, for more informations https://www.broadinstitute.org/gatk/guide/article?id=2801
 
 
 =head3 gatk::gatkRealignerTargetCreator
