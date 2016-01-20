@@ -296,7 +296,10 @@ sub sgeWait {
     }
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 25;#Needed for qacct to register infos...
-    toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tNode\tExitStatus\n-------------------------------",1);
+    toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
+\n---------------------------------------------------------
+Individual\tJobID\tNode\tExitStatus
+---------------------------------------------------------",1);
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
       my $qacctCommand = "qacct -j ".$jobHash{$individual}." 2>&1";
@@ -343,7 +346,7 @@ sub sgeWait {
       toolbox::exportLog($outputLine,1);
       
     }
-    toolbox::exportLog("-------------------------------\n",1);#To have a better table presentation
+    toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
   
   if (scalar @jobsInError) {
     #at least one job has failed
