@@ -22,7 +22,9 @@ if ($samFile eq '0') #No SAM/BAM file found in the previous folder
 
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools sort
 
-samTools::samToolsSort($samFile,$softParameters);   # Sending to samtools sort function
+$fileWithoutExtention=toolbox::extractName($samFile);
+$bamFileOut = "$newDir"."/"."$fileWithoutExtention".".SAMTOOLSSORT.bam";
+samTools::samToolsSort($samFile,$bamFileOUt,$softParameters);   # Sending to samtools sort function
 
 
 

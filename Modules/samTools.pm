@@ -150,7 +150,7 @@ sub samToolsView
 #Sort alignments by leftmost coordinates.
 sub samToolsSort
 {
-     my($bamFileIn,$optionsHachees)=@_;
+     my($bamFileIn,$bamFileOut,$optionsHachees)=@_;
      if (toolbox::sizeFile($bamFileIn)==1)
      { ##Check if entry file exist and is not empty
           
@@ -161,9 +161,6 @@ sub samToolsSort
                return 0;
           }
           
-          my $bamPath=toolbox::extractPath($bamFileIn);
-          my $bamFileName=toolbox::extractName($bamFileIn).".SAMTOOLSSORT";
-          my $bamFileOut = $bamPath.$bamFileName;
           my $options="";
           
           if ($optionsHachees)
