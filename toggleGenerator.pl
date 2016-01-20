@@ -416,17 +416,10 @@ if ($orderBefore1000)
     {
       #Have to wait that all jobs are finished
       my $waitOutput = scheduler::waiter($jobList,\%jobHash);
-      if ($waitOutput == 1)
-      {
-        #all jobs correctly finished
-        toolbox::exportLog("\nINFOS: $0 : All intermediate jobs are finished\n",1);
-      }
-      else
+      if ($waitOutput != 1)
       {
         #Creating a chain with the list of individual with an error in the job...
-        $errorList=join ("\$\|",@{$waitOutput});
-       
-        
+        $errorList=join ("\$\|",@{$waitOutput}); 
       }
 
     }
