@@ -51,7 +51,7 @@ use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 ##########################################
 my $cmd_line=$0." @ARGV";
 my ($nomprog)=$0=~/([^\/]+)$/;
-unless ($#ARGV>=0)                                                                                          # if no argument given
+unless ($#ARGV>=0)                    # if no argument given
 {
 
   print <<"Mesg";
@@ -63,7 +63,7 @@ Mesg
   exit;
 }
 
-my %param = @ARGV;                                                                                          # get the parameters 
+my %param = @ARGV;                     # get the parameters 
 if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}) or not defined ($param{'-o'}))
 {
   print <<"Mesg";
@@ -88,23 +88,18 @@ my @logPathInfos;
 foreach my $inputParameters (keys %param)
 {
   my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
-  die ("ERROR: An empty parameter has been given!\n") if ($newPath eq 0);
+  die ("ERROR: $0 : An empty parameter has been given!\n") if ($newPath eq 0);
   $param{$inputParameters}=$newPath;
   push @logPathInfos,$log;
 }
 
 my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
-##DEBUG print "init Dir = $initialDir\n";
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
-##DEBUG print "file Conf = $fileConf\n";
 my $refFastaFile = $param{'-r'};      # recovery of the reference file
-##DEBUG print "reference = $refFastaFile\n";
 my $outputDir = $param{'-o'};         # recovery of the output folder
 
 my $gffFile;                          # recovery of the gff file used by topHat and rnaseq analysis
 $gffFile = $param{'-g'} if (defined $param{'-g'});
-
-##DEBUG print "out Dir = $outputDir\n";
 
 
 
@@ -114,11 +109,11 @@ $gffFile = $param{'-g'} if (defined $param{'-g'});
 # Creation of the output folder
 ##########################################
 
-if (not -d $outputDir) #The output folder is not existing yet
+if (not -d $outputDir) #if the output folder is not existing yet
 {
-    #creating the folder
+    #creating the output folder
     my $createOutputDirCommand = "mkdir -p $outputDir";
-    system ("$createOutputDirCommand") and die ("\n$0 cannot create the output folder $outputDir: $!\nExiting...\n");
+    system ("$createOutputDirCommand") and die ("\nERROR: $0 : cannot create the output folder $outputDir: $!\nExiting...\n");
 }
 
 chdir $outputDir;
@@ -361,7 +356,7 @@ onTheFly::generateGraphviz($hashOrder,$outputDir);
 
 if ($orderBefore1000)
 {
-    toolbox::exportLog("#########################################\nINFOS: Creating pipeline script \n#########################################\n",1);
+    toolbox::exportLog("\n#########################################\nINFOS: Creating individual pipeline script \n#########################################\n",1);
 
     #generate toggleBzzzz.pl
     onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner);
@@ -384,7 +379,7 @@ if ($orderBefore1000)
     my $jobList="";
     my %jobHash;
         
-    toolbox::exportLog("#########################################\nINFOS: Running pipeline \n#########################################\n",1);
+    toolbox::exportLog("#########################################\nINFOS: Running individual pipeline \n#########################################\n",1);
     foreach my $currentDir(@{$listSamples})
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
@@ -530,6 +525,9 @@ if ($orderBefore1000)
 
 if ($orderAfter1000)
 {
+  
+    toolbox::exportLog("\n#########################################\nINFOS: Creating multiple pipeline script \n#########################################\n",1);
+
     onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner);
     
     $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
@@ -540,7 +538,8 @@ if ($orderAfter1000)
     my $jobList="";
     my %jobHash;
 
-    #Launching through the scheduler launching system  
+        toolbox::exportLog("#########################################\nINFOS: Running multiple pipeline \n#########################################\n",1);
+    #Launching through the scheduler launching system
     my $jobOutput = scheduler::launcher($launcherCommand, "1", "Global analysis", $configInfo); #not blocking job, explaining the '1'
     if ($jobOutput ne 1) #1 means the job is Ok and is running in a normal linear way, ie no scheduling
     {
@@ -586,6 +585,9 @@ if ($orderAfter1000)
 
 close F1;
 
+toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. Thank you for using TOGGLE. \n#########################################\n",1);
+toolbox::exportLog("#########################################\nCITATION: TOGGLE: Toolbox for generic NGS analyses.\n Cécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot. \n
+                   BMC Bioinformatics 2015, 16:374 #########################################\n",1);  
 exit;
 
 =head1 Name
