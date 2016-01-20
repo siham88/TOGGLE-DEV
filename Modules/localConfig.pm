@@ -37,27 +37,27 @@ use warnings;
 use Exporter;
 
 our @ISA=qw(Exporter);
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffmerge $cuffdiff);
 
 #toggle path
-our $toggle="/path/to/toggleFolder";
+our $toggle="/home/ftarkin/scripts/TOGGLE-DEV";
 
 #PATH for Mapping on cluster
-our $java = "/path/to/java -Xmx12g -jar";
+our $java = "java -Xmx3g -jar";
 
-our $bwa = "/path/to/bwa";
-our $picard = "$java /path/to/picard_tools/";
+our $bwa = "/usr/bin/bwa";
+our $picard = "$java /home/ftarkin/sources/picard-tools/";
 
-our $samtools = "/path/to/samtools";
-our $GATK = "$java -Xmx12g -jar /path/to/GenomeAnalysisTK.jar";
-our $fastqc = "/path/to/fastqc";
+our $samtools = "/usr/local/bin/samtools";
+our $GATK = "java -Xmx3g -jar /home/ftarkin/sources/GenomeAnalysisTK/GenomeAnalysisTK.jar";
+our $fastqc = "/home/ftarkin/sources/FastQC/fastqc";
 
 #Path for CutAdapt
-our $cutadapt = "/path/to/cutadapt";
+our $cutadapt = "/home/ftarkin/sources/cutadapt-1.2.1/bin/cutadapt";
 
 ##### FOR RNASEQ analysis
 #Path for fastq_trimmer
-our $fastxTrimmer="/path/to/fastx_trimmer";
+our $fastxTrimmer="/path/to/bin/fastx_trimmer";
 
 #Path for tophat2
 our $tophat2="/path/to/tophat2";
@@ -66,14 +66,14 @@ our $tophat2="/path/to/tophat2";
 our $bowtie2Build="/path/to/bowtie2-build";
 
 #path for bowtie-build
-our $bowtieBuild="/path/to//bowtie-build";
+our $bowtieBuild="/path/to/bowtie-build";
 
 #path for htseqcount
-our $htseqcount = "/path/to//htseq-count";
+our $htseqcount = "/path/to/htseq-count";
 
-#path for Cufflinks
-our $cufflinks = "/path/to/cufflinks";
-our $cuffdiff = "/path/to/cuffdiff";
-our $cuffmerge = "/path/to/cuffmerge";
+#path for cufflinks
+our $cufflinks;
+our $cuffmerge;
+our $cuffdiff;
 
 1;

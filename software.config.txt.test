@@ -51,6 +51,7 @@ $GATK gatkReadBackedPhasing
  
 $GATK gatkBaseRecalibrator
 -T=BaseRecalibrator
+-knownSites=/home/ftarkin/scripts/TOGGLE-DEV/DATA/testData/vcf/vcfForRecalibration/control.vcf
 
 $GATK gatkRealignerTargetCreator
 -T=RealignerTargetCreator
@@ -72,7 +73,5 @@ $cleaner
 2
 
 $order
-1=bwaAln
-2= bwa sampe
-3= picardtoolssortsam
-
+1=gatkPrintReads
+1000=gatkunifiedgenotyper
