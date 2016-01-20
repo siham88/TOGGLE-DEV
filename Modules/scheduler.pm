@@ -125,7 +125,8 @@ sub normalRun { #For running in normal mode, ie no scheduler
     
 }
 
-sub sgeRun { #For SGE cluster, running using qsub
+sub sgeRun
+{ #For SGE cluster, running using qsub
     
     my $sgeOptionsHash=toolbox::extractHashSoft($configInfo,"sge");
     my $sgeOptions=toolbox::extractOptions($sgeOptionsHash);
@@ -185,7 +186,8 @@ sub sgeRun { #For SGE cluster, running using qsub
     return $currentJID;
 }
 
-sub slurmRun{ #for SLURM cluster, running using sbatch
+sub slurmRun
+{ #for SLURM cluster, running using sbatch
     
     my $slurmOptionsHash=toolbox::extractHashSoft($configInfo,"slurm");
     my $slurmOptions=toolbox::extractOptions($slurmOptionsHash);
@@ -215,8 +217,8 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
         return 0; #Returning to launcher subprogram the error type
     }
     
-    toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in sbatch mode through the command:\n\t$launcherCommand\n\n",1);
-    toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
+    toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in sbatch mode through the command:\n\t$launcherCommand\n",1);
+    ## DEBUG toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
     
     my @infosList=split /\s/, $currentJID; #the format is such as "Submitted batch job 3"
     $currentJID = $infosList[3];
@@ -237,7 +239,7 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
             {
                 #We already tryed to pick up the node infos 5 times, let's stop
                 $runningNode = "still unknown (either not running, or already finished)";
-                toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
+                ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
                 last;
             }
             next;
@@ -245,7 +247,7 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
         my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
         $runningNode = $runningFields[8];
     }
-    toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
+    ## DEBUG toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
     
     #Provide the job ID
     return $currentJID;
