@@ -109,7 +109,6 @@ sub picardToolsSortSam
         my $command="$picard/picard.jar SortSam $options INPUT=$bamOrSamFileIn OUTPUT=$bamOrSamFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
-            toolbox::exportLog("INFOS: picardTools::picardToolsSortSam : Correctly run\n",1);
             return 1;
         }
     }
