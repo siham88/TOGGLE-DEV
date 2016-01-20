@@ -148,15 +148,19 @@ sub generateScript
 	    $compressorCounter++;
 	    next;
 	}
-        if (defined $$hashCleaner{$step-$cleanerCounter})
+        if (defined $$hashCompressor{$step-$compressorCounter})
+	{# The previous step has to be compressed BUT NOT CLEANED
+	    unless (defined $$hashCleaner{$step-$cleanerCounter})
+	    {
+	    $catCommand .= " ".$toggle."/onTheFly/compressorBlock.txt";
+	    $compressorCounter=1;
+	    }
+	}
+	
+	if (defined $$hashCleaner{$step-$cleanerCounter})
 	{# The previous step has to be cleaned
 	    $catCommand .= " ".$toggle."/onTheFly/cleanerBlock.txt";
 	    $cleanerCounter=1;
-	}
-	if (defined $$hashCompressor{$step-$compressorCounter})
-	{# The previous step has to be cleaned
-	    $catCommand .= " ".$toggle."/onTheFly/compressorBlock.txt";
-	    $compressorCounter=1;
 	}
 	
 	$catCommand .= " ".$toggle."/onTheFly/afterBlock.txt"; # adding infos for next block
