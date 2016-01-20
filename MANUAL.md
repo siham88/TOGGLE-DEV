@@ -170,6 +170,8 @@ $compress
 
 There only the last step result (samtools sort) will be conserved, the other being compressed in their respective tar.gz archive. The folders and logs of the compressed steps are conserved, but not the resulting files.
 
+BE CAREFUL: CLEANING IS OF HIGHER ORDER THAN COMPRESS. If the same step is required to be cleaned AND compressed, it will be only cleaned!
+
 # Scheduler and parallel runs
 The current version is scheduler-aware (**SGE** and **Slurm** on v0.3), and is able to decide by itself to launch on such a system.
 The jobs will be launched in parallel however only if the *software.config* file contains informations for scheduling, *i.e.* the queue name, number of core/threads per jobs, etc...
