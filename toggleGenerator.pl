@@ -124,7 +124,7 @@ my $lsOutputDir = `ls`;
 chomp $lsOutputDir;
 if ($lsOutputDir ne "") # The folder is not empty
 {
-  die ("\nThe output directory $outputDir is not empty, TOGGLE will not continue\nPlease provide an empty directory for outputting results.\n\nExiting...\n\n");
+  die ("\nERROR: $0 : The output directory $outputDir is not empty, TOGGLE will not continue\nPlease provide an empty directory for outputting results.\n\nExiting...\n\n");
 }
 
 my $infosFile = "individuSoft.txt";
@@ -248,7 +248,6 @@ foreach my $file (@{$initialDirContent})
 {    
     my ($shortName)=toolbox::extractPath($file);
     my $lnCommand = "ln -s $file $workingDir/$shortName";
-    ##DEBUG print $lnCommand,"\n";
     toolbox::run($lnCommand,"noprint");      
 }
 
@@ -392,7 +391,7 @@ if ($orderBefore1000)
         if ($jobOutput == 0)
         {
           #the linear job is not ok, need to pick up the number of jobs
-          my $individualName = `basename $currentDir` or warn("Cannot pick up basename for $currentDir : $!\n");
+          my $individualName = `basename $currentDir` or warn("\nERROR: $0 : Cannot pick up basename for $currentDir : $!\n");
           chomp $individualName;
           $individualName = $currentDir unless ($individualName); # Basename did not succeed...
           ##DEBUG          print "--$individualName--\n";
@@ -405,7 +404,7 @@ if ($orderBefore1000)
         next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
         
         $jobList = $jobList.$jobOutput."|";
-        my $baseNameDir=`basename $currentDir` or die("ERROR : $0 : Cannot pickup the basename for $currentDir: $!\n");
+        my $baseNameDir=`basename $currentDir` or die("\nERROR : $0 : Cannot pickup the basename for $currentDir: $!\n");
         chomp $baseNameDir;
         $jobHash{$baseNameDir}=$jobOutput;
     }
@@ -420,7 +419,7 @@ if ($orderBefore1000)
       if ($waitOutput == 1)
       {
         #all jobs correctly finished
-        toolbox::exportLog("INFOS: $0 : All intermediate jobs are finished\n",1);
+        toolbox::exportLog("\nINFOS: $0 : All intermediate jobs are finished\n",1);
       }
       else
       {
@@ -438,7 +437,7 @@ if ($orderBefore1000)
         my $outputErrors = $errorList;
          ##DEBUG        print "==$errorList==\n";
         $outputErrors =~ s/\$\|/,/;
-        toolbox::exportLog("WARNINGS: $0 : Some individuals are erroneous and not treated: $outputErrors\n",2);
+        toolbox::exportLog("\n>>>>>>>>>>>>>>>> WARNINGS: $0 : Some individuals are erroneous and not treated: $outputErrors\n",2);
       }
     
     # Going through the individual tree
