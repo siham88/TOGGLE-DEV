@@ -389,7 +389,7 @@ sub generateGraphviz
     if ($dotHelpCommand !~ m/Usage: dot/)
     {
 	#The dot soft is not installed on this machine
-	toolbox::exportLog(">>>>>>>>>>>>>> WARNING : $0 : Cannot generate graphical view of the current pipeline through onTheFly::generateGraphviz as Graphviz is not installed. \n Only the dot file will be created. $dotCom\n ",1);
+	toolbox::exportLog(">>>>>>>>>>>>>> WARNING : onTheFly::generateGraphviz: Cannot generate graphical view, Graphviz is not installed. Only the dot file has been created. \n The command line to create png file is : $dotCom\n ",1);
 	return 1;
     }
     
