@@ -525,7 +525,7 @@ if ($orderBefore1000)
 if ($orderAfter1000)
 {
   
-    toolbox::exportLog("\n######################################### INFOS: Running multiple pipeline script \n#########################################\n",1);
+    toolbox::exportLog("\n#########################################\n INFOS: Running multiple pipeline script \n#########################################\n",1);
 
     onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner);
     
@@ -584,8 +584,14 @@ if ($orderAfter1000)
 close F1;
 
 toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. \n#########################################\n",1);
-toolbox::exportLog("\nThank you for using TOGGLE. \n CITATION: \nTOGGLE: Toolbox for generic NGS analyses.\nCécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.\n \
-BMC Bioinformatics 2015, 16:374\n",1);  
+toolbox::exportLog("\nThank you for using TOGGLE!
+###########################################################################################################################
+\tCITATION:
+\tTOGGLE: Toolbox for generic NGS analyses.
+\tCécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
+\tBMC Bioinformatics 2015, 16:374
+###########################################################################################################################",1);  
+
 exit;
 
 =head1 Name
