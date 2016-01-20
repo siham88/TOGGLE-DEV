@@ -126,7 +126,7 @@ sub checkOrder
 ################################################################################################
 sub generateScript
 {
-    my ($hashOrder,$script,$hashCleaner)=@_;
+    my ($hashOrder,$script,$hashCleaner,$hashCompressor)=@_;
     
     #Picking up input output for each software
     my $hashSoftware=toolbox::readFileConf("$toggle/softwareFormats.txt");
@@ -134,6 +134,7 @@ sub generateScript
     my $catCommand = "cat $toggle/onTheFly/startBlock.txt"; #Will create the preambule for the pipeline code, including paths, use modules, etc...
     my @stepsList = sort{$a <=> $b} keys %{$hashOrder};
     my $cleanerCounter=1; #
+    my $compressorCounter=1;#for compressing previous folder
     foreach my $step (@stepsList)
     {
         my $currentSoft=$$hashOrder{$step}; #Picking up the step name
@@ -144,12 +145,18 @@ sub generateScript
 	if ($$hashSoftware{$currentSoft}{'OUT'} eq "NA")
 	{# will not add the switcher of previous directory for 'dead end' protgrams such as fastqc, samtools flagstats....
 	    $cleanerCounter++;
+	    $compressorCounter++;
 	    next;
 	}
         if (defined $$hashCleaner{$step-$cleanerCounter})
 	{# The previous step has to be cleaned
 	    $catCommand .= " ".$toggle."/onTheFly/cleanerBlock.txt";
 	    $cleanerCounter=1;
+	}
+	if (defined $$hashCompressor{$step-$compressorCounter})
+	{# The previous step has to be cleaned
+	    $catCommand .= " ".$toggle."/onTheFly/compressorBlock.txt";
+	    $compressorCounter=1;
 	}
 	
 	$catCommand .= " ".$toggle."/onTheFly/afterBlock.txt"; # adding infos for next block

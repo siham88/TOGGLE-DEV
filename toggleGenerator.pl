@@ -323,6 +323,7 @@ my $scriptMultiple = "$outputDir/toggleMultiple.pl";
 
 my $hashOrder=toolbox::extractHashSoft($configInfo,"order"); #Picking up the options for the order of the pipeline
 my $hashCleaner=toolbox::extractHashSoft($configInfo,"cleaner"); #Picking up infos for steps to be cleaned / data to be removed all along the pipeline
+my $hashCompressor=toolbox::extractHashSoft($configInfo,"compress"); #Picking up infos for steps to be compress 
 
 my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
 
@@ -358,7 +359,7 @@ if ($orderBefore1000)
     toolbox::exportLog("\n#########################################\nINFOS: Running individual pipeline script \n#########################################\n",1);
 
     #generate toggleBzzzz.pl
-    onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner);
+    onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner,$hashCompressor);
     my $listSamples=toolbox::readDir($workingDir);
     
     #CORRECTING $listSamples if only one individual, ie readDir will provide only the list of files...
@@ -512,7 +513,7 @@ if ($orderAfter1000)
   
     toolbox::exportLog("\n#########################################\n INFOS: Running multiple pipeline script \n#########################################\n",1);
 
-    onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner);
+    onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor);
     
     $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 

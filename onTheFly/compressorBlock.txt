@@ -1,0 +1,14 @@
+
+############################
+#
+# Block for compressing the previous step
+#
+############################
+
+$compressorCommand = "tar zcvf $previousDir.tar.gz $previousDir && rm -f $previousDir";
+
+if (toolbox::run($compressorCommand) == 1)
+{
+    toolbox::exportLog("INFOS : $0 : Compressing intermediate results from $previousDir\n",1);
+}
+
