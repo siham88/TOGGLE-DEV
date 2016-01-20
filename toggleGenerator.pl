@@ -487,10 +487,7 @@ if ($orderBefore1000)
             {
                 my ($basicName)=toolbox::extractPath($file);
                 my $lnCommand="ln -s $file $intermediateDir/$basicName";
-                if(toolbox::run($lnCommand))       #Execute command
-                {
-                    toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $intermediateDir\n",1);
-                }   
+                toolbox::run($lnCommand,"noprint")         
             }
         }
     }
@@ -582,10 +579,7 @@ if ($orderAfter1000)
         my ($basicName)=toolbox::extractPath($file);
         my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
         ##DEBUG toolbox::exportLog($cpLnCommand,1);
-        if(toolbox::run($cpLnCommand))       #Execute command
-        {
-            toolbox::exportLog("INFOS: $0 : Correctly transferred  the $file in $finalDir\n",1);
-        }   
+        toolbox::run($cpLnCommand,"noprint")       
     }
     
 }
