@@ -283,6 +283,7 @@ sub sgeWait
     
     my $nbRunningJobs = 1;
     my @jobsInError=();
+    
     ##Waiting for jobs to finish
     while ($nbRunningJobs)
     {  
@@ -292,17 +293,20 @@ sub sgeWait
       chomp $nbRunningJobs;
       sleep 50;
     }
+    
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 25;#Needed for qacct to register infos...
     toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
 \n---------------------------------------------------------
 Individual\tJobID\tNode\tExitStatus
 ---------------------------------------------------------",1);
+    
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
       my $qacctCommand = "qacct -j ".$jobHash{$individual}." 2>&1";
       my $qacctOutput = `$qacctCommand`;
       my $outputLine;
+      
       chomp $qacctOutput;
       if ($qacctOutput =~ "-bash: qacct" or $qacctOutput =~ "installed")
       {
@@ -311,6 +315,7 @@ Individual\tJobID\tNode\tExitStatus
         toolbox::exportLog($outputLine,1);
         next;
       }
+      
       my @linesQacct = split /\n/, $qacctOutput;
       $outputLine = $individual."\t".$jobHash{$individual}."\t";
       while (@linesQacct) #Parsing the qacct output
@@ -346,11 +351,12 @@ Individual\tJobID\tNode\tExitStatus
     }
     toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
   
-  if (scalar @jobsInError) {
-    #at least one job has failed
-    return \@jobsInError;
-  }
-  return 1;
+    if (scalar @jobsInError)
+    {
+	#at least one job has failed
+	return \@jobsInError;
+    }
+    return 1;
 }
 
 sub slurmWait
