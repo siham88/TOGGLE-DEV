@@ -24,7 +24,7 @@ $softParameters = toolbox::extractHashSoft($optionRef,$stepName);               
 
 $fileWithoutExtention=toolbox::extractName($samFile);
 $bamFileOut = "$newDir"."/"."$fileWithoutExtention".".SAMTOOLSSORT.bam";
-samTools::samToolsSort($samFile,$bamFileOUt,$softParameters);   # Sending to samtools sort function
+samTools::samToolsSort($samFile,$bamFileOut,$softParameters);   # Sending to samtools sort function
 
 
 
