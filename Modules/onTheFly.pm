@@ -159,9 +159,9 @@ sub generateScript
     
     ##DEBUG print $catCommand,"\n";
     
-    if(toolbox::run($catCommand)==1)       #Execute command
+    if(toolbox::run($catCommand,"noprint")==1)       #Execute command
     {
-        toolbox::exportLog("INFOS: onTheFly::generateScript : Correctly done\n",1);
+        toolbox::exportLog("INFOS: onTheFly::generateScript : The script $script has been generated\n",1);
         return 1;
     }
     
@@ -179,7 +179,6 @@ sub generateScript
 # 	- hash of complete configuration
 #       - reference file
 ################################################################################################
-
 sub indexCreator
 {
     my ($hashConf,$reference)=@_;
@@ -318,7 +317,6 @@ sub indexCreator
 # 	- hash of complete configuration
 #       - output directory
 ################################################################################################
-
 sub generateGraphviz
 {
     my ($hashOrder,$outDir)=@_;
@@ -383,16 +381,18 @@ sub generateGraphviz
     print OUT $lastLine;
     close OUT;
     
+    
+    my $dotCom="dot -Tpng -o$graphicFileOut $dotFileOut"; #To generate png file
+    
     #Verification if dot can work on this installation
     my $dotHelpCommand = `dot -? 2>/dev/null`;
     if ($dotHelpCommand !~ m/Usage: dot/)
     {
 	#The dot soft is not installed on this machine
-	toolbox::exportLog("WARNING : $0 : Cannot generate graphical view of the current pipeline through onTheFly::generateGraphviz as Graphviz is not installed. Only the dot file will be created.\n",2);
+	toolbox::exportLog(">>>>>>>>>>>>>> WARNING : onTheFly::generateGraphviz: Cannot generate graphical view, Graphviz is not installed. Only the dot file has been created. \n The command line to create png file is : $dotCom\n ",1);
 	return 1;
     }
     
-    my $dotCom="dot -Tpng -o$graphicFileOut $dotFileOut";
     toolbox::run("$dotCom");
 }
 

@@ -145,32 +145,16 @@ sub checkFile
     
     #Check read and write right   
     my $readingRights = readFile($file);
-    my $writingRights = writeFile($file);
     
     my $logOut;
     
-    if ($readingRights == 1 and $writingRights == 1)
+  
+    if($readingRights == 0)
     {
-        $logOut= "INFOS: toolbox::checkFile : The file $file is readable and writable\n";
-    }
-    elsif($readingRights == 1 and $writingRights == 0)
-    {
-        $logOut="ERROR: toolbox::checkFile : The file $file is readable but not writable\n";
-    }
-    elsif($readingRights == 0 and $writingRights ==1)
-    {
-        $logOut="ERROR: toolbox::checkFile : The file $file is writable but not readable\n";
+        $logOut="ERROR: toolbox::checkFile : The file $file is not readable\n";
         exportLog($logOut,0);
-        return 1;
     }
-    else
-    {
-        $logOut="ERROR: toolbox::checkFile : The file $file is not readable and writable\n";
-        exportLog($logOut,0);
-        return 1;
-    }
-    
-    exportLog($logOut,1);   
+     
     return 1;
 }
 ################################################################################################
@@ -271,8 +255,8 @@ sub existsFile
     }
     else		#file does not exists and boolean==0 means log 
     {
-        my $logOut ="INFOS: toolbox::existsFile : The file $file does not exist or is not a file\n$!\n";
-        exportLog($logOut,1);
+        ##DEBUG my $logOut ="INFOS: toolbox::existsFile : The file $file does not exist or is not a file\n$!\n";
+        ##DEBUG exportLog($logOut,1);
 	return 0;
     }
 }
@@ -653,18 +637,9 @@ sub extractName
 sub run
 {
     use Capture::Tiny qw(capture);
-    # copy STDOUT and STDERR to another filehandle
-    #open (my $STDOUT_, '>&', STDOUT);
-    #open (my $STDERR_, '>&', STDERR);
-
-    # redirect STDOUT and STDERR to log.txt
-    #open (STDOUT, '>>', 'log.txt');
-    #open (STDERR, '>>', 'log.txt');
-
-    #TODO: Change the adresses for STDOUT and STDERR
     
-    my($command)=@_;
-    exportLog("INFOS: toolbox::run : $command\n",1);
+    my($command,$print)=@_;
+    exportLog("INFOS: toolbox::run : $command\n",1) if (not defined $print);
     
     ##Execute the command
     my ($result,$stderr)=capture {` $command `};
@@ -672,8 +647,7 @@ sub run
     ##Log export according to the error
     if ($?==0)
     {
-	##DEBUG
-	exportLog("INFOS: toolbox::run : ".$result."\n--".$stderr."\n",1);
+	##DEBUG exportLog("INFOS: toolbox::run : ".$result."\n--".$stderr."\n",1);
 	return 1;
     }
     else
@@ -1414,28 +1388,30 @@ sub checkFormatFasta{
 # returns :
 #	- absolute path
 ################################################################################################
-sub relativeToAbsolutePath{
+sub relativeToAbsolutePath
+{
+    
     my ($relative)=@_;
-  
+ 
+    return 0 if (not defined($relative));
+ 
     my ($absolutePath,$log);
     
     if ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
-	{
-	    my $com = "readlink -m $relative";
-	    $absolutePath = `$com`;
-	    chomp $absolutePath;
-	    ##DEBUG print $relative,"--",$absolutePath,"\n";
-	    $log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the relative path $relative has been modified as an absolute path in $absolutePath \n";
-	}
-    else #relative is in fact an absolute path, send a warning
-	{
-	    $log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a relative but an absolute. TOGGLE will not modify it \n";
-	    ##DEBUG print "No NEED\n";
-	    $absolutePath = $relative;
-	}
-    return ($absolutePath,$log);
+    {
+	my $com = "readlink -m $relative";
+	$absolutePath = `$com`;
+	chomp $absolutePath;
+	$log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the relative path $relative has been modified as an absolute path in $absolutePath \n";
     }
+    else #relative is in fact an absolute path, send a warning
+    {
+	$log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a relative but an absolute. TOGGLE will not modify it \n";
+	$absolutePath = $relative;
+    }
+    return ($absolutePath,$log);
 
+}
 ################################################################################################
 # END sub relativeToAbsolutePath 
 ################################################################################################

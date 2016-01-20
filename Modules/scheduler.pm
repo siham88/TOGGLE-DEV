@@ -113,8 +113,7 @@ sub normalRun { #For running in normal mode, ie no scheduler
     ##Log export according to the error
     if ($?==0) #Success, no error
     {
-	##DEBUG
-	toolbox::exportLog("INFOS: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\n",1);
+	##DEBUG toolbox::exportLog("INFOS: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\n",1);
 	return 1;
     }
     else  #Error, the job cannot be achieved for any reason
@@ -126,7 +125,8 @@ sub normalRun { #For running in normal mode, ie no scheduler
     
 }
 
-sub sgeRun { #For SGE cluster, running using qsub
+sub sgeRun
+{ #For SGE cluster, running using qsub
     
     my $sgeOptionsHash=toolbox::extractHashSoft($configInfo,"sge");
     my $sgeOptions=toolbox::extractOptions($sgeOptionsHash);
@@ -150,8 +150,8 @@ sub sgeRun { #For SGE cluster, running using qsub
         return 0; #Returning to launcher subprogram the error type
     }
     
-    toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in qsub mode through the command:\n\t$launcherCommand\n\n",1);
-    toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
+    toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in qsub mode through the command:\n\t$launcherCommand\n",1);
+    ## DEBUG toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
     
     my @infosList=split /\s/, $currentJID; #the format is such as "Your jobID ("NAME") has been submitted"
     $currentJID = $infosList[2];
@@ -171,8 +171,8 @@ sub sgeRun { #For SGE cluster, running using qsub
             if ($trying == 5)
             {
                 #We already tryed to pick up the node infos 5 times, let's stop
-                $runningNode = "still unknown (either not running, or already finished)";
-                toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
+                $runningNode = "Still unknown (either not running, or already finished)";
+                ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
                 last;
             }
             next;
@@ -181,13 +181,13 @@ sub sgeRun { #For SGE cluster, running using qsub
         $runningNode = $runningFields[7];
         $runningNode =~ s/.+@//;#removing queue name providing only node name
     }
-    toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
+    ## DEBUG toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
     
-    #Provide the job ID
     return $currentJID;
 }
 
-sub slurmRun{ #for SLURM cluster, running using sbatch
+sub slurmRun
+{ #for SLURM cluster, running using sbatch
     
     my $slurmOptionsHash=toolbox::extractHashSoft($configInfo,"slurm");
     my $slurmOptions=toolbox::extractOptions($slurmOptionsHash);
@@ -217,8 +217,8 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
         return 0; #Returning to launcher subprogram the error type
     }
     
-    toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in sbatch mode through the command:\n\t$launcherCommand\n\n",1);
-    toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
+    toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in sbatch mode through the command:\n\t$launcherCommand\n",1);
+    ## DEBUG toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
     
     my @infosList=split /\s/, $currentJID; #the format is such as "Submitted batch job 3"
     $currentJID = $infosList[3];
@@ -239,7 +239,7 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
             {
                 #We already tryed to pick up the node infos 5 times, let's stop
                 $runningNode = "still unknown (either not running, or already finished)";
-                toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
+                ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
                 last;
             }
             next;
@@ -247,7 +247,7 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
         my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
         $runningNode = $runningFields[8];
     }
-    toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
+    ## DEBUG toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
     
     #Provide the job ID
     return $currentJID;
@@ -260,7 +260,8 @@ sub slurmRun{ #for SLURM cluster, running using sbatch
 #
 ##################################
 
-sub waiter { #Global function for waiting, will recover the jobID to survey and will re-dispatch to scheduler
+sub waiter
+{ #Global function for waiting, will recover the jobID to survey and will re-dispatch to scheduler
     
     ($jobList,my $jobsInfos) = @_;
     
@@ -277,31 +278,35 @@ sub waiter { #Global function for waiting, will recover the jobID to survey and 
 }
 
 
-
-sub sgeWait {
+sub sgeWait
+{
     
     my $nbRunningJobs = 1;
     my @jobsInError=();
+    
     ##Waiting for jobs to finish
     while ($nbRunningJobs)
     {  
-      ##DEBUG my $date = `date`;
-      ##DEBUG chomp $date;
-      ##DEBUG toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
       #Picking up the number of currently running jobs
       my $qstatCommand = "qstat | egrep -c \"$jobList\"";
       $nbRunningJobs = `$qstatCommand`;
       chomp $nbRunningJobs;
       sleep 50;
     }
+    
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 25;#Needed for qacct to register infos...
-    toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tNode\tExitStatus\n-------------------------------",1);
+    toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
+\n---------------------------------------------------------
+Individual\tJobID\tNode\tExitStatus
+---------------------------------------------------------",1);
+    
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
       my $qacctCommand = "qacct -j ".$jobHash{$individual}." 2>&1";
       my $qacctOutput = `$qacctCommand`;
       my $outputLine;
+      
       chomp $qacctOutput;
       if ($qacctOutput =~ "-bash: qacct" or $qacctOutput =~ "installed")
       {
@@ -310,6 +315,7 @@ sub sgeWait {
         toolbox::exportLog($outputLine,1);
         next;
       }
+      
       my @linesQacct = split /\n/, $qacctOutput;
       $outputLine = $individual."\t".$jobHash{$individual}."\t";
       while (@linesQacct) #Parsing the qacct output
@@ -343,34 +349,39 @@ sub sgeWait {
       toolbox::exportLog($outputLine,1);
       
     }
-    toolbox::exportLog("-------------------------------\n",1);#To have a better table presentation
+    toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
   
-  if (scalar @jobsInError) {
-    #at least one job has failed
-    return \@jobsInError;
-  }
-  return 1;
+    if (scalar @jobsInError)
+    {
+	#at least one job has failed
+	return \@jobsInError;
+    }
+    return 1;
 }
 
-sub slurmWait{
+sub slurmWait
+{
     
     my $nbRunningJobs = 1;
     my @jobsInError=();
+    
     ##Waiting for jobs to finish
     while ($nbRunningJobs)
     {  
-      ##DEBUG my $date = `date`;
-      ##DEBUG chomp $date;
-      ##DEBUG toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
       #Picking up the number of currently running jobs
       my $squeueCommand = "squeue | egrep -c \"$jobList\"";
       $nbRunningJobs = `$squeueCommand`;
       chomp $nbRunningJobs;
       sleep 50;
     }
+    
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 25;#Needed for qacct to register infos...
-    toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tExitStatus\n-------------------------------",1);
+    toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
+\n---------------------------------------------------------
+Individual\tJobID\tNode\tExitStatus
+---------------------------------------------------------",1);
+    
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
       my $sacctCommand = "sacct -j ".$jobHash{$individual};
@@ -390,35 +401,34 @@ sub slurmWait{
       {
 	my $line = shift @lineSacct;
 	
-
 	#Passing the header lines
 	next if $line =~ m/JobID/;
 	next if $line !~ m/^\d/;
 	
-	
 	my @fields = split /\s+/, $line;
 
 	if ($fields[5] eq "COMPLETED") #No errors
-	  {
+	{
 	    $outputLine .= "Normal";
-	  }
+	}
 	else
-	  {
+	{
 	    push @jobsInError, $individual;
 	    $outputLine .= "Error";
-	  }
+	}
       }
       
       toolbox::exportLog($outputLine,1);
       
     }
-    toolbox::exportLog("-------------------------------\n",1);#To have a better table presentation
+    toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
   
-  if (scalar @jobsInError) {
-    #at least one job has failed
-    return \@jobsInError;
-  }
-  return 1;
+    if (scalar @jobsInError)
+    {
+	#at least one job has failed
+	return \@jobsInError;
+    }
+    return 1;
 }
 
 1;
