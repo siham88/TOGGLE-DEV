@@ -356,7 +356,7 @@ onTheFly::generateGraphviz($hashOrder,$outputDir);
 
 if ($orderBefore1000)
 {
-    toolbox::exportLog("\n#########################################\nINFOS: Creating individual pipeline script \n#########################################\n",1);
+    toolbox::exportLog("\n#########################################\nINFOS: Running individual pipeline script \n#########################################\n",1);
 
     #generate toggleBzzzz.pl
     onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner);
@@ -379,7 +379,6 @@ if ($orderBefore1000)
     my $jobList="";
     my %jobHash;
         
-    toolbox::exportLog("#########################################\nINFOS: Running individual pipeline \n#########################################\n",1);
     foreach my $currentDir(@{$listSamples})
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
@@ -526,7 +525,7 @@ if ($orderBefore1000)
 if ($orderAfter1000)
 {
   
-    toolbox::exportLog("\n#########################################\nINFOS: Creating multiple pipeline script \n#########################################\n",1);
+    toolbox::exportLog("\n######################################### INFOS: Running multiple pipeline script \n#########################################\n",1);
 
     onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner);
     
@@ -538,7 +537,6 @@ if ($orderAfter1000)
     my $jobList="";
     my %jobHash;
 
-        toolbox::exportLog("#########################################\nINFOS: Running multiple pipeline \n#########################################\n",1);
     #Launching through the scheduler launching system
     my $jobOutput = scheduler::launcher($launcherCommand, "1", "Global analysis", $configInfo); #not blocking job, explaining the '1'
     if ($jobOutput ne 1) #1 means the job is Ok and is running in a normal linear way, ie no scheduling
@@ -585,9 +583,9 @@ if ($orderAfter1000)
 
 close F1;
 
-toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. Thank you for using TOGGLE. \n#########################################\n",1);
-toolbox::exportLog("#########################################\nCITATION: TOGGLE: Toolbox for generic NGS analyses.\n Cécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot. \n
-                   BMC Bioinformatics 2015, 16:374 #########################################\n",1);  
+toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. \n#########################################\n",1);
+toolbox::exportLog("\nThank you for using TOGGLE. \n CITATION: \nTOGGLE: Toolbox for generic NGS analyses.\nCécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.\n \
+BMC Bioinformatics 2015, 16:374\n",1);  
 exit;
 
 =head1 Name
