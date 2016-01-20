@@ -11,6 +11,16 @@ unless ($tableReport)
     #########################################
     # GATK BASE RECALIBRATOR
     #########################################
+    my $indexValidator=0;
+    foreach (@$fileList) #We need to know which file is the BAM and if the index exists
+    {
+        $bamFileOut = $_ if $_ =~ m/\.bam$/; # The BAM file
+        $indexValidator=1 if $_ =~ m/\.bai$/; # The index exists
+    }
+    if ($indexValidator == 0)#There are no index
+    {
+        samTools::samToolsIndex($bamFileOut);
+    }
     $softParameters = toolbox::extractHashSoft($optionRef,"gatkBaseRecalibrator");                  # recovery of specific parameters of GATK Base Recalibrator
     $fileWithoutExtention = toolbox::extractName($$fileList[0]);                                    # extract name of file without extention
     $tableReport = "$newDir"."/"."$fileWithoutExtention".".GATKBASERECALIBRATOR.tableReport";       # name for the output file of gatk base recalibrator
