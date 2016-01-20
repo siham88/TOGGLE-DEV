@@ -7,8 +7,8 @@
 
 $cleanerCommand = "rm -f $previousDir/*";
 
-if (toolbox::run($cleanerCommand) == 1)
+if (toolbox::run($cleanerCommand,"noprint") == 1)
 {
-    toolbox::exportLog("INFOS : $0 : Removing intermediate results in $previousDir\n",1);
+    toolbox::exportLog("INFOS : CLEANER STEP : Removing $previousDir\n",1);
 }
 

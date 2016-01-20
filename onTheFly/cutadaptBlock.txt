@@ -23,7 +23,6 @@ if (scalar(@{$fileList})==2)                                                    
     ##########################################
     # cutadapt::execution
     ##########################################
-    print LOG "INFOS: $0 : Start cutadapt execution on file $fastqForward and $fastqReverse\n";
     ##DEBUG print LOG "CHANGE DIRECTORY TO $newDir\n";
     cutadapt::execution($cutadaptFileConf,$fastqForward,,$fastqForwardOut,$fastqReverse,$fastqReverseOut);                     # run cutadapt program on current file
 }
@@ -33,4 +32,4 @@ else                                                                            
 }
 
 my $removeCmd = "rm $cutadaptFileConf";
-toolbox::run($removeCmd);
+toolbox::run($removeCmd,"noprint");

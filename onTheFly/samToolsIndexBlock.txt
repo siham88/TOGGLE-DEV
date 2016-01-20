@@ -35,6 +35,6 @@ samTools::samToolsIndex($bamFile);
 #########################################
 
 $replacementCommand = "rm -Rf $newDir && ln -s $previousDir $newDir";
-toolbox::run($replacementCommand);
+toolbox::run($replacementCommand,"noprint");
 
 

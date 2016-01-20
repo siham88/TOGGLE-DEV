@@ -92,12 +92,12 @@ sub createConfFile
     
     if (toolbox::sizeFile($fileConf))
     {									# Check if the configuration file is not empty
-	toolbox::exportLog("INFOS: cutadapt::createConfFile : the configuration file $fileConf has been correctly created\n",1);
+	#DEBUG #toolbox::exportLog("INFOS: cutadapt::createConfFile : the configuration file $fileConf has been correctly created\n",1);
 	return 1;
     }
     else
     {
-	toolbox::exportLog("ERROR: cutadapt::createConfFile : A probleme has occured during the creation of the configuratin file $fileConf\n",0);
+	toolbox::exportLog("ERROR: cutadapt::createConfFile : A probleme has occured during the creation of the configuration file $fileConf\n",0);
     }
     
 }

@@ -92,7 +92,6 @@ sub samToolsIndex
           #Execute command
           if(toolbox::run($command)==1)
           {
-               toolbox::exportLog("INFOS: samTools::samToolsIndex : Correctly done\n",1);
                return 1;#Command Ok
           }
           else
@@ -131,17 +130,21 @@ sub samToolsView
           my $command=$samtools." view ".$options." -o ".$bamFileOut." ".$bamFileIn;
           #toolbox::exportLog($command."\n",1);
           #Execute command
-          if(toolbox::run($command)==1){
-               toolbox::exportLog("INFOS: samTools::samToolsView : Correctly done\n",1);
+          if(toolbox::run($command)==1)
+          {
                return 1;#Command Ok
-          }else{
+          }
+          else
+          {
                toolbox::exportLog("ERROR: samTools::samToolsView : Uncorrectly done\n",0);
                return 0;#Command not Ok
-               }
-     }else{
+          }
+     }
+     else
+     {
         toolbox::exportLog("ERROR: samTools::samToolsView : The file $bamFileIn is uncorrect\n",0);
         return 0;#File not Ok
-    }
+     }
 }
 
 ##
@@ -172,7 +175,6 @@ sub samToolsSort
           #Execute command
           if(toolbox::run($command)==1)
           {
-               toolbox::exportLog("INFOS: samTools::samToolsSort : Correctly done\n",1);
                return 1;#Command Ok
           }
           else
@@ -248,7 +250,6 @@ sub samToolsMerge
      #Execute command
      if(toolbox::run($command)==1)
      {
-          toolbox::exportLog("INFOS: samTools::samToolsMerge : Correctly done\n",1);
           return 1;#Command Ok
      }
      else
@@ -277,7 +278,6 @@ sub samToolsIdxstats
           
           if(toolbox::run($command)==1)                          #Execute command
           {
-               toolbox::exportLog("INFOS: samTools::samToolsIdxstats : Correctly done\n",1);
                return 1;                                         #Command Ok
           }
           else
@@ -336,7 +336,6 @@ sub samToolsDepth
      my $command = "$samtools depth $options $bamFilesToCompute > $depthOutputFile";#Command to be launched
      if(toolbox::run($command)==1)
      {
-          toolbox::exportLog("INFOS: samTools::samToolsDepth : Correctly done\n",1);
           return 1;#Command Ok
      }
      else
@@ -375,7 +374,6 @@ sub samToolsFlagstat
                my $command = "$samtools flagstat $bamFile > $flagstatsOutputFile";#Command to launch
                if(toolbox::run($command)==1)
 	       {
-                    toolbox::exportLog("INFOS: samTools::samToolsFlagstat : Correctly done\n",1);
                     return 1;
 	       }
 	       else

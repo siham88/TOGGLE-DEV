@@ -87,6 +87,8 @@ Mesg
 }
 
 
+my $cmd_line=$0." @ARGV";
+
 ##########################################
 # recovery of initial informations/files
 ##########################################
@@ -111,15 +113,17 @@ my $infosFile = "individuSoft.txt";
 #my $infosFile = "$pathIndividu[1]/individuSoft.txt";
 open (F1, ">",$infosFile) or die ("ERROR: $0 : Cannot open the file $infosFile\n$!\n");
 print F1 "$individu\n";
-print F1 "Initialization\n";
-
+print F1 "global\n";
 
 my $indivName = `head -n 1 individuSoft.txt`;
 chomp $indivName;
 
-my $logFile=$indivName."_Global"."_log";
-open (LOG, ">",$logFile) or die ("ERROR: $0 : Cannot open the file $logFile\n$!\n");
-print LOG "#########################################\nINFOS: TOGGLE will start\n#########################################\n\n";
+
+
+
+
+toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);
+toolbox::exportLog("INFOS: Command line : $cmd_line\n",1);
 
 toolbox::checkFile($fileConf);                                                                              # check if this file exists
 toolbox::checkFile($refFastaFile);                                                                          # check if the reference file exists
@@ -136,7 +140,7 @@ foreach my $currentFile (@$initialFileList)
   next if ($basicName =~ m/individuSoft|log\.[e|o]|Global_log$/); # Passing the individuSoft file
   my $mvCommand = "mv ".$currentFile." ".$previousDir."/".$basicName;
   print $mvCommand,"\n";
-  toolbox::run($mvCommand);
+  toolbox::run($mvCommand,"noprint");
 }
 my $optionRef=toolbox::readFileConf($fileConf); # Picking up the global options
 
@@ -147,7 +151,11 @@ my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the opti
 #Standard variables
 
 my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$fastqForward,$fastqReverse,$samFile,$extension,$samFileOut,$shortDirName,$stepF1,
+<<<<<<< HEAD
     $vcfCalled,$vcfOut,$listOfBam,$bamFile,$bamFileOut,$cleanerCommand,$compressorCommand,$intervalsFile,$replacementCommand,$tableReport);
+=======
+    $vcfCalled,$vcfOut,$listOfBam,$bamFile,$bamFileOut,$cleanerCommand,$intervalsFile,$replacementCommand,$tableReport);
+>>>>>>> log
 
 #Variable variables
 my ($fastq1,$fastq2,$sam,$bam,$vcf);
