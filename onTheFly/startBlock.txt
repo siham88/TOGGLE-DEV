@@ -122,8 +122,13 @@ my $logFile=$indivName."_Global"."_log";
 open (LOG, ">",$logFile) or die ("ERROR: $0 : Cannot open the file $logFile\n$!\n");
 #########################################
 
-toolbox::exportLog("#########################################\nINFOS: TOGGLE will start\n#########################################\n\n",1);
 
+
+toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);
+toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
+toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
+
+toolbox::exportLog("#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                                                                              # check if this file exists
 toolbox::checkFile($refFastaFile);                                                                          # check if the reference file exists
 
@@ -139,7 +144,7 @@ foreach my $currentFile (@$initialFileList)
   next if ($basicName =~ m/individuSoft|log\.[e|o]|Global_log$/); # Passing the individuSoft file
   my $mvCommand = "mv ".$currentFile." ".$previousDir."/".$basicName;
   print $mvCommand,"\n";
-  toolbox::run($mvCommand);
+  toolbox::run($mvCommand,"noprint");
 }
 my $optionRef=toolbox::readFileConf($fileConf); # Picking up the global options
 
