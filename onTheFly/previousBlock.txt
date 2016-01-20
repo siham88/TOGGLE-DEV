@@ -9,12 +9,5 @@ $stepName = $$hashOrder{$stepOrder};
 $stepF1=$stepName;
 $stepF1 =~ s/ /_/g;
 
-#### A EFFACER ######### 
-#print F1 "$stepF1\n";
-
-
-
-#print LOG "INFOS: $0 : Start $stepName\n";
-#### A EFFACER ######### 
 
 toolbox::exportLog("#########################################\nINFOS: $stepName analysis start \n#########################################\n",1);
