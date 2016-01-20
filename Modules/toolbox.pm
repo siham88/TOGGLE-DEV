@@ -942,7 +942,7 @@ sub checkSamOrBamFormat
     }
     my $checkFormatCommand="$samtools view $inputOption $samFile -H > /dev/null";
     # The samtools view will ask only for the header to be outputted (-H option), and the STDOUT is redirected to nowher (>/dev/null);
-    my $formatValidation=run($checkFormatCommand);
+    my $formatValidation=run($checkFormatCommand,"noprint");
     
     if ($formatValidation == 1)                    # if no error occured in extracting header, ok
     {
