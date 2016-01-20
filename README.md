@@ -115,6 +115,8 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 - gatkVariantFiltration
 - gatkReadBackedPhasing
 - gatkUnifiedGenotyper
+- gatkBaseRecalibrator
+- gatkPrintReads
 
 #####Fastqc (http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
