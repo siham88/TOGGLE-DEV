@@ -28,4 +28,4 @@ gatk::gatkIndelRealigner($refFastaFile, $bamFileOut, $intervalsFile, $bamRealign
 
 #Cleaning and removing the intervals file that may cause a problem in the next steps
 my $intervalsFileRemoverCommand= " rm -f ".$intervalsFile;
-toolbox::run($intervalsFileRemoverCommand);
+toolbox::run($intervalsFileRemoverCommand,"noprint");
