@@ -81,7 +81,6 @@ sub bwaAln
         #Execute command
         if(toolbox::run($command)==1)		## if the command has been excuted correctly, export the log
 	{
-            toolbox::exportLog("INFOS: bwa::bwaAln : correctly done\n",1);
             return 1;
         }
 	else
@@ -118,8 +117,7 @@ sub bwaSampe
         #Execute command
         if(toolbox::run($command)==1)		## if the command has been excuted correctly, export the log
 	{
-        toolbox::exportLog("INFOS: bwa::bwaSampe : correctly done\n",1);
-        return 1;
+	    return 1;
         }
 	else
 	{
@@ -129,7 +127,7 @@ sub bwaSampe
     }
     else
     {
-        toolbox::exportLog("ERROR: bwa::bwaSampe : Problem with the files\n",0);
+        toolbox::exportLog("ERROR: bwa::bwaSampe : Problem with the files $refFastaFileIn or $forwardSaiFileIn or $forwardFastqFileIn or $reverseSaiFileIn or  $reverseFastqFileIn\n",0);
         return 0;
         
     }
@@ -157,8 +155,7 @@ sub bwaSamse
         #Execute command
         if(toolbox::run($command)==1)		## if the command has been excuted correctly, export the log
 	{
-        toolbox::exportLog("INFOS: bwa::bwaSamse : correctly done\n",1);
-        return 1;
+	    return 1;
         }
 	else
 	{
@@ -168,7 +165,7 @@ sub bwaSamse
     }
     else
     {
-        toolbox::exportLog("ERROR: bwa::bwaSamse : Problem with the files\n",0);
+        toolbox::exportLog("ERROR: bwa::bwaSamse : Problem with the files $refFastaFileIn or $SaiFileIn or $FastqFileIn\n",0);
         return 0;
     }
 }
@@ -210,7 +207,6 @@ sub bwaMem
        #Execute command
 	if(toolbox::run($command)==1)
 	{
-	    toolbox::exportLog("INFOS: bwa::bwaMem : correctly done\n",1);
 	    return 1;
 	}
 	else
@@ -221,7 +217,7 @@ sub bwaMem
     }
     else
     {
-       toolbox::exportLog("ERROR: bwa::bwaMem : Problem with the files\n",0);
+       toolbox::exportLog("ERROR: bwa::bwaMem : Problem with the files $refFastaFileIn, $forwardFastqFileIn or/and $reverseFastqFileIn\n",0);
        return 0;
     }                                                                                                                              
 }
