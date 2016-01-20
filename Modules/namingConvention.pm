@@ -90,6 +90,9 @@ sub correctName
 	#FOR cleaner
 	case ($name =~ m/cleaner/i){$correctedName="cleaner";} #Correction for cleaner step
 	
+	#FOR compressor
+	case ($name =~ m/compress/i){$correctedName="compress";} #correction for compressor step
+	
 	#FOR SGE
 	case ($name =~ m/sge/i){$correctedName="sge";} #Correction for sge configuration
 	
