@@ -11,6 +11,6 @@ $compressorCommand = "tar -zcvf $previousDir.tar.gz $previousShortName && rm -Rf
 
 if (toolbox::run($compressorCommand,"noprint") == 1)
 {
-    toolbox::exportLog("INFOS : $0 : Compressing intermediate results from $previousDir\n",1);
+    toolbox::exportLog("INFOS : Compressing Step : Compressing $previousDir\n",1);
 }
 
