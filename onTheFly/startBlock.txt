@@ -111,15 +111,18 @@ my $infosFile = "individuSoft.txt";
 #my $infosFile = "$pathIndividu[1]/individuSoft.txt";
 open (F1, ">",$infosFile) or die ("ERROR: $0 : Cannot open the file $infosFile\n$!\n");
 print F1 "$individu\n";
-print F1 "Initialization\n";
-
+print F1 "global\n";
 
 my $indivName = `head -n 1 individuSoft.txt`;
 chomp $indivName;
 
+
+#### A EFFACER ######### 
 my $logFile=$indivName."_Global"."_log";
 open (LOG, ">",$logFile) or die ("ERROR: $0 : Cannot open the file $logFile\n$!\n");
-print LOG "#########################################\nINFOS: TOGGLE will start\n#########################################\n\n";
+#########################################
+
+toolbox::exportLog("#########################################\nINFOS: TOGGLE will start\n#########################################\n\n",1);
 
 toolbox::checkFile($fileConf);                                                                              # check if this file exists
 toolbox::checkFile($refFastaFile);                                                                          # check if the reference file exists
@@ -147,7 +150,7 @@ my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the opti
 #Standard variables
 
 my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$fastqForward,$fastqReverse,$samFile,$extension,$samFileOut,$shortDirName,$stepF1,
-    $vcfCalled,$vcfOut,$listOfBam,$bamFile,$bamFileOut,$cleanerCommand,$intervalsFile,$replacementCommand);
+    $vcfCalled,$vcfOut,$listOfBam,$bamFile,$bamFileOut,$cleanerCommand,$intervalsFile,$replacementCommand,$tableReport);
 
 #Variable variables
 my ($fastq1,$fastq2,$sam,$bam,$vcf);
