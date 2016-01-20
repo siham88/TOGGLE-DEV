@@ -10,6 +10,7 @@
 - Adding the samTools sortSam flagstats depth idxstats
 - Adding scheduler.pm module for scheduling system
 - Adding the SGE and Slurm schedulers
+- Adding cleaning and compression of given steps
 
 
 ### Functions
@@ -17,8 +18,8 @@
 - *On the fly* creation of pipeline (see MANUAL.md for a detailled explanation)
 - Use of **Graphviz** to generate a visual output of the pipeline structure
 - Adding the automatic scheduling-aware launching system - For SGE and Slurm
-- Adding a cleaning system to remove chosen intermediate data in order to save hard drive space (see MANUAL.md)
-- Use of compressed gzipped files
+- Adding a cleaning and a compression system to remove/compress chosen intermediate data in order to save hard drive space (see MANUAL.md)
+- Use of initial compressed gzipped files
 - Possibility of starting from FASTQ, SAM/BAM or VCF (gzipped or not)
 - Possibility of working in relative path
 - Providing an output folder in order to not modify the input data (working with symbolic links)

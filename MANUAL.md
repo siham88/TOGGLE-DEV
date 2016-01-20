@@ -151,6 +151,25 @@ $cleaner
 
 There only the last step result (samtools sort) will be conserved. The folders and logs of the cleaned steps are conserved, but not the resulting files.
 
+# Compressing steps
+In order to gain hard drive space but conserving data, you may want to compress some steps from your complete analysis.
+
+In this case, you can specify in the configuration file which step must be COMPRESSED in tar.gz along the pipeline (as soon as the step following them has been correctly completed), using the key *compress*.
+
+As an example
+````
+$order
+1=bwaAln
+2=bwaSampe
+3=samtools sort
+
+$compress
+1
+2
+````
+
+There only the last step result (samtools sort) will be conserved, the other being compressed in their respective tar.gz archive. The folders and logs of the compressed steps are conserved, but not the resulting files.
+
 # Scheduler and parallel runs
 The current version is scheduler-aware (**SGE** and **Slurm** on v0.3), and is able to decide by itself to launch on such a system.
 The jobs will be launched in parallel however only if the *software.config* file contains informations for scheduling, *i.e.* the queue name, number of core/threads per jobs, etc...
