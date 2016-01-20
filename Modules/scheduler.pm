@@ -149,8 +149,8 @@ sub sgeRun { #For SGE cluster, running using qsub
         return 0; #Returning to launcher subprogram the error type
     }
     
-    toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in qsub mode through the command:\n\t$launcherCommand\n\n",1);
-    toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
+    toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in qsub mode through the command:\n\t$launcherCommand\n",1);
+    ## DEBUG toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
     
     my @infosList=split /\s/, $currentJID; #the format is such as "Your jobID ("NAME") has been submitted"
     $currentJID = $infosList[2];
@@ -170,8 +170,8 @@ sub sgeRun { #For SGE cluster, running using qsub
             if ($trying == 5)
             {
                 #We already tryed to pick up the node infos 5 times, let's stop
-                $runningNode = "still unknown (either not running, or already finished)";
-                toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
+                $runningNode = "Still unknown (either not running, or already finished)";
+                ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
                 last;
             }
             next;
@@ -180,9 +180,8 @@ sub sgeRun { #For SGE cluster, running using qsub
         $runningNode = $runningFields[7];
         $runningNode =~ s/.+@//;#removing queue name providing only node name
     }
-    toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
+    ## DEBUG toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
     
-    #Provide the job ID
     return $currentJID;
 }
 
