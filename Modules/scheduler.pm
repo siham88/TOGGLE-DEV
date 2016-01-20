@@ -260,7 +260,8 @@ sub slurmRun
 #
 ##################################
 
-sub waiter { #Global function for waiting, will recover the jobID to survey and will re-dispatch to scheduler
+sub waiter
+{ #Global function for waiting, will recover the jobID to survey and will re-dispatch to scheduler
     
     ($jobList,my $jobsInfos) = @_;
     
@@ -277,17 +278,14 @@ sub waiter { #Global function for waiting, will recover the jobID to survey and 
 }
 
 
-
-sub sgeWait {
+sub sgeWait
+{
     
     my $nbRunningJobs = 1;
     my @jobsInError=();
     ##Waiting for jobs to finish
     while ($nbRunningJobs)
     {  
-      ##DEBUG my $date = `date`;
-      ##DEBUG chomp $date;
-      ##DEBUG toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
       #Picking up the number of currently running jobs
       my $qstatCommand = "qstat | egrep -c \"$jobList\"";
       $nbRunningJobs = `$qstatCommand`;
@@ -355,25 +353,29 @@ Individual\tJobID\tNode\tExitStatus
   return 1;
 }
 
-sub slurmWait{
+sub slurmWait
+{
     
     my $nbRunningJobs = 1;
     my @jobsInError=();
+    
     ##Waiting for jobs to finish
     while ($nbRunningJobs)
     {  
-      ##DEBUG my $date = `date`;
-      ##DEBUG chomp $date;
-      ##DEBUG toolbox::exportLog("INFOS : $0 : $nbRunningJobs are still running at $date, we wait for their ending.\n",1);
       #Picking up the number of currently running jobs
       my $squeueCommand = "squeue | egrep -c \"$jobList\"";
       $nbRunningJobs = `$squeueCommand`;
       chomp $nbRunningJobs;
       sleep 50;
     }
+    
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 25;#Needed for qacct to register infos...
-    toolbox::exportLog("INFOS: $0 : RUN JOBS INFOS\nIndividual\tJobID\tExitStatus\n-------------------------------",1);
+    toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
+\n---------------------------------------------------------
+Individual\tJobID\tNode\tExitStatus
+---------------------------------------------------------",1);
+    
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
       my $sacctCommand = "sacct -j ".$jobHash{$individual};
@@ -393,35 +395,34 @@ sub slurmWait{
       {
 	my $line = shift @lineSacct;
 	
-
 	#Passing the header lines
 	next if $line =~ m/JobID/;
 	next if $line !~ m/^\d/;
 	
-	
 	my @fields = split /\s+/, $line;
 
 	if ($fields[5] eq "COMPLETED") #No errors
-	  {
+	{
 	    $outputLine .= "Normal";
-	  }
+	}
 	else
-	  {
+	{
 	    push @jobsInError, $individual;
 	    $outputLine .= "Error";
-	  }
+	}
       }
       
       toolbox::exportLog($outputLine,1);
       
     }
-    toolbox::exportLog("-------------------------------\n",1);#To have a better table presentation
+    toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
   
-  if (scalar @jobsInError) {
-    #at least one job has failed
-    return \@jobsInError;
-  }
-  return 1;
+    if (scalar @jobsInError)
+    {
+	#at least one job has failed
+	return \@jobsInError;
+    }
+    return 1;
 }
 
 1;
