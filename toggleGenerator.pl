@@ -387,7 +387,8 @@ if ($orderBefore1000)
         
         #Launching through the scheduler launching system  
         my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
-        ##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- ",2);
+        ##DEBUG
+        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- ",2);
         if ($jobOutput == 0)
         {
           #the linear job is not ok, need to pick up the number of jobs
@@ -403,7 +404,8 @@ if ($orderBefore1000)
         }
         next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
         
-        ##DEBUG        toolbox::exportLog("INFOS: $0 : Parallel job",2);
+        ##DEBUG
+        toolbox::exportLog("INFOS: $0 : Parallel job",2);
         
         $jobList = $jobList.$jobOutput."|";
         my $baseNameDir=`basename $currentDir` or die("\nERROR : $0 : Cannot pickup the basename for $currentDir: $!\n");
