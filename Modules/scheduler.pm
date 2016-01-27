@@ -156,12 +156,14 @@ sub sgeRun
     
     toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in qsub mode through the command:\n\t$launcherCommand\n",1);
     
-    ## DEBUG    toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",2);
+    ## DEBUG
+    toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",2);
     
     my @infosList=split /\s/, $currentJID; #the format is such as "Your jobID ("NAME") has been submitted"
     $currentJID = $infosList[2];
     
-    ## DEBUG    toolbox::exportLog("INFOS: $0 : jobID is $currentJID\n\n",2);
+    ## DEBUG
+    toolbox::exportLog("INFOS: $0 : jobID is $currentJID\n\n",2);
     
     my $runningNodeCommand="qstat | grep $currentJID";
     my $runningNode="x";
