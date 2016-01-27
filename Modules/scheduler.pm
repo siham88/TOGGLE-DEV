@@ -144,6 +144,8 @@ sub sgeRun
         
     #Parsing infos and informing logs
     chomp $currentJID;
+    ##DEBUG
+    toolbox::exportLog("INFOS: $0 : $currentJID \n\n",2);
     
     unless ($currentJID) #The job has no output in STDOUT, ie there is a problem...
     {
@@ -181,7 +183,8 @@ sub sgeRun
         $runningNode = $runningFields[7];
         $runningNode =~ s/.+@//;#removing queue name providing only node name
     }
-    ## DEBUG toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
+    ## DEBUG
+    toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",2);
     
     return $currentJID;
 }
