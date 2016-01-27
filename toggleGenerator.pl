@@ -387,7 +387,8 @@ if ($orderBefore1000)
         
         #Launching through the scheduler launching system  
         my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
-        ##DEBUG        print "**$jobOutput** \n";
+        ##DEBUG
+        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- ",2);
         if ($jobOutput == 0)
         {
           #the linear job is not ok, need to pick up the number of jobs
