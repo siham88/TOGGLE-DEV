@@ -73,6 +73,9 @@ sub launcher { #Global function for launching, will recover the command to be la
         else {$runOutput = &normalRun};
     }
     
+    ##DEBUG
+    toolbox::exportLog("WARNING : scheduler : run output is $runOutput",2);
+    
     if ($runOutput == 0 && $requirement == 0) {#The job has to succeed either it will kill all other jobs
         toolbox::exportLog("ERROR: scheduler::launcher on $sample: ".$commandLine."\nThe job cannot be achieved and is mandatory, thus the whole analysis is stop\n",0);
     
@@ -153,14 +156,12 @@ sub sgeRun
     
     toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in qsub mode through the command:\n\t$launcherCommand\n",1);
     
-    ## DEBUG
-    toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",2);
+    ## DEBUG    toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",2);
     
     my @infosList=split /\s/, $currentJID; #the format is such as "Your jobID ("NAME") has been submitted"
     $currentJID = $infosList[2];
     
-    ## DEBUG
-    toolbox::exportLog("INFOS: $0 : jobID is $currentJID\n\n",2);
+    ## DEBUG    toolbox::exportLog("INFOS: $0 : jobID is $currentJID\n\n",2);
     
     my $runningNodeCommand="qstat | grep $currentJID";
     my $runningNode="x";
@@ -188,6 +189,9 @@ sub sgeRun
         $runningNode =~ s/.+@//;#removing queue name providing only node name
     }
     ## DEBUG    toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",2);
+    
+    ## DEBUG
+    toolbox::exportLog("INFOS: $0 : jobID is $currentJID\n\n",2);
     
     return $currentJID;
 }
