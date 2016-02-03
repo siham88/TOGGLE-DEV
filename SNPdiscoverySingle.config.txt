@@ -30,8 +30,9 @@ $cutadapt
 -m=35
 -q=20
 --overlap=7
-#If you have a specific adaptator file, please indicate here. 
--adaptatorFile=/path/to/adaptator.txt
+-b ADAPTATOR1REVERSE  # adaptator1 is removed in the forward (-b) read (5' and 3' position)
+-b ADAPTATOR1FORWARD  # same traitement is done for the forward adaptator sequence
+
 
 $bwa aln
 -n=5
