@@ -63,7 +63,7 @@ sub execution
         }
 
 	
-    	my $cmd_line=$fastqc." ".$options." -o $dirOut $filein"; 
+    	my $cmd_line=$fastqc." ".$options." --noextract -o $dirOut $filein"; ## Force option noextract (Do not uncompress the output file after creating it)
 	
 	 if(toolbox::run($cmd_line)==1)		## if the command has been excuted correctly, export the log
 	{
