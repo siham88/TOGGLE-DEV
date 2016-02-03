@@ -30,8 +30,10 @@ $cutadapt
 -m=35
 -q=20
 --overlap=7
--b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE # adaptator1 is removed in the forward (-b) and reverse (-B) reads (5' and 3' position)
--b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD # same traitement is done for the forward adaptator sequence
+# Adaptator1 is removed in the forward (-b) and reverse (-B) reads (5' and 3' position)
+-b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE 
+# Same traitement is done for the forward adaptator sequence
+-b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD
 
 $bwa aln
 -n=5
