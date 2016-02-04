@@ -68,6 +68,7 @@ sub launcher { #Global function for launching, will recover the command to be la
     {
         case ($hashCapability->{"sge"} && defined $$configInfo{"sge"}){$runOutput = &sgeRun} #For SGE running
         case ($hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$runOutput = &slurmRun} #For SLURM running
+	case ($hashCapability->{"mprun"} && defined $$configInfo{"mprun"}){$runOutput = &smprunRun} #For mprun running
         
         #If no scheduler available or configurated in the config info file, let's run it in a normal way
         else {$runOutput = &normalRun};
@@ -95,6 +96,10 @@ sub checkingCapability { #Will test the capacity of launching using various sche
     #SLURM test
     $capabilityValue{"slurm"}=`sbatch -V 2>/dev/null | grep slurm`; #Will provide a not-empty output if SLURM is installed
     chomp $capabilityValue{"slurm"};
+    
+    #mprun test
+    $capabilityValue{"mprun"}=`ccc_mprun -h 2>&1 | grep usage`; #Will provide a not-empty output if mprun is installed
+    chomp $capabilityValue{"mprun"};
     
     
     #Returning infos as a reference
@@ -203,10 +208,11 @@ sub slurmRun
     #Adding slurm options
     my $launcherCommand = "sbatch ".$slurmOptions;
     #Creating the bash script for slurm to launch the command
-    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n".$commandLine."\nexit 0;\" | cat - > ~/slurmScript.sh && chmod 777 ~/slurmScript.sh";
+    my $scriptName="~/slurmScript_".date.".sh";
+    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n".$commandLine."\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
     toolbox::run($bashScriptCreationCommand);
     ##DEBUG toolbox::exportLog("INFOS : $0 : Created the slurm bash file",1);
-    $launcherCommand.=" ~/slurmScript.sh";
+    $launcherCommand.=" $scriptName";
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
     ##DEBUG toolbox::exportLog($launcherCommand,2);
     my $currentJID = `$launcherCommand`;
@@ -231,7 +237,7 @@ sub slurmRun
     my @infosList=split /\s/, $currentJID; #the format is such as "Submitted batch job 3"
     $currentJID = $infosList[3];
     
-    my $runningNodeCommand="squeue | grep \"  $currentJID \"";
+    my $runningNodeCommand="squeue -u \$USER | grep \"  $currentJID \"";
     my $runningNode="x";
     my $trying=0;
     while ($runningNode ne "R") #If the job is not yet launched or already finished
@@ -262,6 +268,77 @@ sub slurmRun
     
 }
 
+sub mprunRun
+{ #for SLURM  MPRUN cluster, running using ccc_msub
+    
+    my $msubOptionsHash=toolbox::extractHashSoft($configInfo,"msub");
+    my $msubOptions=toolbox::extractOptions($msubOptionsHash);
+    
+    #Adding slurm options
+    my $launcherCommand = "ccc_msub ".$msubOptions;
+    #Creating the bash script for slurm to launch the command
+    my $date =`date +%Y_%m_%d_%H_%M_%S`;
+    chomp $date;
+    my $scriptName="~/msubScript_".$date.".sh";
+    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n".$commandLine."\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
+    toolbox::run($bashScriptCreationCommand);
+    ##DEBUG toolbox::exportLog("INFOS : $0 : Created the slurm bash file",1);
+    $launcherCommand.=" $scriptName";
+    $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
+    ##DEBUG toolbox::exportLog($launcherCommand,2);
+    my $currentJID = `$launcherCommand`;
+    
+    if ($!) #There are errors in the launching...
+    {
+        warn ("WARNING : $0 : Cannot launch the job for $sample: $!\n");
+        $currentJID = "";
+    }
+        
+    #Parsing infos and informing logs
+    chomp $currentJID;
+    
+    unless ($currentJID) #The job has no output in STDOUT, ie there is a problem...
+    {
+        return 0; #Returning to launcher subprogram the error type
+    }
+    
+    toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in ccc_msub mode through the command:\n\t$launcherCommand\n",1);
+    ## DEBUG toolbox::exportLog("INFOS: $0 : Output for the command is $currentJID\n\n",1);
+    
+    #Format: Submitted Batch Session 3223145
+    my @infosList=split /\s/, $currentJID; #the format is such as "Submitted batch job 3"
+    $currentJID = $infosList[3];
+    
+    my $runningNodeCommand="ccc_mstat -u \$USER| grep \"  $currentJID \"";
+    my $runningNode="x";
+    my $trying=0;
+    while ($runningNode ne "R01") #If the job is not yet launched or already finished
+    {
+        sleep 3;#Waiting for the job to be launched
+        $runningNode=`$runningNodeCommand`;
+        chomp $runningNode;
+        $runningNode = "x" unless $runningNode; #if empty variable, problem after...
+        if ($runningNode !~ /\s+R\s+/)
+        {# not running yet
+            $trying++;
+            if ($trying == 5)
+            {
+                #We already tryed to pick up the node infos 5 times, let's stop
+                $runningNode = "still unknown (either not running, or already finished)";
+                ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
+                last;
+            }
+            next;
+        }
+        my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
+        $runningNode = $runningFields[8];
+    }
+    ## DEBUG toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
+    
+    #Provide the job ID
+    return $currentJID;
+}
+
 ##################################
 #
 #WAITING for schedulers ONLY!
@@ -281,6 +358,8 @@ sub waiter
     {
         case ($hashCapability->{"sge"} && defined $$configInfo{"sge"}){$stopWaiting = &sgeWait} #For SGE running
         case ($hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$stopWaiting = &slurmWait} #For SLURM running
+	case ($hashCapability->{"mprun"} && defined $$configInfo{"mprun"}){$runOutput = &smprunWait} #For mprun running
+
     }
     return $stopWaiting;
 }
@@ -425,6 +504,69 @@ Individual\tJobID\tNode\tExitStatus
 	    $outputLine .= "Error";
 	}
       }
+      
+      toolbox::exportLog($outputLine,1);
+      
+    }
+    toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
+  
+    if (scalar @jobsInError)
+    {
+	#at least one job has failed
+	return \@jobsInError;
+    }
+    return 1;
+}
+
+
+sub mprunWait
+{
+    
+    my $nbRunningJobs = 1;
+    my @jobsInError=();
+    
+    ##Waiting for jobs to finish
+    while ($nbRunningJobs)
+    {  
+      #Picking up the number of currently running jobs
+      my $squeueCommand = "ccc_mstat -u \$USER | egrep -c \"$jobList\"";
+      $nbRunningJobs = `$squeueCommand`;
+      chomp $nbRunningJobs;
+      sleep 50;
+    }
+    
+    #Compiling infos about sge jobs: jobID, node number, exit status
+    sleep 25;#Needed for ccc_macct to register infos...
+    toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
+\n---------------------------------------------------------
+Individual\tJobID\tNode\tExitStatus
+---------------------------------------------------------",1);
+    
+    foreach my $individual (sort {$a cmp $b} keys %jobHash)
+    {
+      my $macctCommand = "ccc_macct ".$jobHash{$individual}."|tail -n 1";
+      my $macctOutput = `$macctCommand`;
+      my $outputLine;
+      chomp $macctOutput;
+      if ($macctOutput =~ "-bash: ccc_macct" or $macctOutput =~ "installed")
+      {
+        #IF sacct cannot be run on the node
+        $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
+        toolbox::exportLog($outputLine,1);
+        next;
+      }
+      my @fields = split /\s+/, $macctOutput;
+
+      if ($fields[5] eq "COMPLETED") #No errors
+      {
+	$outputLine .= "Normal";
+      }
+      else
+      {
+	push @jobsInError, $individual;
+	$outputLine .= "Error";
+      }
+
       
       toolbox::exportLog($outputLine,1);
       
